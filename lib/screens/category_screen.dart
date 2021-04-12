@@ -1,4 +1,7 @@
 import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
+
+import '../providers/products.dart';
 
 import '../models/product.dart';
 import '../models/category.dart';
@@ -14,6 +17,8 @@ class CategoryScreen extends StatelessWidget {
   Widget build(BuildContext context) {
     final Category category =
         ModalRoute.of(context).settings.arguments as Category;
+    final List<Product> products =
+        Provider.of<ProductsProvider>(context).fetchByCategory(category.title);
     return Scaffold(
       appBar: AppBar(
         title: Text(
@@ -37,29 +42,13 @@ class CategoryScreen extends StatelessWidget {
                 mainAxisSpacing: 10,
                 crossAxisSpacing: 10,
               ),
-              itemBuilder: (ctx, i) => ProductItem(
-                product: Product(
-                  id: DateTime.now().toString(),
-                  ownerId: 'o1',
-                  title: 'Adidas shoes',
-                  price: 90000,
-                  quantity: 4,
-                  imageUrls: [
-                    'https://cdn.pixabay.com/photo/2016/10/02/22/17/red-t-shirt-1710578_1280.jpg',
-                    'https://upload.wikimedia.org/wikipedia/commons/thumb/e/e8/Trousers%2C_dress_%28AM_1960.022-8%29.jpg/512px-Trousers%2C_dress_%28AM_1960.022-8%29.jpg',
-                    'https://upload.wikimedia.org/wikipedia/commons/thumb/1/14/Cast-Iron-Pan.jpg/1024px-Cast-Iron-Pan.jpg',
-                  ],
-                  category: 'fashion',
-                  description: 'hamdi',
-                  specs: {
-                    'color': 'blue',
-                    'size': '42 + 43',
-                    'other': 'running shoes',
-                  },
+              itemBuilder: (ctx, i) => ChangeNotifierProvider.value(
+                value: products[i],
+                child: ProductItem(
+                  isGridView: true,
                 ),
-                isGridView: true,
               ),
-              itemCount: 5,
+              itemCount: products.length,
             )
           : ListView(
               children: [

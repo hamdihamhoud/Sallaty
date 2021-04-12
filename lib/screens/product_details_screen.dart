@@ -10,9 +10,10 @@ class ProductDetailsSceen extends StatelessWidget {
   static const routeName = '/product-details';
   @override
   Widget build(BuildContext context) {
-    final productProvider = Provider.of<ProductsProvider>(context);
-    final Product product =
-        ModalRoute.of(context).settings.arguments as Product;
+    final String productId =
+        ModalRoute.of(context).settings.arguments as String;
+    final productProvider = Provider.of<ProductsProvider>(context,listen: false);
+    final Product product = productProvider.findId(productId);
     final mediaQuery = MediaQuery.of(context);
     return Scaffold(
       appBar: AppBar(
@@ -47,20 +48,14 @@ class ProductDetailsSceen extends StatelessWidget {
                 ),
               ),
             ),
-            RatingBar.builder(
-              initialRating: 3,
-              minRating: 1,
-              direction: Axis.horizontal,
-              allowHalfRating: true,
-              itemCount: 5,
-              itemPadding: EdgeInsets.symmetric(horizontal: 4.0),
-              itemBuilder: (context, _) => Icon(
+            RatingBarIndicator(
+              rating: product.rating,
+              itemBuilder: (context, index) => Icon(
                 Icons.star,
                 color: Colors.amber,
               ),
-              updateOnDrag: false,
-              tapOnlyMode: true,
-              onRatingUpdate: (_){},
+              // itemCount: 5,
+              // itemSize: 50.0,
             ),
             Divider(),
             Padding(

@@ -1,52 +1,58 @@
+import 'dart:ui';
+
 import 'package:flutter/material.dart';
 import 'package:cached_network_image/cached_network_image.dart';
+import 'package:provider/provider.dart';
 
 import '../screens/product_details_screen.dart';
 
 import '../models/product.dart';
 
 class ProductItem extends StatelessWidget {
-  final Product product;
   final bool isGridView;
-  ProductItem({this.product, this.isGridView = false});
+  ProductItem({this.isGridView = false});
 
   @override
   Widget build(BuildContext context) {
-    final width = MediaQuery.of(context).size.width;
+    final product = Provider.of<Product>(context);
     return InkWell(
       onTap: () {
         Navigator.of(context)
-            .pushNamed(ProductDetailsSceen.routeName, arguments: product);
+            .pushNamed(ProductDetailsSceen.routeName, arguments: product.id);
       },
       child: AspectRatio(
-        aspectRatio: 2/3,
-        // Container(
-        //                     width: isGridView ? width * 0.45 : 120,
-        //             // height: isGridView ? width * 0.40 : 120,
+        aspectRatio: 3 / 4,
         child: Card(
-          // color: Colors.tr,
+          shape: RoundedRectangleBorder(
+            borderRadius: BorderRadius.all(Radius.circular(15)),
+          ),
           elevation: 3,
-
-          // semanticContainer: false,
-          // decoration: BoxDecoration(
-          //   border: Border.all(
-          //     width: 0.4,
-          //   ),
-          // borderRadius: BorderRadius.circular(15),
-          // ),
           margin: const EdgeInsets.symmetric(horizontal: 10, vertical: 5),
-          child: Column(
-            mainAxisAlignment: MainAxisAlignment.start,
-            crossAxisAlignment: CrossAxisAlignment.stretch,
+          child: Stack(
+            clipBehavior: Clip.hardEdge,
+            fit: StackFit.passthrough,
             children: [
               Container(
-                constraints: BoxConstraints(maxHeight:120),
-                // padding: const EdgeInsets.all(5),
-                // margin: const EdgeInsets.only(bottom: 8),
+                clipBehavior: Clip.hardEdge,
+                decoration: BoxDecoration(
+                  borderRadius: BorderRadius.all(Radius.circular(15)),
+                ),
+                foregroundDecoration: BoxDecoration(
+                    borderRadius: BorderRadius.all(Radius.circular(15)),
+                    // color: Colors.white,
+                    gradient: LinearGradient(
+                        begin: FractionalOffset.topCenter,
+                        end: FractionalOffset.bottomCenter,
+                        colors: [
+                          Colors.grey[300].withOpacity(0.3),
+                          Colors.black.withOpacity(0.6),
+                        ],
+                        stops: [
+                          0.0,
+                          1.0
+                        ])),
+                // constraints: BoxConstraints(maxHeight: 120),
                 child: CachedNetworkImage(
-                  // width: isGridView ? width * 0.40 : 120,
-                  // height: isGridView ? width * 0.40 : 120,
-
                   alignment: Alignment.center,
                   imageUrl: product.imageUrls.first,
                   progressIndicatorBuilder: (ctx, str, downloadProgress) =>
@@ -58,20 +64,51 @@ class ProductItem extends StatelessWidget {
                   ),
                   errorWidget: (context, url, error) =>
                       const Center(child: const Icon(Icons.error)),
-                  fit: BoxFit.fitWidth,
+                  fit: BoxFit.cover,
                 ),
               ),
+              Positioned(
+                  right: 5,
+                  top: 5,
+                  child: Container(
+                    width: 30,
+                    height: 30,
+                    decoration: BoxDecoration(
+                        borderRadius: BorderRadius.circular(25),
+                        color: Colors.black54),
+                    child: Consumer<Product>(
+                      builder: (ctx, pr, _) => Center(
+                        child: IconButton(
+                          padding: const EdgeInsets.all(0),
+                          color: Colors.red,
+                          icon: pr.isFavorite
+                              ? Icon(Icons.favorite_rounded)
+                              : Icon(Icons.favorite_border_rounded),
+                          onPressed: () {
+                            pr.toggleFav(
+                                // token,
+                                // userId,
+                                );
+                          },
+                        ),
+                      ),
+                    ),
+                  )),
               Padding(
-                padding: const EdgeInsets.all(5.0),
+                padding: const EdgeInsets.only(left: 5.0),
                 child: Column(
-                  mainAxisAlignment: MainAxisAlignment.spaceAround,
+                  mainAxisAlignment: MainAxisAlignment.end,
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
                     Text(
                       product.title,
-                      style: TextStyle(fontWeight: FontWeight.bold, fontSize: 18),
+                      style: TextStyle(
+                        fontWeight: FontWeight.bold,
+                        fontSize: 16,
+                        color: Colors.white,
+                      ),
                       maxLines: 1,
-                      overflow: TextOverflow.fade,
+                      overflow: TextOverflow.ellipsis,
                     ),
                     SizedBox(
                       height: 6,
@@ -80,27 +117,34 @@ class ProductItem extends StatelessWidget {
                       Text(
                         '${product.price} SYP',
                         maxLines: 1,
-                        overflow: TextOverflow.fade,
+                        overflow: TextOverflow.ellipsis,
                         textAlign: TextAlign.start,
-                        style: TextStyle(fontSize: 16),
+                        style: TextStyle(
+                          fontSize: 14,
+                          color: Colors.white,
+                        ),
                       ),
                     if (product.hasDiscount)
                       Text(
                         '${product.price} SYP',
                         style: TextStyle(
-                          decoration: TextDecoration.lineThrough,
-                        ),
+                            decoration: TextDecoration.lineThrough,
+                            color: Colors.white,
+                            fontSize: 12),
                         maxLines: 1,
-                        overflow: TextOverflow.fade,
+                        overflow: TextOverflow.ellipsis,
                         textAlign: TextAlign.start,
                       ),
                     if (product.hasDiscount)
                       Text(
                         '${(product.price - product.price * product.discountPercentage / 100)} SYP',
                         maxLines: 1,
-                        overflow: TextOverflow.fade,
+                        overflow: TextOverflow.ellipsis,
                         textAlign: TextAlign.start,
-                        style: TextStyle(fontSize: 16),
+                        style: TextStyle(
+                          fontSize: 14,
+                          color: Colors.white,
+                        ),
                       ),
                   ],
                 ),

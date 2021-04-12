@@ -4,6 +4,8 @@ import '../widgets/categories_row.dart';
 import '../widgets/home_suggestion_item.dart';
 import '../widgets/bottom_navigation_bar.dart';
 
+import '../widgets/search.dart';
+
 class HomeScreen extends StatelessWidget {
   static const routeName = '/home';
 
@@ -24,6 +26,7 @@ class HomeScreen extends StatelessWidget {
       ),
       body: ListView(
         children: [
+          SearchBar(),
           CategoriesRow(),
           SizedBox(
             height: 10,
