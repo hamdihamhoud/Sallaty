@@ -80,6 +80,7 @@ class ProductItem extends StatelessWidget {
                     child: Consumer<Product>(
                       builder: (ctx, pr, _) => Center(
                         child: IconButton(
+                          iconSize: 19,
                           padding: const EdgeInsets.all(0),
                           color: Colors.red,
                           icon: pr.isFavorite
