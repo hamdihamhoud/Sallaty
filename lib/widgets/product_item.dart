@@ -3,6 +3,7 @@ import 'dart:ui';
 import 'package:flutter/material.dart';
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:provider/provider.dart';
+import 'package:flutter_rating_bar/flutter_rating_bar.dart';
 
 import '../screens/product_details_screen.dart';
 
@@ -95,7 +96,7 @@ class ProductItem extends StatelessWidget {
                     ),
                   )),
               Padding(
-                padding: const EdgeInsets.only(left: 5.0),
+                padding: const EdgeInsets.only(left: 5.0, bottom: 9),
                 child: Column(
                   mainAxisAlignment: MainAxisAlignment.end,
                   crossAxisAlignment: CrossAxisAlignment.start,
@@ -103,8 +104,7 @@ class ProductItem extends StatelessWidget {
                     Text(
                       product.title,
                       style: TextStyle(
-                        fontWeight: FontWeight.bold,
-                        fontSize: 16,
+                        fontWeight: FontWeight.w300,
                         color: Colors.white,
                       ),
                       maxLines: 1,
@@ -120,7 +120,7 @@ class ProductItem extends StatelessWidget {
                         overflow: TextOverflow.ellipsis,
                         textAlign: TextAlign.start,
                         style: TextStyle(
-                          fontSize: 14,
+                          fontWeight: FontWeight.w500,
                           color: Colors.white,
                         ),
                       ),
@@ -142,10 +142,23 @@ class ProductItem extends StatelessWidget {
                         overflow: TextOverflow.ellipsis,
                         textAlign: TextAlign.start,
                         style: TextStyle(
+                          fontWeight: FontWeight.w500,
                           fontSize: 14,
                           color: Colors.white,
                         ),
                       ),
+                    SizedBox(
+                      height: 6,
+                    ),
+                    RatingBarIndicator(
+                      rating: product.rating,
+                      itemBuilder: (context, index) => Icon(
+                        Icons.star,
+                        color: Colors.amber,
+                      ),
+                      itemSize: 16,
+                      unratedColor: Colors.white,
+                    ),
                   ],
                 ),
               )

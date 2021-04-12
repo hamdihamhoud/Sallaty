@@ -109,7 +109,6 @@ class ProductDetailsSceen extends StatelessWidget {
               constraints: BoxConstraints(maxHeight: 100),
               padding: const EdgeInsets.all(8),
               child: Scrollbar(
-                isAlwaysShown: true,
                 child: SingleChildScrollView(child: Text(product.description)),
               ),
             )
