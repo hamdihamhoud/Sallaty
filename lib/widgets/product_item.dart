@@ -138,7 +138,7 @@ class ProductItem extends StatelessWidget {
                       ),
                     if (product.hasDiscount)
                       Text(
-                        '${(product.price - product.price * product.discountPercentage / 100)} SYP',
+                        '${(product.price - product.price * product.discountPercentage / 100).toStringAsFixed(0)} SYP',
                         maxLines: 1,
                         overflow: TextOverflow.ellipsis,
                         textAlign: TextAlign.start,

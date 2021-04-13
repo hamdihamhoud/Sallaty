@@ -5,7 +5,7 @@ import '../providers/cart.dart';
 import './badge.dart';
 
 import '../screens/home_screen.dart';
-import '../screens/wishlist_screen.dart';
+import '../screens/watchlist_screen.dart';
 import '../screens/offers_screen.dart';
 import '../screens/cart_screen.dart';
 import '../screens/account_screen.dart';
@@ -20,7 +20,7 @@ class BottomBar extends StatelessWidget {
     if (i == 0)
       Navigator.of(ctx).pushReplacementNamed(HomeScreen.routeName);
     else if (i == 1)
-      Navigator.of(ctx).pushReplacementNamed(WishlistScreen.routeName);
+      Navigator.of(ctx).pushReplacementNamed(WatchlistScreen.routeName);
     else if (i == 2)
       Navigator.of(ctx).pushReplacementNamed(OffersScreen.routeName);
     else if (i == 3)
@@ -51,7 +51,7 @@ class BottomBar extends StatelessWidget {
           icon: Icon(
             Icons.favorite_border_rounded,
           ),
-          label: 'Wishlist',
+          label: 'Watchlist',
           activeIcon: Icon(Icons.favorite_rounded),
           backgroundColor: Theme.of(context).primaryColor,
         ),

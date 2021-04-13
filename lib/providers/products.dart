@@ -26,6 +26,8 @@ class ProductsProvider with ChangeNotifier {
         'size': '42 + 43',
         'other': 'running shoes',
       },
+      hasDiscount: true,
+      discountPercentage: 20,
     ),
   ];
 

@@ -68,6 +68,8 @@ class HomeSuggestionItem extends StatelessWidget {
                         'size': '42 + 43',
                         'other': 'running shoes',
                       },
+                      hasDiscount: true,
+                      discountPercentage: 20,
                     ), //product[index],
                     child: ProductItem(
                         // product: Product(
