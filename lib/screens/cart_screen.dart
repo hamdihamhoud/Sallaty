@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 
 import '../widgets/bottom_navigation_bar.dart';
-
+import 'drawer_screen.dart';
 class CartScreen extends StatelessWidget {
   static const routeName = '/cart';
   @override
@@ -10,6 +10,7 @@ class CartScreen extends StatelessWidget {
       appBar: AppBar(
         title: Text('Cart'),
       ),
+      drawer: DrawerScreen(),
       body: Container(),
       bottomNavigationBar: BottomBar(3, context),
     );

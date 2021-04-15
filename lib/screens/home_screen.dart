@@ -5,6 +5,7 @@ import '../widgets/home_suggestion_item.dart';
 import '../widgets/bottom_navigation_bar.dart';
 
 import '../widgets/search.dart';
+import 'drawer_screen.dart';
 
 class HomeScreen extends StatelessWidget {
   static const routeName = '/home';
@@ -24,6 +25,7 @@ class HomeScreen extends StatelessWidget {
           ),
         ],
       ),
+      drawer: DrawerScreen(),
       body: ListView(
         children: [
           SearchBar(),
