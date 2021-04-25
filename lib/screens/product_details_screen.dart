@@ -271,8 +271,7 @@ class ProductDetailsSceen extends StatelessWidget {
                   padding: const EdgeInsets.all(6),
                   color: Theme.of(context).accentColor,
                   child: ElevatedButton.icon(
-                    onPressed: () {
-                    },
+                    onPressed: () {},
                     icon: Icon(
                       Icons.add_shopping_cart_rounded,
                       color: Colors.black,

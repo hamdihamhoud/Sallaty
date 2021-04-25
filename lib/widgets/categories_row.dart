@@ -5,6 +5,7 @@ import './category_item.dart';
 import '../models/category.dart';
 
 class CategoriesRow extends StatelessWidget {
+  const CategoriesRow();
   @override
   Widget build(BuildContext context) {
     return Column(

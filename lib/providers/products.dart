@@ -29,13 +29,35 @@ class ProductsProvider with ChangeNotifier {
       hasDiscount: true,
       discountPercentage: 20,
     ),
+    Product(
+      id: 'p2',
+      ownerId: 'o2',
+      title: 'Shirt',
+      price: 30000,
+      quantity: 8,
+      imageUrls: [
+        'https://cdn.pixabay.com/photo/2016/10/02/22/17/red-t-shirt-1710578_1280.jpg',
+        'https://upload.wikimedia.org/wikipedia/commons/thumb/e/e8/Trousers%2C_dress_%28AM_1960.022-8%29.jpg/512px-Trousers%2C_dress_%28AM_1960.022-8%29.jpg',
+        'https://upload.wikimedia.org/wikipedia/commons/thumb/1/14/Cast-Iron-Pan.jpg/1024px-Cast-Iron-Pan.jpg',
+      ],
+      category: categories[1].title,
+      type: categories[1].types[1].title,
+                      description:
+                          'Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.',
+      specs: {
+        'color': 'red',
+        'size': '42 + 43',
+        'other': 'running shoes',
+      },
+      hasDiscount: true,
+      discountPercentage: 20,
+    ),
   ];
 
   List<Product> get products => [..._products];
 
   Product findId(String id) {
-    return products[0];
-    // _products.firstWhere((element) => element.id == id);
+    return  _products.firstWhere((element) => element.id == id);
   }
 
   List<Product> fetchByCategory(String category) {
@@ -50,6 +72,10 @@ class ProductsProvider with ChangeNotifier {
 
   List<Product> fetchBy(String fetchMechanism) {
     return products;
+  }
+
+  List<Product> search(String query){
+   return products.where((element) => element.title.contains(query)).toList();
   }
 
   Seller findSeller() {

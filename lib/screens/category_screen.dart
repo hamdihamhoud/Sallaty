@@ -94,7 +94,7 @@ class CategoryScreen extends StatelessWidget {
                                   itemBuilder: (ctx, index) =>
                                       ChangeNotifierProvider.value(
                                           value: Product(
-                                            id: DateTime.now().toString(),
+                                            id: 'p1',
                                             ownerId: 'o1',
                                             title: 'Adidas shoes',
                                             price: 90000,

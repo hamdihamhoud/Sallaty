@@ -22,7 +22,7 @@ class Category {
   });
 }
 
-List<Category> categories = [
+final List<Category> categories = [
   Category(
       title: 'Electronics',
       imageAsset: 'assets/images/categories/electronics/electronics.png',

@@ -22,11 +22,12 @@ class MyApp extends StatelessWidget {
   Widget build(BuildContext context) {
     return MultiProvider(
       providers: [
-        ChangeNotifierProvider.value(value: Cart()),
-        ChangeNotifierProvider.value(value: ProductsProvider()),
+        ChangeNotifierProvider<Cart>(create: (_) => Cart()),
+        ChangeNotifierProvider<ProductsProvider>(create: (_) => ProductsProvider()),
       ],
       child: MaterialApp(
         title: 'e-cart',
+        debugShowCheckedModeBanner: false,
         theme: ThemeData(
           primaryColor: Color(0xFF003F63),
           accentColor: Color(0xFFF2B138),

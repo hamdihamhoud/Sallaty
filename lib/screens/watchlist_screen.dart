@@ -8,7 +8,7 @@ class WatchlistScreen extends StatelessWidget {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: Text('Watchhlist'),
+        title: Text('Watchlist'),
       ),
       drawer: DrawerScreen(),
       body: Container(),

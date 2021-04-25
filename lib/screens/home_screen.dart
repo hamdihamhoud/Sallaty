@@ -3,42 +3,101 @@ import 'package:flutter/material.dart';
 import '../widgets/categories_row.dart';
 import '../widgets/home_suggestion_item.dart';
 import '../widgets/bottom_navigation_bar.dart';
-
-import '../widgets/search.dart';
+import '../screens/product_details_screen.dart';
+import '../widgets/product_item.dart';
+import '../providers/products.dart';
+import 'package:provider/provider.dart';
 import 'drawer_screen.dart';
 
 class HomeScreen extends StatelessWidget {
   static const routeName = '/home';
-
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: const Text(
-          'ecart',
-          style: TextStyle(fontWeight: FontWeight.bold),
-        ),
+        title: Text('ecart'),
         actions: [
           IconButton(
-            icon: Icon(Icons.search),
-            onPressed: () {},
-          ),
+              icon: Icon(Icons.search),
+              onPressed: () {
+                showSearch(context: context, delegate: SearchItem());
+              })
         ],
       ),
       drawer: DrawerScreen(),
       body: ListView(
         children: [
-          SearchBar(),
-          CategoriesRow(),
-          SizedBox(
+          const CategoriesRow(),
+          const SizedBox(
             height: 10,
           ),
-          HomeSuggestionItem('Most Recent'),
-          HomeSuggestionItem('Highest Rated'),
-          HomeSuggestionItem('Best Seller'),
+          const HomeSuggestionItem('Most Recent'),
+          const HomeSuggestionItem('Highest Rated'),
+          const HomeSuggestionItem('Best Seller'),
         ],
       ),
       bottomNavigationBar: BottomBar(0, context),
     );
+  }
+}
+
+class SearchItem extends SearchDelegate<SearchItem> {
+  @override
+  List<Widget> buildActions(BuildContext context) {
+    return [
+      IconButton(
+          icon: Icon(Icons.close),
+          onPressed: () {
+            query = '';
+          })
+    ];
+  }
+
+  @override
+  Widget buildLeading(BuildContext context) {
+    return IconButton(
+        icon: Icon(Icons.arrow_back_rounded),
+        onPressed: () {
+          close(context, null);
+        });
+  }
+
+  @override
+  Widget buildResults(BuildContext context) {
+    var products =
+        Provider.of<ProductsProvider>(context, listen: false).search(query);
+    return Container(
+      margin: const EdgeInsets.symmetric(vertical: 8),
+      child: GridView.builder(
+        gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
+          childAspectRatio: 3 / 2,
+          crossAxisCount: 2,
+          crossAxisSpacing: 8,
+          mainAxisSpacing: 8,
+        ),
+        itemCount: products.length,
+        itemBuilder: (ctx, i) => ChangeNotifierProvider.value(
+          value: products[i],
+          child: ProductItem(
+            isGridView: true,
+          ),
+        ),
+      ),
+    );
+  }
+
+  @override
+  Widget buildSuggestions(BuildContext context) {
+    var suggestions =
+        Provider.of<ProductsProvider>(context, listen: false).search(query);
+    return ListView.builder(
+        itemCount: suggestions.length,
+        itemBuilder: (ctx, i) => ListTile(
+              title: Text(suggestions[i].title),
+              onTap: () {
+                Navigator.of(context).pushNamed(ProductDetailsSceen.routeName,
+                    arguments: suggestions[i].id);
+              },
+            ));
   }
 }
