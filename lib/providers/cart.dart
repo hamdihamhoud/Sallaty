@@ -4,7 +4,7 @@ class CartItem {
   final String id;
   final String title;
   final int quantity;
-  final double price;
+  final int price;
 
   CartItem({
     @required this.id,
@@ -52,8 +52,9 @@ class Cart with ChangeNotifier {
 
   void addItem(
     String productId,
-    double price,
+    int price,
     String title,
+    int addingQuantity
   ) {
     if (_items.containsKey(productId)) {
       // change quantity...
@@ -63,7 +64,7 @@ class Cart with ChangeNotifier {
           id: existingCartItem.id,
           title: existingCartItem.title,
           price: existingCartItem.price,
-          quantity: existingCartItem.quantity + 1,
+          quantity: existingCartItem.quantity + addingQuantity,
         ),
       );
     } else {
@@ -73,7 +74,7 @@ class Cart with ChangeNotifier {
           id: DateTime.now().toString(),
           title: title,
           price: price,
-          quantity: 1,
+          quantity: addingQuantity,
         ),
       );
     }

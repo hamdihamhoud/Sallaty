@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-
+import '../screens/type_screen.dart';
 import '../models/category.dart' show Type;
 
 class TypesRow extends StatelessWidget {
@@ -15,7 +15,8 @@ class TypesRow extends StatelessWidget {
         children: types
             .map((e) => InkWell(
                   onTap: () {
-                    // Navigator.of(context).pushNamed(routeName,arguments: type)
+                    Navigator.of(context)
+                        .pushNamed(TypeScreen.routeName, arguments: e);
                   },
                   child: Container(
                     margin: const EdgeInsets.all(12),
@@ -50,7 +51,6 @@ class TypesRow extends StatelessWidget {
                   ),
                 ))
             .toList(),
-            
       ),
     );
   }

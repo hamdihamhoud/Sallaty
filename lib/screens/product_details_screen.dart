@@ -1,3 +1,4 @@
+import 'package:ecart/providers/cart.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_rating_bar/flutter_rating_bar.dart';
 import 'package:provider/provider.dart';
@@ -271,7 +272,23 @@ class ProductDetailsSceen extends StatelessWidget {
                   padding: const EdgeInsets.all(6),
                   color: Theme.of(context).accentColor,
                   child: ElevatedButton.icon(
-                    onPressed: () {},
+                    onPressed: () {
+                      Provider.of<Cart>(context, listen: false).addItem(
+                        product.id,
+                        product.price,
+                        product.title,
+                        amount,
+                      );
+                      ScaffoldMessenger.of(context).showSnackBar(SnackBar(
+                        content: Text(
+                          'Added to cart',
+                          style: TextStyle(
+                            fontWeight: FontWeight.bold,
+                          ),
+                        ),
+                        padding: const EdgeInsets.all(8),
+                      ));
+                    },
                     icon: Icon(
                       Icons.add_shopping_cart_rounded,
                       color: Colors.black,

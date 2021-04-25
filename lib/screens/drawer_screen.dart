@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 // import 'package:provider/provider.dart';
 
 // import '../providers/auth.dart';
-
+import 'orders_history_screen.dart';
 import 'catergories_screen.dart';
 
 class DrawerScreen extends StatelessWidget {
@@ -14,15 +14,14 @@ class DrawerScreen extends StatelessWidget {
     return Drawer(
       child: Column(children: [
         AppBar(
-          title:Text('ecart'),
+          title: Text('ecart'),
           automaticallyImplyLeading: false,
         ),
         ListTile(
           leading: const Icon(Icons.home),
           title: const Text('Home'),
           onTap: () {
-            Navigator.of(context)
-                .pushReplacementNamed('/');
+            Navigator.of(context).pushReplacementNamed('/');
           },
         ),
         const Divider(),
@@ -30,8 +29,7 @@ class DrawerScreen extends StatelessWidget {
           leading: const Icon(Icons.category_outlined),
           title: const Text('Categories'),
           onTap: () {
-            Navigator.of(context)
-                .pushNamed(CategoriesScreen.routeName);
+            Navigator.of(context).pushNamed(CategoriesScreen.routeName);
           },
         ),
         const Divider(),
@@ -39,7 +37,7 @@ class DrawerScreen extends StatelessWidget {
           leading: const Icon(Icons.receipt_long_rounded),
           title: const Text('Orders History'),
           onTap: () {
-            // Navigator.of(context).pushNamed(.routeName);
+            Navigator.of(context).pushNamed(OrdersHistoryScreen.routeName);
           },
         ),
         const Divider(),
@@ -52,14 +50,14 @@ class DrawerScreen extends StatelessWidget {
         ),
         const Divider(),
         // if (admin)
-          // ListTile(
-          //   leading: const Icon(Icons.edit),
-          //   title: const Text('Your products'),
-          //   onTap: () {
-          //     Navigator.of(context)
-          //         .pushNamed(.routeName);
-          //   },
-          // ),
+        // ListTile(
+        //   leading: const Icon(Icons.edit),
+        //   title: const Text('Your products'),
+        //   onTap: () {
+        //     Navigator.of(context)
+        //         .pushNamed(.routeName);
+        //   },
+        // ),
         ListTile(
           leading: const Icon(Icons.feedback_outlined),
           title: const Text('Feedback'),
