@@ -11,7 +11,7 @@ class Product with ChangeNotifier {
   final String type;
   final bool warranty;
   final int warrantyPeriod;
-  final double rating;
+  double rating;
   final bool isReplaceable;
   final int replacementPeriod;
   final bool isReturnable;

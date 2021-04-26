@@ -1,8 +1,9 @@
-import 'dart:math';
-
 import 'package:flutter/material.dart';
+import 'package:flutter_rating_bar/flutter_rating_bar.dart';
 import '../providers/orders.dart' as oi;
 import 'package:intl/intl.dart';
+import 'package:provider/provider.dart';
+import '../providers/products.dart';
 
 class OrderItem extends StatefulWidget {
   final oi.OrderItem order;
@@ -12,7 +13,7 @@ class OrderItem extends StatefulWidget {
   _OrderItemState createState() => _OrderItemState();
 }
 
-class _OrderItemState extends State<OrderItem>{
+class _OrderItemState extends State<OrderItem> {
   var _expanded = false;
 
   @override
@@ -43,34 +44,109 @@ class _OrderItemState extends State<OrderItem>{
           AnimatedContainer(
             duration: Duration(milliseconds: 300),
             constraints: BoxConstraints(
-              maxHeight: _expanded
-                  ? min(widget.order.products.length * 25.0 + 10, 100)
-                  : 0,
+              maxHeight:
+                  _expanded ? widget.order.products.length * 60.0 + 10 : 0,
               minHeight: _expanded ? 30 : 0,
             ),
             color: Colors.grey[200],
             //    height: min(widget.order.products.length * 25.0 + 10, 100),
-                child: ListView.builder(
-                  padding: const EdgeInsets.all(8),
-                  itemCount: widget.order.products.length,
-                  itemBuilder: (ctx, i) => Row(
-                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                    children: [
-                      Text(
-                        widget.order.products[i].title,
-                        style: TextStyle(
-                          fontSize: 18,
-                          fontWeight: FontWeight.bold,
+            child: ListView.builder(
+              padding: const EdgeInsets.all(8),
+              itemCount: widget.order.products.length,
+              itemBuilder: (ctx, i) => Container(
+                margin: const EdgeInsets.symmetric(vertical: 5),
+                child: Row(
+                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                  children: [
+                    Column(
+                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        Text(
+                          widget.order.products[i].title,
+                          style: TextStyle(
+                            fontSize: 18,
+                            fontWeight: FontWeight.bold,
+                          ),
                         ),
-                      ),
-                      Text(
-                        '${widget.order.products[i].quantity} x  \$${widget.order.amount}',
-                        style: TextStyle(fontSize: 18),
-                      ),
-                    ],
-                  ),
+                        Text(
+                          '${widget.order.products[i].quantity} x  \$${widget.order.amount}',
+                          style: TextStyle(fontSize: 18),
+                        ),
+                      ],
+                    ),
+                    Column(
+                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                      children: [
+                        Text('Rate this product'),
+                        RatingBar.builder(
+                          tapOnlyMode: true,
+                          itemSize: 25,
+                          initialRating: 0,
+                          minRating: 1,
+                          direction: Axis.horizontal,
+                          allowHalfRating: true,
+                          itemCount: 5,
+                          itemPadding: EdgeInsets.symmetric(horizontal: 4.0),
+                          itemBuilder: (context, _) => Icon(
+                            Icons.star,
+                            color: Colors.amber,
+                          ),
+                          onRatingUpdate: (rating) {
+                            showDialog(
+                                context: context,
+                                builder: (ctx) => AlertDialog(
+                                      title: Text('Confirm your rating'),
+                                      content: RatingBarIndicator(
+                                        rating: rating,
+                                        itemBuilder: (context, index) => Icon(
+                                          Icons.star,
+                                          color: Colors.amber,
+                                        ),
+                                        itemCount: 5,
+                                        itemSize: 40,
+                                      ),
+                                      actions: [
+                                        TextButton(
+                                          onPressed: () {
+                                            Navigator.of(context).pop();
+                                          },
+                                          child: Text(
+                                            'Cancel',
+                                            style: TextStyle(
+                                                color: Theme.of(context)
+                                                    .primaryColor),
+                                          ),
+                                        ),
+                                        TextButton(
+                                          onPressed: () {
+                                            Provider.of<ProductsProvider>(
+                                                    context,
+                                                    listen: false)
+                                                .updateRating(
+                                              widget.order.products[i].id,
+                                              rating,
+                                            );
+                                            Navigator.of(context).pop();
+                                          },
+                                          child: Text(
+                                            'Confirm',
+                                            style: TextStyle(
+                                                color: Theme.of(context)
+                                                    .primaryColor),
+                                          ),
+                                        ),
+                                      ],
+                                    ));
+                          },
+                        ),
+                      ],
+                    )
+                  ],
                 ),
               ),
+            ),
+          ),
         ],
       ),
     );

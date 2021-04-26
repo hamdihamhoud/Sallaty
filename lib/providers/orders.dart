@@ -34,7 +34,7 @@ class Orders with ChangeNotifier {
           title: 'Shirt',
           quantity: 6,
           price: 100000,
-        )
+        ),
       ],
     ),
      OrderItem(

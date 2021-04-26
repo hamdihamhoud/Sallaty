@@ -44,8 +44,10 @@ class ProductItem extends StatelessWidget {
                         begin: FractionalOffset.topCenter,
                         end: FractionalOffset.bottomCenter,
                         colors: [
-                          Colors.grey[300].withOpacity(0.3),
-                          Colors.black.withOpacity(0.6),
+                          // Colors.grey[300].withOpacity(0.3),
+                          // Colors.black.withOpacity(0.6),
+                          Colors.black12,
+                          Colors.black87
                         ],
                         stops: [
                           0.0,

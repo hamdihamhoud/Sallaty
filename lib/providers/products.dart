@@ -19,8 +19,8 @@ class ProductsProvider with ChangeNotifier {
       ],
       category: categories[1].title,
       type: categories[1].types[1].title,
-                      description:
-                          'Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.',
+      description:
+          'Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.',
       specs: {
         'color': 'blue',
         'size': '42 + 43',
@@ -42,8 +42,8 @@ class ProductsProvider with ChangeNotifier {
       ],
       category: categories[1].title,
       type: categories[1].types[1].title,
-                      description:
-                          'Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.',
+      description:
+          'Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.',
       specs: {
         'color': 'red',
         'size': '42 + 43',
@@ -57,11 +57,11 @@ class ProductsProvider with ChangeNotifier {
   List<Product> get products => [..._products];
 
   Product findId(String id) {
-    return  _products.firstWhere((element) => element.id == id);
+    return _products.firstWhere((element) => element.id == id);
   }
 
   List<Product> fetchByCategory(String category) {
-    return products; 
+    return products;
     //_products.where((element) => element.category == category).toList();
   }
 
@@ -74,8 +74,14 @@ class ProductsProvider with ChangeNotifier {
     return products;
   }
 
-  List<Product> search(String query){
-   return products.where((element) => element.title.contains(query)).toList();
+  List<Product> search(String query) {
+    return products.where((element) => element.title.contains(query)).toList();
+  }
+
+  void updateRating(String id, double rating) {
+    int i = _products.indexWhere((element) => element.id == id);
+    _products[i].rating = (_products[i].rating + rating)/2;
+    notifyListeners();
   }
 
   Seller findSeller() {

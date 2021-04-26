@@ -261,48 +261,48 @@ class ProductDetailsSceen extends StatelessWidget {
           Row(
             children: [
               Container(
+                width: mediaQuery.size.width - mediaQuery.size.width/1.6,
                   color: Theme.of(context).primaryColor,
                   child: QuantityIcon(
                     amount: amount,
                     maxAmount: product.quantity,
                     setter: setAmount,
                   )),
-              Expanded(
-                child: Container(
-                  padding: const EdgeInsets.all(6),
-                  color: Theme.of(context).accentColor,
-                  child: ElevatedButton.icon(
-                    onPressed: () {
-                      Provider.of<Cart>(context, listen: false).addItem(
-                        product.id,
-                        product.price,
-                        product.title,
-                        amount,
-                      );
-                      ScaffoldMessenger.of(context).showSnackBar(SnackBar(
-                        content: Text(
-                          'Added to cart',
-                          style: TextStyle(
-                            fontWeight: FontWeight.bold,
-                          ),
+              Container(
+                width: mediaQuery.size.width/1.6,
+                padding: const EdgeInsets.all(6),
+                color: Theme.of(context).accentColor,
+                child: ElevatedButton.icon(
+                  onPressed: () {
+                    Provider.of<Cart>(context, listen: false).addItem(
+                      product.id,
+                      product.price,
+                      product.title,
+                      amount,
+                    );
+                    ScaffoldMessenger.of(context).showSnackBar(SnackBar(
+                      content: Text(
+                        'Added to cart',
+                        style: TextStyle(
+                          fontWeight: FontWeight.bold,
                         ),
-                        padding: const EdgeInsets.all(8),
-                      ));
-                    },
-                    icon: Icon(
-                      Icons.add_shopping_cart_rounded,
-                      color: Colors.black,
-                    ),
-                    label: Text(
-                      'ADD TO CART',
-                      style: TextStyle(color: Colors.black),
-                    ),
-                    style: ButtonStyle(
-                      elevation: MaterialStateProperty.all(0),
-                      tapTargetSize: MaterialTapTargetSize.shrinkWrap,
-                      backgroundColor: MaterialStateProperty.all(
-                          Theme.of(context).accentColor),
-                    ),
+                      ),
+                      padding: const EdgeInsets.all(8),
+                    ));
+                  },
+                  icon: Icon(
+                    Icons.add_shopping_cart_rounded,
+                    color: Colors.black,
+                  ),
+                  label: Text(
+                    'ADD TO CART',
+                    style: TextStyle(color: Colors.black),
+                  ),
+                  style: ButtonStyle(
+                    elevation: MaterialStateProperty.all(0),
+                    tapTargetSize: MaterialTapTargetSize.shrinkWrap,
+                    backgroundColor: MaterialStateProperty.all(
+                        Theme.of(context).accentColor),
                   ),
                 ),
               ),
