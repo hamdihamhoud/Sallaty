@@ -4,6 +4,7 @@ import 'package:flutter/material.dart';
 // import '../providers/auth.dart';
 import 'orders_history_screen.dart';
 import 'catergories_screen.dart';
+import 'feedback.dart';
 
 class DrawerScreen extends StatelessWidget {
   const DrawerScreen();
@@ -62,7 +63,7 @@ class DrawerScreen extends StatelessWidget {
           leading: const Icon(Icons.feedback_outlined),
           title: const Text('Feedback'),
           onTap: () {
-            // Navigator.of(context).pushNamed(.routeName);
+            Navigator.of(context).pushNamed(FeedbackScreen.routeName);
           },
         ),
         const Divider(),

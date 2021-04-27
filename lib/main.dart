@@ -15,6 +15,7 @@ import 'screens/product_details_screen.dart';
 import 'screens/catergories_screen.dart';
 import 'screens/type_screen.dart';
 import 'screens/orders_history_screen.dart';
+import 'screens/feedback.dart';
 
 void main() {
   runApp(MyApp());
@@ -28,8 +29,7 @@ class MyApp extends StatelessWidget {
         ChangeNotifierProvider<Cart>(create: (_) => Cart()),
         ChangeNotifierProvider<ProductsProvider>(
             create: (_) => ProductsProvider()),
-            ChangeNotifierProvider<Orders>(
-            create: (_) => Orders()),
+        ChangeNotifierProvider<Orders>(create: (_) => Orders()),
       ],
       child: MaterialApp(
         title: 'e-cart',
@@ -53,6 +53,7 @@ class MyApp extends StatelessWidget {
           CategoriesScreen.routeName: (ctx) => CategoriesScreen(),
           TypeScreen.routeName: (ctx) => TypeScreen(),
           OrdersHistoryScreen.routeName: (ctx) => OrdersHistoryScreen(),
+          FeedbackScreen.routeName: (ctx) => FeedbackScreen(),
         },
       ),
     );
