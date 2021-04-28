@@ -1,4 +1,6 @@
 import 'package:ecart/providers/cart.dart';
+import 'package:ecart/widgets/alert_dialog.dart';
+import 'package:ecart/widgets/soldout.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_rating_bar/flutter_rating_bar.dart';
 import 'package:provider/provider.dart';
@@ -11,10 +13,8 @@ import '../widgets/product_images_carousel.dart';
 class ProductDetailsSceen extends StatelessWidget {
   static const routeName = '/product-details';
   int amount = 1;
-  void setAmount(int a) {
-    amount = a;
-  }
-
+  void setAmount(int a) => amount = a;
+  int cartItemId = 0;
   @override
   Widget build(BuildContext context) {
     final String productId =
@@ -22,6 +22,7 @@ class ProductDetailsSceen extends StatelessWidget {
     final productProvider =
         Provider.of<ProductsProvider>(context, listen: false);
     final Product product = productProvider.findId(productId);
+    final cart = Provider.of<Cart>(context);
     final mediaQuery = MediaQuery.of(context);
     return Scaffold(
       appBar: AppBar(
@@ -81,6 +82,10 @@ class ProductDetailsSceen extends StatelessWidget {
                     Icons.star,
                     color: Colors.amber,
                   ),
+                ),
+                Padding(
+                  padding: EdgeInsets.all(9),
+                  child: Text('Quantity: ${product.quantity}'),
                 ),
                 Divider(),
                 // Details
@@ -258,56 +263,80 @@ class ProductDetailsSceen extends StatelessWidget {
               ],
             ),
           ),
-          Row(
-            children: [
-              Container(
-                width: mediaQuery.size.width - mediaQuery.size.width/1.6,
-                  color: Theme.of(context).primaryColor,
-                  child: QuantityIcon(
-                    amount: amount,
-                    maxAmount: product.quantity,
-                    setter: setAmount,
-                  )),
-              Container(
-                width: mediaQuery.size.width/1.6,
-                padding: const EdgeInsets.all(6),
-                color: Theme.of(context).accentColor,
-                child: ElevatedButton.icon(
-                  onPressed: () {
-                    Provider.of<Cart>(context, listen: false).addItem(
-                      product.id,
-                      product.price,
-                      product.title,
-                      amount,
-                    );
-                    ScaffoldMessenger.of(context).showSnackBar(SnackBar(
-                      content: Text(
-                        'Added to cart',
-                        style: TextStyle(
-                          fontWeight: FontWeight.bold,
-                        ),
+          if (productProvider.checkIfAvailable(productId))
+            Row(
+              children: [
+                Container(
+                    color: Theme.of(context).primaryColor,
+                    child: QuantityIcon(
+                      amount: amount,
+                      maxAmount: product.quantity,
+                      setter: setAmount,
+                    )),
+                Expanded(
+                  child: Container(
+                    padding: const EdgeInsets.all(6),
+                    color: Theme.of(context).accentColor,
+                    child: ElevatedButton.icon(
+                      onPressed: () {
+                        productProvider.removeFromList(productId, amount)
+                            ? {
+                                cart.addItem(
+                                  productId: product.id, //key
+                                  quantity: amount,
+                                  title: product.title,
+                                  price: product.hasDiscount
+                                      ? (product.price -
+                                          product.price *
+                                              product.discountPercentage /
+                                              100)
+                                      : product.price,
+                                  imageUrls: product.imageUrls,
+                                ),
+                                ScaffoldMessenger.of(context).showSnackBar(
+                                  SnackBar(
+                                    content: Text(
+                                      amount > 1
+                                          ? '$amount item\'s added to your cart'
+                                          : '$amount item added to your cart',
+                                      style: TextStyle(
+                                        color: Colors.black,
+                                        fontSize: 20,
+                                      ),
+                                    ),
+                                    backgroundColor:
+                                        Theme.of(context).accentColor,
+                                    duration: Duration(milliseconds: 700),
+                                  ),
+                                ),
+                                setAmount(1),
+                                cartItemId++,
+                              }
+
+                            // ignore: unnecessary_statements
+                            : null;
+                      },
+                      icon: Icon(
+                        Icons.add_shopping_cart_rounded,
+                        color: Colors.black,
                       ),
-                      padding: const EdgeInsets.all(8),
-                    ));
-                  },
-                  icon: Icon(
-                    Icons.add_shopping_cart_rounded,
-                    color: Colors.black,
-                  ),
-                  label: Text(
-                    'ADD TO CART',
-                    style: TextStyle(color: Colors.black),
-                  ),
-                  style: ButtonStyle(
-                    elevation: MaterialStateProperty.all(0),
-                    tapTargetSize: MaterialTapTargetSize.shrinkWrap,
-                    backgroundColor: MaterialStateProperty.all(
-                        Theme.of(context).accentColor),
+                      label: Text(
+                        'ADD TO CART',
+                        style: TextStyle(color: Colors.black),
+                      ),
+                      style: ButtonStyle(
+                        elevation: MaterialStateProperty.all(0),
+                        tapTargetSize: MaterialTapTargetSize.shrinkWrap,
+                        backgroundColor: MaterialStateProperty.all(
+                            Theme.of(context).accentColor),
+                      ),
+                    ),
                   ),
                 ),
-              ),
-            ],
-          )
+              ],
+            )
+          else
+            SoldOut(),
         ],
       ),
     );
@@ -403,6 +432,12 @@ class _QuantityIconState extends State<QuantityIcon> {
                 if (widget.amount < widget.maxAmount) {
                   widget.amount++;
                   widget.setter(widget.amount);
+                } else {
+                  showAlertDialog(
+                    context: context,
+                    title: 'Opps!',
+                    subTitle: "There is no enuogh quantity",
+                  );
                 }
               });
             },

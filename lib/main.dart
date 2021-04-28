@@ -4,7 +4,6 @@ import 'package:provider/provider.dart';
 
 import 'providers/products.dart';
 import 'providers/cart.dart';
-
 import 'screens/home_screen.dart';
 import 'screens/watchlist_screen.dart';
 import 'screens/offers_screen.dart';
@@ -39,7 +38,7 @@ class MyApp extends StatelessWidget {
           accentColor: Color(0xFFF2B138),
           primaryColorBrightness: Brightness.dark,
           accentColorBrightness: Brightness.light,
-          fontFamily: 'Roboto',
+          fontFamily: 'Cocon',
         ),
         home: HomeScreen(),
         routes: {

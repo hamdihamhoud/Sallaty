@@ -24,12 +24,14 @@ class Orders with ChangeNotifier {
       dateTime: DateTime.now(),
       products: [
         CartItem(
+          imageUrls: [],
           id: 'p1',
           title: 'adidas shoes',
           quantity: 2,
           price: 500000,
         ),
-          CartItem(
+        CartItem(
+          imageUrls: [],
           id: 'p2',
           title: 'Shirt',
           quantity: 6,
@@ -37,18 +39,20 @@ class Orders with ChangeNotifier {
         ),
       ],
     ),
-     OrderItem(
+    OrderItem(
       id: DateTime.now().toString(),
       amount: 1000000,
       dateTime: DateTime.now(),
       products: [
         CartItem(
+          imageUrls: [],
           id: 'p1',
           title: 'adidas shoes',
           quantity: 2,
           price: 500000,
         ),
-          CartItem(
+        CartItem(
+          imageUrls: [],
           id: 'p2',
           title: 'Shirt',
           quantity: 6,
@@ -56,18 +60,20 @@ class Orders with ChangeNotifier {
         )
       ],
     ),
-     OrderItem(
+    OrderItem(
       id: DateTime.now().toString(),
       amount: 1000000,
       dateTime: DateTime.now(),
       products: [
         CartItem(
+          imageUrls: [],
           id: 'p1',
           title: 'adidas shoes',
           quantity: 2,
           price: 500000,
         ),
-          CartItem(
+        CartItem(
+          imageUrls: [],
           id: 'p2',
           title: 'Shirt',
           quantity: 6,
