@@ -1,27 +1,35 @@
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/foundation.dart';
+
+int cartItemId = 0; // Habad haboooood
 
 class CartItem {
   final String id;
   final String title;
   final int quantity;
-  final int price;
+  final double price;
+  final List<String> imageUrls;
 
   CartItem({
     @required this.id,
     @required this.title,
     @required this.quantity,
     @required this.price,
+    @required this.imageUrls,
   });
 }
 
 class Cart with ChangeNotifier {
   Map<String, CartItem> _items = {
-    // 'p1': CartItem(
-    //   id: 'p1',
-    //   title: 'adidas shoes',
-    //   quantity: 2,
-    //   price: 500000,
-    // )git
+/*     'p111111': CartItem(
+      id: 'p1',
+      title: 'Adidas Shoes',
+      quantity: 2,
+      price: 12,
+      imageUrls: [
+        'https://freeiconshop.com/wp-content/uploads/edd/burger-flat.png',
+      ],
+    ) */
   };
 
   Map<String, CartItem> get items {
@@ -40,7 +48,7 @@ class Cart with ChangeNotifier {
   double get total {
     var total = 0.0;
     _items.forEach((key, value) {
-      total += value.quantity * value.price;
+      total += value.price;
     });
     return total;
   }
@@ -50,33 +58,36 @@ class Cart with ChangeNotifier {
     return 0;
   }
 
-  void addItem(
-    String productId,
-    int price,
-    String title,
-    int addingQuantity
-  ) {
+  void addItem({
+    @required String productId,
+    @required double price,
+    @required String title,
+    @required int quantity,
+    final List<String> imageUrls,
+  }) {
     if (_items.containsKey(productId)) {
-      // change quantity...
       _items.update(
         productId,
         (existingCartItem) => CartItem(
           id: existingCartItem.id,
           title: existingCartItem.title,
-          price: existingCartItem.price,
-          quantity: existingCartItem.quantity + addingQuantity,
+          price: existingCartItem.price + (price * quantity),
+          quantity: existingCartItem.quantity + quantity,
+          imageUrls: existingCartItem.imageUrls,
         ),
       );
     } else {
       _items.putIfAbsent(
         productId,
         () => CartItem(
-          id: DateTime.now().toString(),
+          id: cartItemId.toString(),
           title: title,
-          price: price,
-          quantity: addingQuantity,
+          price: price * quantity,
+          quantity: quantity,
+          imageUrls: imageUrls,
         ),
       );
+      cartItemId++;
     }
     notifyListeners();
   }
@@ -87,6 +98,7 @@ class Cart with ChangeNotifier {
   }
 
   void undoAddingItem(String productId) {
+    double picePrice = (_items[productId].price) / (_items[productId].quantity);
     if (!_items.containsKey(productId)) return;
     if (_items[productId].quantity > 1)
       _items.update(
@@ -94,8 +106,9 @@ class Cart with ChangeNotifier {
         (value) => CartItem(
           id: value.id,
           title: value.title,
-          price: value.price,
+          price: value.price - picePrice,
           quantity: value.quantity - 1,
+          imageUrls: value.imageUrls,
         ),
       );
     else

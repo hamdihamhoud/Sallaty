@@ -4,8 +4,7 @@ class Product with ChangeNotifier {
   final String id;
   final String ownerId;
   final String title;
-  final int price;
-  final int quantity;
+  final double price;
   final List<String> imageUrls;
   final String category;
   final String type;
@@ -21,6 +20,7 @@ class Product with ChangeNotifier {
   final bool hasDiscount;
   final int discountPercentage;
   bool isFavorite;
+  int quantity;
 
   Product({
     this.id,
@@ -51,9 +51,9 @@ class Product with ChangeNotifier {
   // }
 
   Future<void> toggleFav(
-    // String token,
-    // String userId,
-  ) async {
+      // String token,
+      // String userId,
+      ) async {
     // final oldStatus = isFavorite;
     isFavorite = !isFavorite;
     notifyListeners();

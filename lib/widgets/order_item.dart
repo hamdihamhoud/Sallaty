@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_rating_bar/flutter_rating_bar.dart';
 import '../providers/orders.dart' as oi;
-import 'package:intl/intl.dart';
+
 import 'package:provider/provider.dart';
 import '../providers/products.dart';
 
@@ -27,7 +27,7 @@ class _OrderItemState extends State<OrderItem> {
               'Total : \$${widget.order.amount}',
             ),
             subtitle: Text(
-              DateFormat('dd/MM/yyyy hh:mm').format(widget.order.dateTime),
+              '', //DateFormat('dd/MM/yyyy hh:mm').format(widget.order.dateTime),
             ),
             trailing: IconButton(
               icon: Icon(_expanded

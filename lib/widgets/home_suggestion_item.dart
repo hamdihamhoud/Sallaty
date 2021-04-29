@@ -9,7 +9,7 @@ import './product_item.dart';
 
 class HomeSuggestionItem extends StatelessWidget {
   final String type;
- const HomeSuggestionItem(this.type);
+  const HomeSuggestionItem(this.type);
 
   @override
   Widget build(BuildContext context) {
@@ -46,14 +46,23 @@ class HomeSuggestionItem extends StatelessWidget {
             height: 190,
             child: ListView.builder(
                 scrollDirection: Axis.horizontal,
-                itemCount: products.length,
-                itemBuilder: (ctx, index) =>
-                    // ChangeNotifierProvider<Product>(
-                    //   create:  (_) => products[index] ,
-                    //                   child: ProductItem(),
-                    // )
-                    ChangeNotifierProvider.value(
-                        value: products[index], child: ProductItem())),
+                itemCount: 7,
+                itemBuilder: (ctx, index) => ChangeNotifierProvider.value(
+                    value: Product(
+                      id: products[index].id,
+                      ownerId: products[index].ownerId,
+                      title: products[index].title,
+                      price: products[index].price,
+                      quantity: products[index].quantity,
+                      imageUrls: products[index].imageUrls,
+                      category: categories[1].title, // !!!
+                      type: categories[1].types[1].title, //!!!
+                      description: products[index].description,
+                      specs: products[index].specs,
+                      hasDiscount: products[index].hasDiscount,
+                      discountPercentage: products[index].discountPercentage,
+                    ), //product[index],
+                    child: ProductItem())),
           ),
         ],
       ),

@@ -6,7 +6,7 @@ import '../providers/products.dart';
 import '../models/product.dart';
 import '../models/category.dart';
 import '../widgets/product_item.dart';
-import '../widgets/home_suggestion_item.dart';
+//import '../widgets/home_suggestion_item.dart';
 import '../widgets/bottom_navigation_bar.dart';
 import '../widgets/types_row.dart';
 

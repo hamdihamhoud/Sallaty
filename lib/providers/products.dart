@@ -10,7 +10,7 @@ class ProductsProvider with ChangeNotifier {
       id: 'p1',
       ownerId: 'o1',
       title: 'Adidas shoes',
-      price: 90000,
+      price: 30,
       quantity: 4,
       imageUrls: [
         'https://upload.wikimedia.org/wikipedia/commons/thumb/e/e8/Trousers%2C_dress_%28AM_1960.022-8%29.jpg/512px-Trousers%2C_dress_%28AM_1960.022-8%29.jpg',
@@ -32,12 +32,12 @@ class ProductsProvider with ChangeNotifier {
     Product(
       id: 'p2',
       ownerId: 'o2',
-      title: 'Shirt',
-      price: 30000,
-      quantity: 8,
+      title: 'Nike',
+      price: 90,
+      quantity: 4,
       imageUrls: [
-        'https://cdn.pixabay.com/photo/2016/10/02/22/17/red-t-shirt-1710578_1280.jpg',
         'https://upload.wikimedia.org/wikipedia/commons/thumb/e/e8/Trousers%2C_dress_%28AM_1960.022-8%29.jpg/512px-Trousers%2C_dress_%28AM_1960.022-8%29.jpg',
+        'https://cdn.pixabay.com/photo/2016/10/02/22/17/red-t-shirt-1710578_1280.jpg',
         'https://upload.wikimedia.org/wikipedia/commons/thumb/1/14/Cast-Iron-Pan.jpg/1024px-Cast-Iron-Pan.jpg',
       ],
       category: categories[1].title,
@@ -45,19 +45,134 @@ class ProductsProvider with ChangeNotifier {
       description:
           'Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.',
       specs: {
-        'color': 'red',
+        'color': 'Black',
         'size': '42 + 43',
         'other': 'running shoes',
       },
       hasDiscount: true,
-      discountPercentage: 20,
+      discountPercentage: 50,
+    ),
+    Product(
+      id: 'p3',
+      ownerId: 'o3',
+      title: 'Didora',
+      price: 100,
+      quantity: 10,
+      imageUrls: [
+        'https://upload.wikimedia.org/wikipedia/commons/thumb/e/e8/Trousers%2C_dress_%28AM_1960.022-8%29.jpg/512px-Trousers%2C_dress_%28AM_1960.022-8%29.jpg',
+        'https://cdn.pixabay.com/photo/2016/10/02/22/17/red-t-shirt-1710578_1280.jpg',
+        'https://upload.wikimedia.org/wikipedia/commons/thumb/1/14/Cast-Iron-Pan.jpg/1024px-Cast-Iron-Pan.jpg',
+      ],
+      category: categories[1].title,
+      type: categories[1].types[1].title,
+      description:
+          'Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.',
+      specs: {
+        'color': 'Red',
+        'size': '42 + 43',
+        'other': 'running shoes',
+      },
+      hasDiscount: false,
+      discountPercentage: 0,
+    ),
+    Product(
+      id: 'p4',
+      ownerId: 'o3',
+      title: 'Adibas',
+      price: 120,
+      quantity: 50,
+      imageUrls: [
+        'https://upload.wikimedia.org/wikipedia/commons/thumb/e/e8/Trousers%2C_dress_%28AM_1960.022-8%29.jpg/512px-Trousers%2C_dress_%28AM_1960.022-8%29.jpg',
+        'https://cdn.pixabay.com/photo/2016/10/02/22/17/red-t-shirt-1710578_1280.jpg',
+        'https://upload.wikimedia.org/wikipedia/commons/thumb/1/14/Cast-Iron-Pan.jpg/1024px-Cast-Iron-Pan.jpg',
+      ],
+      category: categories[1].title,
+      type: categories[1].types[1].title,
+      description:
+          'Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.',
+      specs: {
+        'color': 'Red',
+        'size': '42 + 43',
+        'other': 'running shoes',
+      },
+      hasDiscount: true,
+      discountPercentage: 10,
+    ),
+    Product(
+      id: 'p5',
+      ownerId: 'o3',
+      title: 'Hamdi',
+      price: 40,
+      quantity: 15,
+      imageUrls: [
+        'https://upload.wikimedia.org/wikipedia/commons/thumb/e/e8/Trousers%2C_dress_%28AM_1960.022-8%29.jpg/512px-Trousers%2C_dress_%28AM_1960.022-8%29.jpg',
+        'https://cdn.pixabay.com/photo/2016/10/02/22/17/red-t-shirt-1710578_1280.jpg',
+        'https://upload.wikimedia.org/wikipedia/commons/thumb/1/14/Cast-Iron-Pan.jpg/1024px-Cast-Iron-Pan.jpg',
+      ],
+      category: categories[1].title,
+      type: categories[1].types[1].title,
+      description:
+          'Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.',
+      specs: {
+        'color': 'Red',
+        'size': '42 + 43',
+        'other': 'running shoes',
+      },
+      hasDiscount: false,
+      discountPercentage: 0,
+    ),
+    Product(
+      id: 'p6',
+      ownerId: 'o3',
+      title: 'Khalaf',
+      price: 300,
+      quantity: 10,
+      imageUrls: [
+        'https://upload.wikimedia.org/wikipedia/commons/thumb/e/e8/Trousers%2C_dress_%28AM_1960.022-8%29.jpg/512px-Trousers%2C_dress_%28AM_1960.022-8%29.jpg',
+        'https://cdn.pixabay.com/photo/2016/10/02/22/17/red-t-shirt-1710578_1280.jpg',
+        'https://upload.wikimedia.org/wikipedia/commons/thumb/1/14/Cast-Iron-Pan.jpg/1024px-Cast-Iron-Pan.jpg',
+      ],
+      category: categories[1].title,
+      type: categories[1].types[1].title,
+      description:
+          'Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.',
+      specs: {
+        'color': 'Red',
+        'size': '42 + 43',
+        'other': 'running shoes',
+      },
+      hasDiscount: true,
+      discountPercentage: 50,
+    ),
+    Product(
+      id: 'p7',
+      ownerId: 'o3',
+      title: 'Abo Abdo',
+      price: 2000,
+      quantity: 10,
+      imageUrls: [
+        'https://upload.wikimedia.org/wikipedia/commons/thumb/e/e8/Trousers%2C_dress_%28AM_1960.022-8%29.jpg/512px-Trousers%2C_dress_%28AM_1960.022-8%29.jpg',
+        'https://cdn.pixabay.com/photo/2016/10/02/22/17/red-t-shirt-1710578_1280.jpg',
+        'https://upload.wikimedia.org/wikipedia/commons/thumb/1/14/Cast-Iron-Pan.jpg/1024px-Cast-Iron-Pan.jpg',
+      ],
+      category: categories[1].title,
+      type: categories[1].types[1].title,
+      description:
+          'Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.',
+      specs: {
+        'color': 'Red',
+        'size': '42 + 43',
+        'other': 'running shoes',
+      },
+      hasDiscount: false,
+      discountPercentage: 0,
     ),
   ];
 
   List<Product> get products => [..._products];
 
   Product findId(String id) {
-    return _products.firstWhere((element) => element.id == id);
+    return products.firstWhere((element) => element.id == id);
   }
 
   List<Product> fetchByCategory(String category) {
@@ -80,7 +195,7 @@ class ProductsProvider with ChangeNotifier {
 
   void updateRating(String id, double rating) {
     int i = _products.indexWhere((element) => element.id == id);
-    _products[i].rating = (_products[i].rating + rating)/2;
+    _products[i].rating = (_products[i].rating + rating) / 2;
     notifyListeners();
   }
 
@@ -93,8 +208,30 @@ class ProductsProvider with ChangeNotifier {
       addresses: ['mazzeh'],
       imageUrl: '',
       items: ['p1'],
-      number: 0958772317,
+      numbers: [0958772317],
       typeOfItems: 'electronics',
     );
+  }
+
+  bool removeFromList(String id, int amount) {
+    if (_products.firstWhere((element) => element.id == id).quantity >=
+        amount) {
+      _products.firstWhere((element) => element.id == id).quantity -= amount;
+      notifyListeners();
+      return true;
+    }
+    return false;
+  }
+
+  bool checkIfAvailable(String id) {
+    if (_products.firstWhere((element) => element.id == id).quantity > 0)
+      return true;
+    else
+      return false;
+  }
+
+  void addToList(String id, int amount) {
+    _products.firstWhere((element) => element.id == id).quantity += amount;
+    notifyListeners();
   }
 }
