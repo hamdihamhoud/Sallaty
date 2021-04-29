@@ -21,7 +21,7 @@ class Cart with ChangeNotifier {
     //   title: 'adidas shoes',
     //   quantity: 2,
     //   price: 500000,
-    // )
+    // )git
   };
 
   Map<String, CartItem> get items {

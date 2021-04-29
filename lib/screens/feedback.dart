@@ -50,7 +50,7 @@ class FeedbackScreen extends StatelessWidget {
     showDialog(
         context: context,
         builder: (ctx) => AlertDialog(
-              title: Text('Alert !'),
+              title: Text('Alert!'),
               content:
                   Text('your name and number will be sent with your message'),
               actions: [
