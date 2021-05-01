@@ -25,19 +25,9 @@ class CartScreen extends StatelessWidget {
           ? Column(
               mainAxisAlignment: MainAxisAlignment.center,
               children: [
-                CachedNetworkImage(
-                  imageUrl:
-                      'https://assets.materialup.com/uploads/66fb8bdf-29db-40a2-996b-60f3192ea7f0/preview.png',
+                Image.asset(
+                  'assets/images/no-cart-items.png',
                   fit: BoxFit.contain,
-                  progressIndicatorBuilder: (ctx, str, downloadProgress) =>
-                      Center(
-                    child: CircularProgressIndicator(
-                      valueColor: AlwaysStoppedAnimation<Color>(
-                          Theme.of(context).accentColor),
-                    ),
-                  ),
-                  errorWidget: (context, url, error) =>
-                      const Center(child: const Icon(Icons.error)),
                 ),
                 Text(
                   "Empty Cart",
@@ -57,7 +47,7 @@ class CartScreen extends StatelessWidget {
                     right: 30,
                   ),
                   child: Text(
-                    'Looks like you haven\'t make your choice yet...',
+                    'Looks like you haven\'t made your choice yet...',
                     style: TextStyle(
                       color: Colors.black54,
                       fontSize: 20,
@@ -93,7 +83,9 @@ class CartScreen extends StatelessWidget {
                     itemBuilder: (context, index) => CartObject(
                       components[index],
                       items.keys.firstWhere(
-                          (element) => items[element] == components[index]), ///!!!!!!!!!!!!!!!!!!!!
+                          (element) => items[element] == components[index]),
+
+                      ///!!!!!!!!!!!!!!!!!!!!
                     ), //* sending the productid which is itemId not cartItemId
                   ),
                 ),

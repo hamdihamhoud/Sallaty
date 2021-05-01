@@ -38,7 +38,7 @@ class MyApp extends StatelessWidget {
           accentColor: Color(0xFFF2B138),
           primaryColorBrightness: Brightness.dark,
           accentColorBrightness: Brightness.light,
-          fontFamily: 'Cocon',
+          fontFamily: 'Roboto',
         ),
         home: HomeScreen(),
         routes: {

@@ -57,6 +57,7 @@ flutter:
     - assets/images/categories/fashion/watches.png
     - assets/images/categories/food.png
     - assets/images/categories/health-and-beauty.png
+    - assets/images/no-cart-items.png
 
   # An image asset can refer to one or more resolution-specific "variants", see
   # https://flutter.dev/assets-and-images/#resolution-aware.
