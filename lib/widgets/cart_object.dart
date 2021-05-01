@@ -47,8 +47,8 @@ class CartObject extends StatelessWidget {
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
               children: [
                 Padding(
-                  padding: const EdgeInsets.only(
-                    right: 10,
+                  padding: const EdgeInsets.symmetric(
+                    horizontal: 10,
                   ),
                   child: CachedNetworkImage(
                     width: MediaQuery.of(context).size.width / 4 * 0.8,
@@ -69,6 +69,7 @@ class CartObject extends StatelessWidget {
                 Padding(
                   padding: const EdgeInsets.only(right: 10),
                   child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
                       Text(
                         '${cartItem.title}',
@@ -186,13 +187,13 @@ class CartObject extends StatelessWidget {
             right: 20,
           ),
           child: Row(
-            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+            // mainAxisAlignment: MainAxisAlignment.spaceBetween,
             children: [
-              Text(
-                '________________________________________',
-                style: TextStyle(
+              Expanded(
+                child: Divider(
                   color: Colors.blue,
-                  fontWeight: FontWeight.bold,
+                  thickness: 2,
+                  endIndent: 8,
                 ),
               ),
               Icon(
@@ -206,4 +207,3 @@ class CartObject extends StatelessWidget {
     );
   }
 }
-

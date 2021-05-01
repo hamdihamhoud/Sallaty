@@ -1,4 +1,3 @@
-import 'package:cached_network_image/cached_network_image.dart';
 import 'package:ecart/providers/cart.dart';
 import 'package:ecart/screens/home_screen.dart';
 import 'package:ecart/widgets/cart_object.dart';
@@ -89,11 +88,15 @@ class CartScreen extends StatelessWidget {
                     ), //* sending the productid which is itemId not cartItemId
                   ),
                 ),
-                Padding(
-                  padding: const EdgeInsets.all(10.0),
-                  child: Column(
-                    children: [
-                      Row(
+                Column(
+                  children: [
+                    Padding(
+                      padding: const EdgeInsets.only(
+                        top: 8.0,
+                        left: 8.0,
+                        right: 8.0,
+                      ),
+                      child: Row(
                         mainAxisAlignment: MainAxisAlignment.spaceBetween,
                         children: [
                           Text(
@@ -112,48 +115,53 @@ class CartScreen extends StatelessWidget {
                           ),
                         ],
                       ),
-                      Padding(
-                        padding: const EdgeInsets.only(
-                          top: 10,
-                          bottom: 10,
-                        ),
-                        child: Row(
-                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                          children: [
-                            Text(
-                              'Tax',
-                              style: TextStyle(
-                                color: Colors.blue,
-                                fontSize: 20,
-                              ),
-                            ),
-                            Text(
-                              '40.0 SP',
-                              style: TextStyle(
-                                color: Colors.black,
-                                fontSize: 20,
-                              ),
-                            ),
-                          ],
-                        ),
+                    ),
+                    Padding(
+                      padding: const EdgeInsets.all(
+                        8,
                       ),
-                      ElevatedButton(
-                          style: ElevatedButton.styleFrom(
-                            primary: Colors.green,
-                            onPrimary: Colors.greenAccent,
-                          ),
-                          onPressed: () {},
-                          child: Center(
-                            child: Text(
-                              'Confirm Order',
-                              style: TextStyle(
-                                fontSize: 25,
-                                color: Colors.white,
-                              ),
+                      child: Row(
+                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                        children: [
+                          Text(
+                            'Tax',
+                            style: TextStyle(
+                              color: Colors.blue,
+                              fontSize: 20,
                             ),
-                          ))
-                    ],
-                  ),
+                          ),
+                          Text(
+                            '40.0 SP',
+                            style: TextStyle(
+                              color: Colors.black,
+                              fontSize: 20,
+                            ),
+                          ),
+                        ],
+                      ),
+                    ),
+                    ElevatedButton(
+                        style: ButtonStyle(
+                            padding: MaterialStateProperty.all(
+                                EdgeInsets.symmetric(vertical: 5)),
+                            backgroundColor:
+                                MaterialStateProperty.all(Colors.green),
+                            elevation: MaterialStateProperty.all(0),
+                            tapTargetSize: MaterialTapTargetSize.shrinkWrap,
+                            shape: MaterialStateProperty.all(
+                                RoundedRectangleBorder(
+                                    borderRadius: BorderRadius.zero))),
+                        onPressed: () {},
+                        child: Center(
+                          child: Text(
+                            'Confirm Order',
+                            style: TextStyle(
+                              fontSize: 25,
+                              color: Colors.white,
+                            ),
+                          ),
+                        ))
+                  ],
                 )
               ],
             ),
