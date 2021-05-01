@@ -267,66 +267,66 @@ class ProductDetailsSceen extends StatelessWidget {
             Row(
               children: [
                 Container(
+                  width: mediaQuery.size.width - mediaQuery.size.width/1.6,
                     color: Theme.of(context).primaryColor,
                     child: QuantityIcon(
                       amount: amount,
                       maxAmount: product.quantity,
                       setter: setAmount,
                     )),
-                Expanded(
-                  child: Container(
-                    padding: const EdgeInsets.all(6),
-                    color: Theme.of(context).accentColor,
-                    child: ElevatedButton.icon(
-                      onPressed: () {
-                        if(productProvider.removeFromList(productId, amount))
-                            {
-                                cart.addItem(
-                                  productId: product.id, //key
-                                  quantity: amount,
-                                  title: product.title,
-                                  price: product.hasDiscount
-                                      ? (product.price -
-                                          product.price *
-                                              product.discountPercentage /
-                                              100)
-                                      : product.price,
-                                  imageUrls: product.imageUrls,
-                                );
-                                ScaffoldMessenger.of(context).showSnackBar(
-                                  SnackBar(
-                                    content: Text(
-                                      amount > 1
-                                          ? '$amount item\'s added to your cart'
-                                          : '$amount item added to your cart',
-                                      style: TextStyle(
-                                        color: Colors.black,
-                                        fontSize: 20,
-                                      ),
+                Container(
+                   width: mediaQuery.size.width/1.6,
+                  padding: const EdgeInsets.all(6),
+                  color: Theme.of(context).accentColor,
+                  child: ElevatedButton.icon(
+                    onPressed: () {
+                      if(productProvider.removeFromList(productId, amount))
+                          {
+                              cart.addItem(
+                                productId: product.id, //key
+                                quantity: amount,
+                                title: product.title,
+                                price: product.hasDiscount
+                                    ? (product.price -
+                                        product.price *
+                                            product.discountPercentage /
+                                            100)
+                                    : product.price,
+                                imageUrls: product.imageUrls,
+                              );
+                              ScaffoldMessenger.of(context).showSnackBar(
+                                SnackBar(
+                                  content: Text(
+                                    amount > 1
+                                        ? '$amount item\'s added to your cart'
+                                        : '$amount item added to your cart',
+                                    style: TextStyle(
+                                      color: Colors.black,
+                                      fontSize: 20,
                                     ),
-                                    backgroundColor:
-                                        Theme.of(context).accentColor,
-                                    duration: Duration(milliseconds: 700),
                                   ),
-                                );
-                                setAmount(1);
-                                cartItemId++;
-                              }
-                      },
-                      icon: Icon(
-                        Icons.add_shopping_cart_rounded,
-                        color: Colors.black,
-                      ),
-                      label: Text(
-                        'ADD TO CART',
-                        style: TextStyle(color: Colors.black),
-                      ),
-                      style: ButtonStyle(
-                        elevation: MaterialStateProperty.all(0),
-                        tapTargetSize: MaterialTapTargetSize.shrinkWrap,
-                        backgroundColor: MaterialStateProperty.all(
-                            Theme.of(context).accentColor),
-                      ),
+                                  backgroundColor:
+                                      Theme.of(context).accentColor,
+                                  duration: Duration(milliseconds: 700),
+                                ),
+                              );
+                              setAmount(1);
+                              cartItemId++;
+                            }
+                    },
+                    icon: Icon(
+                      Icons.add_shopping_cart_rounded,
+                      color: Colors.black,
+                    ),
+                    label: Text(
+                      'ADD TO CART',
+                      style: TextStyle(color: Colors.black,fontWeight: FontWeight.bold),
+                    ),
+                    style: ButtonStyle(
+                      elevation: MaterialStateProperty.all(0),
+                      tapTargetSize: MaterialTapTargetSize.shrinkWrap,
+                      backgroundColor: MaterialStateProperty.all(
+                          Theme.of(context).accentColor),
                     ),
                   ),
                 ),

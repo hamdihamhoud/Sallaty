@@ -46,23 +46,9 @@ class HomeSuggestionItem extends StatelessWidget {
             height: 190,
             child: ListView.builder(
                 scrollDirection: Axis.horizontal,
-                itemCount: 7,
+                itemCount: products.length,
                 itemBuilder: (ctx, index) => ChangeNotifierProvider.value(
-                    value: Product(
-                      id: products[index].id,
-                      ownerId: products[index].ownerId,
-                      title: products[index].title,
-                      price: products[index].price,
-                      quantity: products[index].quantity,
-                      imageUrls: products[index].imageUrls,
-                      category: categories[1].title, // !!!
-                      type: categories[1].types[1].title, //!!!
-                      description: products[index].description,
-                      specs: products[index].specs,
-                      hasDiscount: products[index].hasDiscount,
-                      discountPercentage: products[index].discountPercentage,
-                    ), //product[index],
-                    child: ProductItem())),
+                    value: products[index], child: ProductItem())),
           ),
         ],
       ),
