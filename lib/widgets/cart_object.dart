@@ -85,6 +85,7 @@ class CartObject extends StatelessWidget {
                           top: 20,
                         ),
                         child: Row(
+                          crossAxisAlignment: CrossAxisAlignment.center,
                           children: [
                             SizedBox(
                               width: 35,
@@ -98,6 +99,7 @@ class CartObject extends StatelessWidget {
                                   child: IconButton(
                                     icon: Icon(
                                       Icons.remove,
+                                      size: 20,
                                       color: Colors.blueAccent,
                                     ),
                                     tooltip: 'Decrease quantity by one',
