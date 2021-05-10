@@ -1,23 +1,23 @@
 import 'package:ecart/providers/cart.dart';
-import 'package:ecart/screens/home_screen.dart';
+import 'package:ecart/screens/main_screen.dart';
 import 'package:ecart/widgets/cart_object.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/rendering.dart';
 import 'package:provider/provider.dart';
-
-import '../widgets/bottom_navigation_bar.dart';
 import 'drawer_screen.dart';
 
 class CartScreen extends StatelessWidget {
   static const routeName = '/cart';
+  CartScreen({Key key}) : super(key: key);
   @override
   Widget build(BuildContext context) {
     final cart = Provider.of<Cart>(context);
     final Map<String, CartItem> items = cart.items;
     final List<CartItem> components = items.values.toList();
     return Scaffold(
+      backgroundColor: Theme.of(context).primaryColor,
       appBar: AppBar(
-        title: Text('Cart'),
+        title: Text('My Cart'),
       ),
       drawer: DrawerScreen(),
       body: components.length == 0
@@ -60,15 +60,18 @@ class CartScreen extends StatelessWidget {
                   ),
                   child: ElevatedButton(
                       onPressed: () => Navigator.of(context)
-                          .pushReplacementNamed(HomeScreen.routeName),
+                          .pushReplacementNamed(
+                              AppBottomNavigationBarController.routeName),
                       child: Text(
                         'Back to menu',
                         style: TextStyle(
-                          color: Colors.white,
+                          color: Color.fromARGB(255, 232, 232, 232),
+                          fontWeight: FontWeight.bold,
+                          fontSize: 15,
                         ),
                       ),
                       style: ElevatedButton.styleFrom(
-                        primary: Colors.green,
+                        primary: Theme.of(context).accentColor,
                         onPrimary: Colors.greenAccent,
                       )),
                 ),
@@ -85,7 +88,7 @@ class CartScreen extends StatelessWidget {
                           (element) => items[element] == components[index]),
 
                       ///!!!!!!!!!!!!!!!!!!!!
-                    ), //* sending the productid which is itemId not cartItemId
+                    ),
                   ),
                 ),
                 Column(
@@ -165,7 +168,6 @@ class CartScreen extends StatelessWidget {
                 )
               ],
             ),
-      bottomNavigationBar: BottomBar(3, context),
     );
   }
 }

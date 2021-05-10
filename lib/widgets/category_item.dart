@@ -13,8 +13,9 @@ class CategoryItem extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return InkWell(
-      onTap: (){
-        Navigator.of(context).pushNamed(CategoryScreen.routeName,arguments: category);
+      onTap: () {
+        Navigator.of(context)
+            .pushNamed(CategoryScreen.routeName, arguments: category);
       },
       child: Container(
         margin: const EdgeInsets.all(12),

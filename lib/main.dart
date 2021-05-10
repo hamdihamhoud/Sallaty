@@ -1,4 +1,5 @@
 import 'package:ecart/providers/orders.dart';
+import 'package:ecart/screens/main_screen.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
@@ -31,16 +32,16 @@ class MyApp extends StatelessWidget {
         ChangeNotifierProvider<Orders>(create: (_) => Orders()),
       ],
       child: MaterialApp(
-        title: 'e-cart',
+        title: "Discover",
         debugShowCheckedModeBanner: false,
         theme: ThemeData(
-          primaryColor: Color(0xFF003F63),
-          accentColor: Color(0xFFF2B138),
+          primaryColor: Color.fromARGB(255, 45, 45, 45),
+          accentColor: Color.fromARGB(255, 194, 165, 109),
           primaryColorBrightness: Brightness.dark,
           accentColorBrightness: Brightness.light,
           fontFamily: 'Poppins',
         ),
-        home: HomeScreen(),
+        home: AppBottomNavigationBarController(),
         routes: {
           HomeScreen.routeName: (ctx) => HomeScreen(),
           WatchlistScreen.routeName: (ctx) => WatchlistScreen(),
@@ -53,6 +54,8 @@ class MyApp extends StatelessWidget {
           TypeScreen.routeName: (ctx) => TypeScreen(),
           OrdersHistoryScreen.routeName: (ctx) => OrdersHistoryScreen(),
           FeedbackScreen.routeName: (ctx) => FeedbackScreen(),
+          AppBottomNavigationBarController.routeName: (ctx) =>
+              AppBottomNavigationBarController(),
         },
       ),
     );

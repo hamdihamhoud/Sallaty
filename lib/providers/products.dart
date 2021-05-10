@@ -11,7 +11,7 @@ class ProductsProvider with ChangeNotifier {
       ownerId: 'o1',
       title: 'Adidas shoes',
       price: 30,
-      quantity: 4,
+      quantity: 0,
       imageUrls: [
         'https://upload.wikimedia.org/wikipedia/commons/thumb/e/e8/Trousers%2C_dress_%28AM_1960.022-8%29.jpg/512px-Trousers%2C_dress_%28AM_1960.022-8%29.jpg',
         'https://cdn.pixabay.com/photo/2016/10/02/22/17/red-t-shirt-1710578_1280.jpg',
@@ -28,6 +28,7 @@ class ProductsProvider with ChangeNotifier {
       },
       hasDiscount: true,
       discountPercentage: 20,
+      colors: [Colors.black, Colors.blue, Colors.red],
     ),
     Product(
       id: 'p2',
@@ -51,6 +52,7 @@ class ProductsProvider with ChangeNotifier {
       },
       hasDiscount: true,
       discountPercentage: 50,
+      colors: [Colors.black, Colors.blue, Colors.red],
     ),
     Product(
       id: 'p3',
@@ -74,6 +76,7 @@ class ProductsProvider with ChangeNotifier {
       },
       hasDiscount: false,
       discountPercentage: 0,
+      colors: [Colors.black, Colors.blue, Colors.red],
     ),
     Product(
       id: 'p4',
@@ -97,6 +100,7 @@ class ProductsProvider with ChangeNotifier {
       },
       hasDiscount: true,
       discountPercentage: 10,
+      colors: [Colors.black, Colors.blue, Colors.red],
     ),
     Product(
       id: 'p5',
@@ -120,6 +124,7 @@ class ProductsProvider with ChangeNotifier {
       },
       hasDiscount: false,
       discountPercentage: 0,
+      colors: [Colors.black, Colors.blue, Colors.red],
     ),
     Product(
       id: 'p6',
@@ -143,6 +148,7 @@ class ProductsProvider with ChangeNotifier {
       },
       hasDiscount: true,
       discountPercentage: 50,
+      colors: [Colors.black, Colors.blue, Colors.red],
     ),
     Product(
       id: 'p7',
@@ -166,6 +172,7 @@ class ProductsProvider with ChangeNotifier {
       },
       hasDiscount: false,
       discountPercentage: 0,
+      colors: [Colors.black, Colors.blue, Colors.red],
     ),
   ];
 

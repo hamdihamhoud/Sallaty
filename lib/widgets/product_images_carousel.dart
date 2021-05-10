@@ -48,7 +48,7 @@ class _CarouselWithIndicatorState extends State<CarouselWithIndicator> {
       CarouselSlider(
         items: imageSliders,
         options: CarouselOptions(
-            aspectRatio: 3 / 2,
+            aspectRatio: 1,
             enlargeCenterPage: true,
             onPageChanged: (index, reason) {
               setState(() {

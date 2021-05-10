@@ -5,7 +5,7 @@ class SoldOut extends StatelessWidget {
   Widget build(BuildContext context) {
     return Container(
       width: MediaQuery.of(context).size.width,
-      height: 50,
+      height: 51,
       color: Colors.red,
       child: Center(
         child: Text(
