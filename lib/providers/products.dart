@@ -190,7 +190,14 @@ class ProductsProvider with ChangeNotifier {
   }
 
   List<Product> search(String query) {
-    return products.where((element) => element.title.contains(query)).toList();
+    query = query.toLowerCase();
+    return products
+        .where((element) => element.title.toLowerCase().contains(query))
+        .toList();
+  }
+
+  List<Product> fetchBySellerRecents() {
+    return products;
   }
 
   void updateRating(String id, double rating) {

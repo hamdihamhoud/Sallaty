@@ -1,4 +1,3 @@
-
 import 'package:flutter/material.dart';
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:provider/provider.dart';
@@ -10,7 +9,11 @@ import '../models/product.dart';
 
 class ProductItem extends StatelessWidget {
   final bool isGridView;
-  ProductItem({this.isGridView = false});
+  final bool isSeller;
+  ProductItem({
+    this.isGridView = false,
+    this.isSeller = false,
+  });
 
   @override
   Widget build(BuildContext context) {
@@ -69,6 +72,7 @@ class ProductItem extends StatelessWidget {
                   fit: BoxFit.cover,
                 ),
               ),
+              if(!isSeller)
               Positioned(
                   right: 5,
                   top: 5,
