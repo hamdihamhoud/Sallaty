@@ -9,13 +9,29 @@ import '../providers/products.dart';
 import 'package:provider/provider.dart';
 import 'drawer_screen.dart';
 
-class HomeScreen extends StatelessWidget {
+class HomeScreen extends StatefulWidget {
   static const routeName = '/home';
+  HomeScreen({Key key}) : super(key: key);
+  @override
+  _HomeScreenState createState() => _HomeScreenState();
+}
+
+class _HomeScreenState extends State<HomeScreen> {
+  int currentState = 0;
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      backgroundColor: Theme.of(context).primaryColor,
       appBar: AppBar(
-        title: Text('ecart'),
+        centerTitle: true,
+        title: Text(
+          'Discover',
+          style: TextStyle(
+            fontWeight: FontWeight.bold,
+            fontSize: 25,
+            letterSpacing: 2.0,
+          ),
+        ),
         actions: [
           IconButton(
               icon: Icon(Icons.search),
@@ -27,7 +43,7 @@ class HomeScreen extends StatelessWidget {
       drawer: DrawerScreen(),
       body: ListView(
         children: [
-          const CategoriesRow(),
+          // const CategoriesRow(),
           const SizedBox(
             height: 10,
           ),
@@ -36,7 +52,6 @@ class HomeScreen extends StatelessWidget {
           const HomeSuggestionItem('Best Seller'),
         ],
       ),
-      bottomNavigationBar: BottomBar(0, context),
     );
   }
 }

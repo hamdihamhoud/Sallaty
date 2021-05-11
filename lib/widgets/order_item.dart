@@ -27,7 +27,7 @@ class _OrderItemState extends State<OrderItem> {
               'Total : \$${widget.order.amount}',
             ),
             subtitle: Text(
-               DateFormat('dd/MM/yyyy hh:mm').format(widget.order.dateTime),
+              DateFormat('dd/MM/yyyy hh:mm').format(widget.order.dateTime),
             ),
             trailing: IconButton(
               icon: Icon(_expanded
@@ -42,7 +42,7 @@ class _OrderItemState extends State<OrderItem> {
           ),
           //     if (_expanded)
           AnimatedContainer(
-            duration: Duration(milliseconds: 300),
+            duration: Duration(milliseconds: 500),
             constraints: BoxConstraints(
               maxHeight:
                   _expanded ? widget.order.products.length * 60.0 + 10 : 0,

@@ -123,7 +123,6 @@ class CategoryScreen extends StatelessWidget {
                     .toList()
               ],
             ),
-      bottomNavigationBar: BottomBar(0, context),
     );
   }
 }

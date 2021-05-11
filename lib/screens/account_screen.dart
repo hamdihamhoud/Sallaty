@@ -10,6 +10,7 @@ import 'drawer_screen.dart';
 
 class AccountScreen extends StatelessWidget {
   static const routeName = '/account';
+  AccountScreen({Key key}) : super(key: key);
   @override
   Widget build(BuildContext context) {
     bool isPremium = true; //false;
@@ -140,6 +141,7 @@ class AccountScreen extends StatelessWidget {
     }
 
     return Scaffold(
+      backgroundColor: Theme.of(context).primaryColor,
       appBar: AppBar(
         title: Text(
           'Account',

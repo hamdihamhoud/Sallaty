@@ -1,4 +1,5 @@
 import 'package:flutter/cupertino.dart';
+import 'package:flutter/material.dart';
 
 class Product with ChangeNotifier {
   final String id;
@@ -19,6 +20,7 @@ class Product with ChangeNotifier {
   final Map<String, String> specs;
   final bool hasDiscount;
   final int discountPercentage;
+  final List<Color> colors;
   bool isFavorite;
   int quantity;
 
@@ -43,6 +45,7 @@ class Product with ChangeNotifier {
     this.hasDiscount = false,
     this.discountPercentage = 0,
     this.isFavorite = false,
+    this.colors,
   });
 
   //     void _setFavValue(bool newValue) {
