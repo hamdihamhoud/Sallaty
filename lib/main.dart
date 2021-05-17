@@ -37,10 +37,14 @@ class MyApp extends StatelessWidget {
         theme: ThemeData(
           canvasColor: Color(0xFF828282),
           buttonColor: Color(0xFF333333),
+<<<<<<< HEAD
           primaryColor:  Color(0xFF6fb9b8),
+=======
+          primaryColor: Color(0xFF6fb9b8),
+>>>>>>> 6253111e94b48705ab6f075ed382ec1ab7829533
           accentColor: Color(0xFFd4f5ee),
           primaryColorBrightness: Brightness.dark,
-          accentColorBrightness: Brightness.light,
+          accentColorBrightness: Brightness.dark,
           fontFamily: 'Poppins',
         ),
         home: AppBottomNavigationBarController(),

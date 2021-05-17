@@ -6,6 +6,7 @@ import 'package:ecart/screens/offers_screen.dart';
 import 'package:ecart/screens/watchlist_screen.dart';
 import 'package:ecart/widgets/badge.dart';
 import 'package:flutter/material.dart';
+import 'package:google_nav_bar/google_nav_bar.dart';
 
 class AppBottomNavigationBarController extends StatefulWidget {
   static const routeName = '/main';
@@ -36,7 +37,87 @@ class _AppBottomNavigationBarControllerState
 
   final PageStorageBucket bucket = PageStorageBucket();
   int _selectedIndex = 0;
-  Widget _bottomNavigationBar(int selectedIndex) => CurvedNavigationBar(
+  Widget _bottomNavigationBar(int selectedIndex) => Container(
+        height: 60,
+        width: MediaQuery.of(context).size.width,
+        decoration: BoxDecoration(
+            color: Color.fromARGB(255, 67, 67, 67),
+            borderRadius: BorderRadius.only(
+              topLeft: Radius.circular(10),
+              topRight: Radius.circular(10),
+            ),
+            border: Border.all(
+              width: 5,
+              color: Color.fromARGB(255, 67, 67, 67),
+            )),
+        child: GNav(
+            selectedIndex: _selectedIndex,
+            onTabChange: (index) => setState(() => _selectedIndex = index),
+            backgroundColor: Color.fromARGB(255, 67, 67, 67),
+            rippleColor: Theme.of(context).accentColor,
+            hoverColor: Theme.of(context).accentColor,
+            haptic: true,
+            tabBorderRadius: 15,
+            tabActiveBorder: Border.all(
+              color: Color.fromARGB(255, 67, 67, 67),
+              width: 1,
+            ),
+            curve: Curves.ease,
+            duration: Duration(milliseconds: 200),
+            gap: 8,
+            color: Colors.black45,
+            activeColor: Colors.black,
+            iconSize: 22,
+            tabBackgroundColor: Theme.of(context).accentColor,
+            padding: EdgeInsets.only(
+              top: 10,
+              bottom: 10,
+              left: 15,
+              right: 15,
+            ),
+            tabs: [
+              GButton(
+                icon: Icons.home,
+                text: 'Home',
+                iconColor: Colors.white,
+              ),
+              GButton(
+                icon: Icons.favorite,
+                text: 'Favorite',
+                iconColor: Colors.white,
+              ),
+              GButton(
+                icon: Icons.shopping_cart,
+                text: 'Cart',
+                iconColor: Colors.white,
+              ),
+              GButton(
+                icon: Icons.local_offer_outlined,
+                text: 'Offers',
+                iconColor: Colors.white,
+              ),
+              GButton(
+                icon: Icons.account_circle_rounded,
+                text: 'Account',
+                iconColor: Colors.white,
+              ),
+            ]),
+      );
+
+  @override
+  Widget build(BuildContext context) {
+    return Scaffold(
+      bottomNavigationBar: _bottomNavigationBar(_selectedIndex),
+      backgroundColor: Theme.of(context).primaryColor,
+      body: PageStorage(
+        child: pages[_selectedIndex],
+        bucket: bucket,
+      ),
+    );
+  }
+}
+
+/* CurvedNavigationBar(
         onTap: (int index) => setState(() => _selectedIndex = index),
         index: _selectedIndex,
         
@@ -83,16 +164,11 @@ class _AppBottomNavigationBarControllerState
             color: Color.fromARGB(255, 235, 235, 235),
           ),
         ],
-      );
+      ); */
 
-  @override
-  Widget build(BuildContext context) {
-    return Scaffold(
-      bottomNavigationBar: _bottomNavigationBar(_selectedIndex),
-      body: PageStorage(
-        child: pages[_selectedIndex],
-        bucket: bucket,
-      ),
-    );
-  }
-}
+/* tabShadow: [
+              BoxShadow(
+                color: Colors.grey.withOpacity(0.5),
+                blurRadius: 8,
+              ),
+            ], */

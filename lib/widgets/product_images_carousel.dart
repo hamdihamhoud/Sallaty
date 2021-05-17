@@ -22,11 +22,15 @@ class _CarouselWithIndicatorState extends State<CarouselWithIndicator> {
               child: Container(
                 margin: EdgeInsets.all(5.0),
                 child: ClipRRect(
-                  borderRadius: BorderRadius.all(Radius.circular(5.0)),
+                  borderRadius: BorderRadius.all(Radius.circular(10.0)),
                   child: CachedNetworkImage(
+<<<<<<< HEAD
                     width: double.infinity,
                     height: 500,
                     // height: 100,
+=======
+                    useOldImageOnUrlChange: true,
+>>>>>>> 6253111e94b48705ab6f075ed382ec1ab7829533
                     imageUrl: item,
                     fit: BoxFit.cover,
                     progressIndicatorBuilder: (ctx, str, downloadProgress) =>
@@ -66,7 +70,7 @@ class _CarouselWithIndicatorState extends State<CarouselWithIndicator> {
         children: widget.imgList.map((url) {
           int index = widget.imgList.indexOf(url);
           return Container(
-            width: 8.0,
+            width: 15,
             height: 8.0,
             margin: EdgeInsets.symmetric(vertical: 10.0, horizontal: 2.0),
             decoration: BoxDecoration(
