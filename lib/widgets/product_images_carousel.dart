@@ -24,13 +24,7 @@ class _CarouselWithIndicatorState extends State<CarouselWithIndicator> {
                 child: ClipRRect(
                   borderRadius: BorderRadius.all(Radius.circular(10.0)),
                   child: CachedNetworkImage(
-<<<<<<< HEAD
-                    width: double.infinity,
-                    height: 500,
-                    // height: 100,
-=======
                     useOldImageOnUrlChange: true,
->>>>>>> 6253111e94b48705ab6f075ed382ec1ab7829533
                     imageUrl: item,
                     fit: BoxFit.cover,
                     progressIndicatorBuilder: (ctx, str, downloadProgress) =>

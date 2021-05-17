@@ -88,6 +88,23 @@ flutter:
           weight: 700
         - asset: assets/fonts/Poppins/Poppins-ExtraBold.ttf
           weight: 800
+    - family: Gilroy
+      fonts:
+        - asset: assets/fonts/Gilroy/Gilroy-Regular.ttf
+        - asset: assets/fonts/Gilroy/Gilroy-Thin.ttf
+          weight: 100
+        - asset: assets/fonts/Gilroy/Gilroy-UltraLight.ttf
+          weight: 200
+        - asset: assets/fonts/Gilroy/Gilroy-Light.ttf
+          weight: 300
+        - asset: assets/fonts/Gilroy/Gilroy-Medium.ttf
+          weight: 500
+        - asset: assets/fonts/Gilroy/Gilroy-SemiBold.ttf
+          weight: 600
+        - asset: assets/fonts/Gilroy/Gilroy-Bold.ttf
+          weight: 700
+        - asset: assets/fonts/Gilroy/Gilroy-ExtraBold.ttf
+          weight: 800
     - family: Araboto
       fonts:
         - asset: assets/fonts/Araboto/Araboto-Normal.ttf
