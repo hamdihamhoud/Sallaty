@@ -353,6 +353,7 @@ class ProductDetailsSceen extends StatelessWidget {
               ],
             ),
           ),
+          if(!isSeller)
           Container(
             color: Theme.of(context).primaryColor,
             width: mediaQuery.size.width,
