@@ -12,8 +12,8 @@ class ColorCircule extends StatelessWidget {
       child: Container(
         decoration: BoxDecoration(
           border: Border.all(
-            color: Colors
-                .white, // black mode ??? white moodeededwd !!!!!!!!!!!!!!!!
+            color: Theme.of(context).accentColor,
+            width: 1,
           ),
           borderRadius: BorderRadius.circular(50),
           color: color,

@@ -32,6 +32,7 @@ class _HomeScreenState extends State<HomeScreen> {
             letterSpacing: 2.0,
           ),
         ),
+        elevation: 0,
         actions: [
           IconButton(
               icon: Icon(Icons.search),

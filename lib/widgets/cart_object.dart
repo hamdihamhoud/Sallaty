@@ -6,27 +6,11 @@ import 'package:flutter/material.dart';
 import 'package:flutter_slidable/flutter_slidable.dart';
 import 'package:provider/provider.dart';
 
-class CartObject extends StatefulWidget {
+// ignore: must_be_immutable
+class CartObject extends StatelessWidget {
   final String productId;
   final CartItem cartItem;
   CartObject(
-    this.cartItem,
-    this.productId,
-  );
-
-  @override
-  _CartObjectState createState() => _CartObjectState(
-        this.cartItem,
-        this.productId,
-      );
-}
-
-class _CartObjectState extends State<CartObject> {
-  bool addButtonState = true;
-  bool removeButtonState = false;
-  final String productId;
-  final CartItem cartItem;
-  _CartObjectState(
     this.cartItem,
     this.productId,
   );
@@ -34,33 +18,34 @@ class _CartObjectState extends State<CartObject> {
   Widget build(BuildContext context) {
     final productProvider = Provider.of<ProductsProvider>(
       context,
-      listen: false, // need this??
     );
     final cart = Provider.of<Cart>(context);
     return Padding(
       padding: const EdgeInsets.only(
-        left: 10,
-        right: 20,
-        top: 20,
-        bottom: 20,
+        left: 5,
+        right: 5,
+        top: 10,
+        bottom: 10,
       ),
       child: Row(
         mainAxisAlignment: MainAxisAlignment.spaceBetween,
         children: [
           Row(
+            crossAxisAlignment: CrossAxisAlignment.start,
             children: [
               Stack(
                 children: [
                   Padding(
                     padding: const EdgeInsets.only(
                       left: 10,
-                      right: 10,
-                      top: 8,
+                      right: 15,
+                      top: 10,
+                      bottom: 5,
                     ),
                     child: CachedNetworkImage(
                       width: MediaQuery.of(context).size.width / 4 * 0.8,
                       height: 90,
-                      imageUrl: widget.cartItem.imageUrls[0],
+                      imageUrl: cartItem.imageUrls[0],
                       fit: BoxFit.fitWidth,
                       progressIndicatorBuilder: (ctx, str, downloadProgress) =>
                           Center(
@@ -78,7 +63,7 @@ class _CartObjectState extends State<CartObject> {
                         color: Colors.black12,
                         border: Border.all(
                           color: Theme.of(context).primaryColor,
-                          width: 11,
+                          width: 10,
                         ),
                         borderRadius: BorderRadius.all(
                           Radius.circular(20),
@@ -90,28 +75,26 @@ class _CartObjectState extends State<CartObject> {
               ),
               Padding(
                 padding: const EdgeInsets.only(
-                  left: 10,
-                  bottom: 30,
+                  top: 10,
+                  right: 15,
                 ),
                 child: Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
                     Text(
-                      widget.cartItem.title,
+                      cartItem.title,
                       style: TextStyle(
                         color: Colors.white,
-                        fontSize: 20,
-                        fontWeight: FontWeight.w500,
+                        fontSize: 18,
+                        fontWeight: FontWeight.w400,
                       ),
                     ),
-                    Container(
-                      child: Text(
-                        "${widget.cartItem.price.toStringAsFixed(0)} S.P",
-                        style: TextStyle(
-                          color: Theme.of(context).accentColor,
-                          fontSize: 20,
-                          fontWeight: FontWeight.w500,
-                        ),
+                    Text(
+                      "${cartItem.price.toStringAsFixed(0)} S.P",
+                      style: TextStyle(
+                        color: Theme.of(context).accentColor,
+                        fontSize: 18,
+                        fontWeight: FontWeight.w400,
                       ),
                     ),
                   ],
@@ -121,7 +104,7 @@ class _CartObjectState extends State<CartObject> {
           ),
           Padding(
             padding: const EdgeInsets.only(
-              left: 5,
+              right: 12,
             ),
             child: Row(
               children: [
@@ -130,106 +113,98 @@ class _CartObjectState extends State<CartObject> {
                     right: 10,
                   ),
                   child: Container(
-                    width: 35,
-                    height: 35,
+                    width: 30,
+                    height: 30,
                     decoration: BoxDecoration(
                       border: Border.all(
-                        color: 1 == 1
-                            ? Color.fromARGB(255, 66, 66, 66)
-                            : Theme.of(context).accentColor,
+                        color: cartItem.quantity > 1
+                            ? Theme.of(context).accentColor
+                            : Color.fromARGB(255, 66, 66, 66),
                       ),
                       borderRadius: BorderRadius.circular(5),
-                      color: 1 == 1
-                          ? Color.fromARGB(255, 66, 66, 66)
-                          : Theme.of(context).accentColor,
+                      color: cartItem.quantity > 1
+                          ? Theme.of(context).accentColor
+                          : Color.fromARGB(255, 66, 66, 66),
                     ),
                     child: Center(
                       child: IconButton(
-                        splashColor: removeButtonState
-                            ? ThemeData().splashColor
-                            : Colors.transparent,
-                        enableFeedback: removeButtonState,
-                        highlightColor: removeButtonState
-                            ? ThemeData().highlightColor
-                            : Colors.transparent,
-                        icon: const Icon(
-                          Icons.remove,
-                          color: Colors.white,
-                          size: 18,
-                        ),
-                        onPressed: () {
-                          /* if (widget.amount > 1) {
-                            setState(() {
-                              removeButtonState = true;
-                              addButtonState = true;
-                              widget.amount--;
-                              widget.setter(widget.amount);
-                            });
-                            if (widget.amount == 1) {
-                              setState(() {
-                                removeButtonState = false;
-                              });
+                          splashColor: cartItem.quantity > 1
+                              ? ThemeData().splashColor
+                              : Colors.transparent,
+                          enableFeedback: cartItem.quantity > 1,
+                          highlightColor: cartItem.quantity > 1
+                              ? ThemeData().highlightColor
+                              : Colors.transparent,
+                          icon: Center(
+                            child: const Icon(
+                              Icons.remove,
+                              color: Colors.white,
+                              size: 13,
+                            ),
+                          ),
+                          onPressed: () {
+                            if (cartItem.quantity > 1) {
+                              cart.undoAddingItem(productId);
+                              productProvider.addToList(productId, 1);
                             }
-                          } */
-                        },
-                      ),
+                          }),
                     ),
                   ),
                 ),
                 Text(
                   cartItem.quantity.toStringAsFixed(0),
                   style: const TextStyle(
-                    fontSize: 24,
+                    fontSize: 20,
                     color: Colors.white,
                   ),
                 ),
                 Padding(
                   padding: const EdgeInsets.only(
-                    left: 10,
+                    left: 12,
                   ),
                   child: Container(
-                    width: 35,
-                    height: 35,
+                    width: 30,
+                    height: 30,
                     decoration: BoxDecoration(
                       border: Border.all(
-                        color: 1 == 1
-                            ? Color.fromARGB(255, 66, 66, 66)
-                            : Theme.of(context).accentColor,
+                        color: productProvider.checkIfAvailable(productId)
+                            ? Theme.of(context).accentColor
+                            : Color.fromARGB(255, 66, 66, 66),
                       ),
                       borderRadius: BorderRadius.circular(5),
-                      color: 1 == 1
-                          ? Color.fromARGB(255, 66, 66, 66)
-                          : Theme.of(context).accentColor,
+                      color: productProvider.checkIfAvailable(productId)
+                          ? Theme.of(context).accentColor
+                          : Color.fromARGB(255, 66, 66, 66),
                     ),
                     child: Center(
                       child: IconButton(
-                        splashColor: addButtonState
-                            ? ThemeData().splashColor
-                            : Colors.transparent,
-                        enableFeedback: addButtonState,
-                        highlightColor: addButtonState
-                            ? ThemeData().highlightColor
-                            : Colors.transparent,
-                        icon: const Icon(
-                          Icons.add,
-                          color: Colors.white,
-                          size: 18,
-                        ),
-                        onPressed: () {
-/*                       if (widget.amount < widget.maxAmount) {
-                            setState(() {
-                              removeButtonState = true;
-                              widget.amount++;
-                              widget.setter(widget.amount);
-                            });
-                            if (widget.amount == widget.maxAmount) {
-                              setState(() {
-                                addButtonState = false;
-                              });
+                          splashColor:
+                              productProvider.checkIfAvailable(productId)
+                                  ? ThemeData().splashColor
+                                  : Colors.transparent,
+                          enableFeedback:
+                              productProvider.checkIfAvailable(productId),
+                          highlightColor:
+                              productProvider.checkIfAvailable(productId)
+                                  ? ThemeData().highlightColor
+                                  : Colors.transparent,
+                          icon: Center(
+                            child: const Icon(
+                              Icons.add,
+                              color: Colors.white,
+                              size: 13,
+                            ),
+                          ),
+                          onPressed: () {
+                            if (productProvider.removeFromList(productId, 1)) {
+                              cart.addItem(
+                                productId: productId,
+                                price: (cartItem.price / cartItem.quantity),
+                                title: cartItem.title,
+                                quantity: 1,
+                              );
                             }
-                          } */
-                        },
-                      ),
+                          }),
                     ),
                   ),
                 ),
