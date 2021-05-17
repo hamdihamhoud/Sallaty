@@ -39,9 +39,10 @@ class _AppBottomNavigationBarControllerState
   Widget _bottomNavigationBar(int selectedIndex) => CurvedNavigationBar(
         onTap: (int index) => setState(() => _selectedIndex = index),
         index: _selectedIndex,
+        
         letIndexChange: (index) => true,
-        backgroundColor: Color.fromARGB(255, 135, 135, 135),
-        color: Color.fromARGB(255, 67, 67, 67),
+        // backgroundColor: Color.fromARGB(255, 135, 135, 135),
+        // color: Color.fromARGB(255, 67, 67, 67),
         buttonBackgroundColor: Theme.of(context).accentColor,
         height: 60,
         items: <Widget>[

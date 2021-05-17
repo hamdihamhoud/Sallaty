@@ -35,8 +35,10 @@ class MyApp extends StatelessWidget {
         title: "Discover",
         debugShowCheckedModeBanner: false,
         theme: ThemeData(
-          primaryColor: Color.fromARGB(255, 45, 45, 45),
-          accentColor: Color.fromARGB(255, 194, 165, 109),
+          canvasColor: Color(0xFF828282),
+          buttonColor: Color(0xFF333333),
+          primaryColor:  Color(0xFF6fb9b8),
+          accentColor: Color(0xFFd4f5ee),
           primaryColorBrightness: Brightness.dark,
           accentColorBrightness: Brightness.light,
           fontFamily: 'Poppins',

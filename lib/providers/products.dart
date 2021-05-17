@@ -9,7 +9,7 @@ class ProductsProvider with ChangeNotifier {
     Product(
       id: 'p1',
       ownerId: 'o1',
-      title: 'Adidas shoes',
+      title: 'Adidas shoesdfssssssssssssssssssssssssssssssssssss',
       price: 30,
       quantity: 0,
       imageUrls: [
@@ -33,7 +33,7 @@ class ProductsProvider with ChangeNotifier {
     Product(
       id: 'p2',
       ownerId: 'o2',
-      title: 'Nike',
+      title: 'Nikenadmdaknjaldnaldjnladjndlajandldandaldanlkhjcldja',
       price: 90,
       quantity: 4,
       imageUrls: [

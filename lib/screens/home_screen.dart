@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-
+import 'dart:io';
 import '../widgets/categories_row.dart';
 import '../widgets/home_suggestion_item.dart';
 import '../widgets/bottom_navigation_bar.dart';
@@ -21,13 +21,16 @@ class _HomeScreenState extends State<HomeScreen> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: Theme.of(context).primaryColor,
-      appBar: AppBar(
-        centerTitle: true,
+      backgroundColor: Colors.white,
+      appBar:  AppBar(
+        backgroundColor: Colors.white,
+        
+        
         title: Text(
-          'Discover',
+          'Salaty',
           style: TextStyle(
             fontWeight: FontWeight.bold,
+            color: Theme.of(context).primaryColor,
             fontSize: 25,
             letterSpacing: 2.0,
           ),

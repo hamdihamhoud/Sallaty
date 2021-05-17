@@ -24,8 +24,11 @@ class _CarouselWithIndicatorState extends State<CarouselWithIndicator> {
                 child: ClipRRect(
                   borderRadius: BorderRadius.all(Radius.circular(5.0)),
                   child: CachedNetworkImage(
+                    width: double.infinity,
+                    height: 500,
+                    // height: 100,
                     imageUrl: item,
-                    fit: BoxFit.contain,
+                    fit: BoxFit.cover,
                     progressIndicatorBuilder: (ctx, str, downloadProgress) =>
                         Center(
                       child: CircularProgressIndicator(
@@ -48,8 +51,10 @@ class _CarouselWithIndicatorState extends State<CarouselWithIndicator> {
       CarouselSlider(
         items: imageSliders,
         options: CarouselOptions(
-            aspectRatio: 1,
-            enlargeCenterPage: true,
+            aspectRatio: 3/2,
+            viewportFraction: 1,
+
+            // enlargeCenterPage: true,
             onPageChanged: (index, reason) {
               setState(() {
                 _current = index;

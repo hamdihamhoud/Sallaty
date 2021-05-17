@@ -6,6 +6,7 @@ import 'package:flutter_rating_bar/flutter_rating_bar.dart';
 import '../screens/product_details_screen.dart';
 
 import '../models/product.dart';
+import '../models/product_details_screen_args.dart';
 
 class ProductItem extends StatelessWidget {
   final bool isGridView;
@@ -20,8 +21,13 @@ class ProductItem extends StatelessWidget {
     final product = Provider.of<Product>(context);
     return InkWell(
       onTap: () {
-        Navigator.of(context)
-            .pushNamed(ProductDetailsSceen.routeName, arguments: product.id);
+        Navigator.of(context).pushNamed(
+          ProductDetailsSceen.routeName,
+          arguments: ProducDetailsScreenArgs(
+            id: product.id,
+            isSeller: isSeller,
+          ),
+        );
       },
       child: AspectRatio(
         aspectRatio: 3 / 4,
@@ -72,35 +78,35 @@ class ProductItem extends StatelessWidget {
                   fit: BoxFit.cover,
                 ),
               ),
-              if(!isSeller)
-              Positioned(
-                  right: 5,
-                  top: 5,
-                  child: Container(
-                    width: 30,
-                    height: 30,
-                    decoration: BoxDecoration(
-                        borderRadius: BorderRadius.circular(25),
-                        color: Colors.black54),
-                    child: Consumer<Product>(
-                      builder: (ctx, pr, _) => Center(
-                        child: IconButton(
-                          iconSize: 19,
-                          padding: const EdgeInsets.all(0),
-                          color: Colors.red,
-                          icon: pr.isFavorite
-                              ? Icon(Icons.favorite_rounded)
-                              : Icon(Icons.favorite_border_rounded),
-                          onPressed: () {
-                            pr.toggleFav(
-                                // token,
-                                // userId,
-                                );
-                          },
+              if (!isSeller)
+                Positioned(
+                    right: 5,
+                    top: 5,
+                    child: Container(
+                      width: 30,
+                      height: 30,
+                      decoration: BoxDecoration(
+                          borderRadius: BorderRadius.circular(25),
+                          color: Colors.black54),
+                      child: Consumer<Product>(
+                        builder: (ctx, pr, _) => Center(
+                          child: IconButton(
+                            iconSize: 19,
+                            padding: const EdgeInsets.all(0),
+                            color: Colors.red,
+                            icon: pr.isFavorite
+                                ? Icon(Icons.favorite_rounded)
+                                : Icon(Icons.favorite_border_rounded),
+                            onPressed: () {
+                              pr.toggleFav(
+                                  // token,
+                                  // userId,
+                                  );
+                            },
+                          ),
                         ),
                       ),
-                    ),
-                  )),
+                    )),
               Padding(
                 padding: const EdgeInsets.only(left: 5.0, bottom: 9),
                 child: Column(

@@ -60,7 +60,7 @@ class _CartObjectState extends State<CartObject> {
                     child: CachedNetworkImage(
                       width: MediaQuery.of(context).size.width / 4 * 0.8,
                       height: 90,
-                      imageUrl: widget.cartItem.imageUrls[0],
+                      imageUrl: widget.cartItem.imageUrl,
                       fit: BoxFit.fitWidth,
                       progressIndicatorBuilder: (ctx, str, downloadProgress) =>
                           Center(
@@ -75,7 +75,7 @@ class _CartObjectState extends State<CartObject> {
                   ),
                   Container(
                     decoration: BoxDecoration(
-                        color: Colors.black12,
+                        color: Colors.transparent,
                         border: Border.all(
                           color: Theme.of(context).primaryColor,
                           width: 11,

@@ -3,19 +3,27 @@ import 'package:flutter/foundation.dart';
 
 int cartItemId = 0; // Habad haboooood
 
+enum Status {
+  Ordered,
+  Shiped,
+  Delivered,
+}
+
 class CartItem {
   final String id;
   final String title;
   final int quantity;
   final double price;
-  final List<String> imageUrls;
+  final String imageUrl;
+  final Status status;
 
   CartItem({
     @required this.id,
     @required this.title,
     @required this.quantity,
     @required this.price,
-    @required this.imageUrls,
+    @required this.imageUrl,
+    this.status = Status.Ordered,
   });
 }
 
@@ -26,9 +34,9 @@ class Cart with ChangeNotifier {
       title: 'Adidas Shoes',
       quantity: 2,
       price: 12,
-      imageUrls: [
+      imageUrl: 
         'https://freeiconshop.com/wp-content/uploads/edd/burger-flat.png',
-      ],
+      ,
     ) */
   };
 
@@ -63,7 +71,7 @@ class Cart with ChangeNotifier {
     @required double price,
     @required String title,
     @required int quantity,
-    final List<String> imageUrls,
+    final String imageUrl,
   }) {
     if (_items.containsKey(productId)) {
       _items.update(
@@ -73,7 +81,7 @@ class Cart with ChangeNotifier {
           title: existingCartItem.title,
           price: existingCartItem.price + (price * quantity),
           quantity: existingCartItem.quantity + quantity,
-          imageUrls: existingCartItem.imageUrls,
+          imageUrl: existingCartItem.imageUrl,
         ),
       );
     } else {
@@ -84,7 +92,7 @@ class Cart with ChangeNotifier {
           title: title,
           price: price * quantity,
           quantity: quantity,
-          imageUrls: imageUrls,
+          imageUrl: imageUrl,
         ),
       );
       cartItemId++;
@@ -108,7 +116,7 @@ class Cart with ChangeNotifier {
           title: value.title,
           price: value.price - picePrice,
           quantity: value.quantity - 1,
-          imageUrls: value.imageUrls,
+          imageUrl: value.imageUrl,
         ),
       );
     else

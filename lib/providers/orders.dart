@@ -24,14 +24,14 @@ class Orders with ChangeNotifier {
       dateTime: DateTime.now(),
       products: [
         CartItem(
-          imageUrls: [],
+          imageUrl: '',
           id: 'p1',
           title: 'adidas shoes',
           quantity: 2,
           price: 500000,
         ),
         CartItem(
-          imageUrls: [],
+          imageUrl: '',
           id: 'p2',
           title: 'Shirt',
           quantity: 6,
@@ -45,14 +45,14 @@ class Orders with ChangeNotifier {
       dateTime: DateTime.now(),
       products: [
         CartItem(
-          imageUrls: [],
+          imageUrl: '',
           id: 'p1',
           title: 'adidas shoes',
           quantity: 2,
           price: 500000,
         ),
         CartItem(
-          imageUrls: [],
+          imageUrl: '',
           id: 'p2',
           title: 'Shirt',
           quantity: 6,
@@ -66,14 +66,14 @@ class Orders with ChangeNotifier {
       dateTime: DateTime.now(),
       products: [
         CartItem(
-          imageUrls: [],
+          imageUrl: '',
           id: 'p1',
           title: 'adidas shoes',
           quantity: 2,
           price: 500000,
         ),
         CartItem(
-          imageUrls: [],
+          imageUrl: '',
           id: 'p2',
           title: 'Shirt',
           quantity: 6,
@@ -103,5 +103,76 @@ class Orders with ChangeNotifier {
       ),
     );
     notifyListeners();
+  }
+
+  List<CartItem> fetchSellerOreders() {
+    return [
+      CartItem(
+        id: 'p1',
+        quantity: 5,
+        title: 'nike',
+        price: 30000,
+        imageUrl:
+            'https://cdn.pixabay.com/photo/2016/10/02/22/17/red-t-shirt-1710578_1280.jpg',
+        status: Status.Shiped,
+      ),
+      CartItem(
+        id: 'p1',
+        quantity: 5,
+        title: 'nike',
+        price: 30000,
+        imageUrl:
+            'https://upload.wikimedia.org/wikipedia/commons/thumb/e/e8/Trousers%2C_dress_%28AM_1960.022-8%29.jpg/512px-Trousers%2C_dress_%28AM_1960.022-8%29.jpg',
+        status: Status.Delivered,
+      ),
+      CartItem(
+        id: 'p1',
+        quantity: 5,
+        title: 'nike',
+        price: 30000,
+        imageUrl:
+            'https://cdn.pixabay.com/photo/2016/10/02/22/17/red-t-shirt-1710578_1280.jpg',
+      ),
+      CartItem(
+        id: 'p1',
+        quantity: 5,
+        title: 'nike',
+        price: 30000,
+        imageUrl:
+            'https://cdn.pixabay.com/photo/2016/10/02/22/17/red-t-shirt-1710578_1280.jpg',
+      ),
+      CartItem(
+        id: 'p1',
+        quantity: 5,
+        title: 'nike',
+        price: 30000,
+        imageUrl:
+            'https://cdn.pixabay.com/photo/2016/10/02/22/17/red-t-shirt-1710578_1280.jpg',
+      ),
+      CartItem(
+        id: 'p1',
+        quantity: 5,
+        title: 'nike',
+        price: 30000,
+        imageUrl:
+            'https://cdn.pixabay.com/photo/2016/10/02/22/17/red-t-shirt-1710578_1280.jpg',
+      ),
+      CartItem(
+        id: 'p1',
+        quantity: 5,
+        title: 'nike',
+        price: 30000,
+        imageUrl:
+            'https://cdn.pixabay.com/photo/2016/10/02/22/17/red-t-shirt-1710578_1280.jpg',
+      ),
+      CartItem(
+        id: 'p1',
+        quantity: 5,
+        title: 'nike',
+        price: 30000,
+        imageUrl:
+            'https://cdn.pixabay.com/photo/2016/10/02/22/17/red-t-shirt-1710578_1280.jpg',
+      ),
+    ];
   }
 }
