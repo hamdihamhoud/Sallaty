@@ -19,7 +19,7 @@ class AccountScreen extends StatelessWidget {
       return  ListView(
               children: [
                 Container(
-                  height: 50,
+                  height: 60,
                   color: Theme.of(context).primaryColor,
                   child: ListView(
                     scrollDirection: Axis.horizontal,
