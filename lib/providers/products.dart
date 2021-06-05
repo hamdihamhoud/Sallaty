@@ -1,3 +1,5 @@
+import 'dart:io';
+
 import 'package:flutter/material.dart';
 
 import '../models/category.dart';
@@ -247,5 +249,9 @@ class ProductsProvider with ChangeNotifier {
   void addToList(String id, int amount) {
     _products.firstWhere((element) => element.id == id).quantity += amount;
     notifyListeners();
+  }
+
+  void addProduct(Product product,List<File> images){
+    
   }
 }

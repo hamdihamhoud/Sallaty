@@ -16,6 +16,7 @@ import 'screens/catergories_screen.dart';
 import 'screens/type_screen.dart';
 import 'screens/orders_history_screen.dart';
 import 'screens/feedback.dart';
+import 'screens/add_product_screen.dart';
 
 void main() {
   runApp(MyApp());
@@ -35,13 +36,34 @@ class MyApp extends StatelessWidget {
         title: "Discover",
         debugShowCheckedModeBanner: false,
         theme: ThemeData(
-          canvasColor: Color(0xFF828282),
-          buttonColor: Color(0xFF333333),
+          // canvasColor: Color(0xFF828282),
+          // buttonColor: Color(0xFF333333),
           primaryColor: Color(0xFF6fb9b8),
           accentColor: Color(0xFFd4f5ee),
           primaryColorBrightness: Brightness.dark,
           accentColorBrightness: Brightness.dark,
           fontFamily: 'Gilroy',
+          textButtonTheme: TextButtonThemeData(
+            style: ButtonStyle(
+              overlayColor: MaterialStateProperty.all(
+                Color(0xFFd4f5ee),
+              ),
+            ),
+          ),
+          outlinedButtonTheme: OutlinedButtonThemeData(
+            style: ButtonStyle(
+              overlayColor: MaterialStateProperty.all(
+                Color(0xFFd4f5ee),
+              ),
+            ),
+          ),
+          elevatedButtonTheme: ElevatedButtonThemeData(
+            style: ButtonStyle(
+              overlayColor: MaterialStateProperty.all(
+                Color(0xFFd4f5ee),
+              ),
+            ),
+          ),
         ),
         home: AppBottomNavigationBarController(),
         routes: {
@@ -56,6 +78,7 @@ class MyApp extends StatelessWidget {
           TypeScreen.routeName: (ctx) => TypeScreen(),
           OrdersHistoryScreen.routeName: (ctx) => OrdersHistoryScreen(),
           FeedbackScreen.routeName: (ctx) => FeedbackScreen(),
+          AddProductScreen.routeName: (ctx) => AddProductScreen(),
           AppBottomNavigationBarController.routeName: (ctx) =>
               AppBottomNavigationBarController(),
         },

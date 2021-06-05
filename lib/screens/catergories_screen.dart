@@ -33,12 +33,13 @@ class CategoriesScreen extends StatelessWidget {
                     bottom: 8,
                     right: 15,
                   ),
-                  child: Image.asset(
-                    categories[i].imageAsset,
-                    alignment: Alignment.centerLeft,
-                    width: mediaQuery.size.width * 0.2,
-                    fit: BoxFit.fitWidth,
-                  ),
+                  child: Container(),
+                  // Image.asset(
+                  //   categories[i].imageAsset,
+                  //   alignment: Alignment.centerLeft,
+                  //   width: mediaQuery.size.width * 0.2,
+                  //   fit: BoxFit.fitWidth,
+                  // ),
                 ),
                 Text(
                   categories[i].title,

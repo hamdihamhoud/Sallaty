@@ -11,6 +11,7 @@ import 'package:ecart/widgets/product_item.dart';
 import '../providers/products.dart';
 import '../widgets/seller_filtering_row.dart';
 import 'drawer_screen.dart';
+import 'add_product_screen.dart';
 
 class AccountScreen extends StatelessWidget {
   static const routeName = '/account';
@@ -128,7 +129,7 @@ class RecentSoldItems extends StatelessWidget {
               icon: Icon(
                 Icons.refresh,
               ),
-              color: Theme.of(context).buttonColor,
+              color: Theme.of(context).primaryColor,
               onPressed: () {},
             ),
           ),
@@ -163,9 +164,11 @@ class RecentlyAdded extends StatelessWidget {
             child: IconButton(
               icon: Icon(
                 Icons.add,
-                color: Theme.of(context).buttonColor,
+                color: Theme.of(context).primaryColor,
               ),
-              onPressed: () {},
+              onPressed: () {
+                Navigator.of(context).pushNamed(AddProductScreen.routeName);
+              },
             ),
           ),
         ],

@@ -1,3 +1,4 @@
+import 'package:ecart/models/product_details_screen_args.dart';
 import 'package:flutter/material.dart';
 import 'dart:io';
 import '../widgets/categories_row.dart';
@@ -115,7 +116,7 @@ class SearchItem extends SearchDelegate<SearchItem> {
               title: Text(suggestions[i].title),
               onTap: () {
                 Navigator.of(context).pushNamed(ProductDetailsSceen.routeName,
-                    arguments: suggestions[i].id);
+                    arguments: ProducDetailsScreenArgs(id:suggestions[i].id) );
               },
             ));
   }
