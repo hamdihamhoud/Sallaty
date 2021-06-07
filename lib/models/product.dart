@@ -1,3 +1,4 @@
+import 'package:ecart/models/period.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 
@@ -9,43 +10,33 @@ class Product with ChangeNotifier {
   final List<String> imageUrls;
   final String category;
   final String type;
-  final bool warranty;
-  final int warrantyPeriod;
+  final Period warranty;
   double rating;
-  final bool isReplaceable;
-  final int replacementPeriod;
-  final bool isReturnable;
-  final int returningPeriod;
+  final Period replacement;
+  final Period returning;
   final String description;
   final Map<String, String> specs;
-  final bool hasDiscount;
-  final int discountPercentage;
-  final List<Color> colors;
+  final double discountPercentage;
+  final Map<Color, Map<String, int>> colorsAndQuantityAndSizes;
   bool isFavorite;
-  int quantity;
 
   Product({
     this.id,
     this.ownerId,
     this.title,
     this.price,
-    this.quantity,
     this.imageUrls,
     this.category,
     this.type = '',
     this.description,
     this.specs,
-    this.warranty = false,
-    this.warrantyPeriod = 0,
+    this.warranty,
     this.rating = 1,
-    this.isReplaceable = false,
-    this.replacementPeriod = 0,
-    this.isReturnable = false,
-    this.returningPeriod = 0,
-    this.hasDiscount = false,
+    this.replacement,
+    this.returning,
     this.discountPercentage = 0,
     this.isFavorite = false,
-    this.colors,
+    this.colorsAndQuantityAndSizes,
   });
 
   //     void _setFavValue(bool newValue) {

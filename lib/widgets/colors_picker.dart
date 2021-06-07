@@ -27,6 +27,15 @@ class _ColorsPickerState extends State<ColorsPicker> {
   }
 
   void save() {
+    if (widget.hasSizes && sizesAndQuantity.isEmpty) {
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(
+          content: Text('Incomplete Information !'),
+          backgroundColor: Theme.of(context).errorColor,
+        ),
+      );
+      return;
+    }
     if (!_form.currentState.validate()) return;
     !widget.hasSizes
         ? _form.currentState.save()
@@ -155,7 +164,6 @@ class _ColorsPickerState extends State<ColorsPicker> {
                     color: Theme.of(context).primaryColor,
                   ),
                 ),
-              
               )
             ],
           ),

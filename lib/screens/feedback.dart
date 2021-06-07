@@ -58,7 +58,6 @@ class FeedbackScreen extends StatelessWidget {
                   Navigator.of(context).pop();
                 }, child: Text('Cancel')),
                 TextButton(onPressed: () {
-                  print(controller.text);
                   controller.text = '';
                   Navigator.of(context).pop();
                 }, child: Text('Okay'))

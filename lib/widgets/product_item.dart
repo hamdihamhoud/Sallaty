@@ -125,7 +125,7 @@ class ProductItem extends StatelessWidget {
                     SizedBox(
                       height: 6,
                     ),
-                    if (!product.hasDiscount)
+                    if (product.discountPercentage == 0)
                       Text(
                         '${product.price} SYP',
                         maxLines: 1,
@@ -136,7 +136,7 @@ class ProductItem extends StatelessWidget {
                           color: Colors.white,
                         ),
                       ),
-                    if (product.hasDiscount)
+                    if (product.discountPercentage > 0)
                       Text(
                         '${product.price} SYP',
                         style: TextStyle(
@@ -147,7 +147,7 @@ class ProductItem extends StatelessWidget {
                         overflow: TextOverflow.ellipsis,
                         textAlign: TextAlign.start,
                       ),
-                    if (product.hasDiscount)
+                    if (product.discountPercentage > 0)
                       Text(
                         '${(product.price - product.price * product.discountPercentage / 100).toStringAsFixed(0)} SYP',
                         maxLines: 1,

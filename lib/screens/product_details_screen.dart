@@ -17,7 +17,7 @@ class ProductDetailsSceen extends StatelessWidget {
   bool darkmode = false;
   static const routeName = '/product-details';
   bool isSeller = false;
-  double size =1;
+  double size = 1;
   int amount = 1;
   void setAmount(int a) => amount = a;
   int cartItemId = 0;
@@ -33,7 +33,7 @@ class ProductDetailsSceen extends StatelessWidget {
     final Product product = productProvider.findId(productId);
     final cart = Provider.of<Cart>(context);
     final mediaQuery = MediaQuery.of(context);
-    if (product.hasDiscount)
+    if (product.discountPercentage > 0)
       price =
           (product.price - product.price * product.discountPercentage / 100);
     return Scaffold(
@@ -64,7 +64,6 @@ class ProductDetailsSceen extends StatelessWidget {
                   automaticallyImplyLeading: true,
                   flexibleSpace: FlexibleSpaceBar(
                       background: Container(
-                        
                         color: Colors.white,
                         child: CarouselWithIndicator(product.imageUrls),
                       ),
@@ -140,7 +139,7 @@ class ProductDetailsSceen extends StatelessWidget {
                               children: [
                                 Column(
                                   children: [
-                                    if (!product.hasDiscount)
+                                    if (product.discountPercentage == 0)
                                       Text(
                                         '${product.price.toInt()} S.P',
                                         style: TextStyle(
@@ -149,7 +148,7 @@ class ProductDetailsSceen extends StatelessWidget {
                                           fontWeight: FontWeight.w700,
                                         ),
                                       ),
-                                    if (product.hasDiscount)
+                                    if (product.discountPercentage > 0)
                                       Padding(
                                         padding: const EdgeInsets.only(
                                           bottom: 2,
@@ -166,7 +165,7 @@ class ProductDetailsSceen extends StatelessWidget {
                                           ),
                                         ),
                                       ),
-                                    if (product.hasDiscount)
+                                    if (product.discountPercentage > 0)
                                       Text(
                                         '${price.toInt()} S.P',
                                         style: TextStyle(
@@ -294,8 +293,12 @@ class ProductDetailsSceen extends StatelessWidget {
                                   ),
                                 ),
                                 Container(
-                                  child: product.isReturnable
-                                      ? Text('${product.returningPeriod} day')
+                                  child: product.returning.period == 0
+                                      ? Text('${product.returning.period} ' +
+                                          product.returning.type
+                                              .toString()
+                                              .split('.')
+                                              .last)
                                       : Text(
                                           'X',
                                           style: TextStyle(color: Colors.red),
@@ -320,8 +323,12 @@ class ProductDetailsSceen extends StatelessWidget {
                                   ),
                                 ),
                                 Container(
-                                  child: product.isReturnable
-                                      ? Text('${product.replacementPeriod} day')
+                                  child: product.replacement.period == 0
+                                      ? Text('${product.replacement.period} ' +
+                                          product.replacement.type
+                                              .toString()
+                                              .split('.')
+                                              .last)
                                       : Text(
                                           'X',
                                           style: TextStyle(color: Colors.red),
@@ -353,153 +360,155 @@ class ProductDetailsSceen extends StatelessWidget {
               ],
             ),
           ),
-          if(!isSeller)
-          Container(
-            color: Theme.of(context).primaryColor,
-            width: mediaQuery.size.width,
-            height: 80,
-            child: Padding(
-              padding: const EdgeInsets.only(
-                left: 25,
-                right: 25,
-                top: 15,
-                bottom: 15,
-              ),
-              child: (productProvider.checkIfAvailable(productId))
-                  ? ElevatedButton(
-                      style: ElevatedButton.styleFrom(
-                        primary: Theme.of(context).accentColor,
-                        shape: RoundedRectangleBorder(
-                          borderRadius: BorderRadius.circular(10),
+          if (!isSeller)
+            Container(
+              color: Theme.of(context).primaryColor,
+              width: mediaQuery.size.width,
+              height: 80,
+              child: Padding(
+                padding: const EdgeInsets.only(
+                  left: 25,
+                  right: 25,
+                  top: 15,
+                  bottom: 15,
+                ),
+                child: (productProvider.checkIfAvailable(productId))
+                    ? ElevatedButton(
+                        style: ElevatedButton.styleFrom(
+                          primary: Theme.of(context).accentColor,
+                          shape: RoundedRectangleBorder(
+                            borderRadius: BorderRadius.circular(10),
+                          ),
                         ),
-                      ),
-                      onPressed: () => {
-                        showDialog(
-                          context: context,
-                          barrierDismissible: false,
-                          builder: (context) {
-                            return AlertDialog(
-                              title: Center(
-                                child: Text(
-                                  'Add quantity',
-                                  style: TextStyle(
-                                    color: Colors.white,
-                                  ),
-                                ),
-                              ),
-                              backgroundColor: Theme.of(context).primaryColor,
-                              shape: RoundedRectangleBorder(
-                                borderRadius: BorderRadius.circular(10),
-                              ),
-                              scrollable: true,
-                              titlePadding: EdgeInsets.only(
-                                bottom: 20,
-                                top: 20,
-                              ),
-                              actionsPadding: EdgeInsets.all(0),
-                              contentPadding: EdgeInsets.only(
-                                left: 70,
-                                right: 70,
-                              ),
-                              actions: <Widget>[
-                                TextButton(
+                        onPressed: () => {
+                          showDialog(
+                            context: context,
+                            barrierDismissible: false,
+                            builder: (context) {
+                              return AlertDialog(
+                                title: Center(
                                   child: Text(
-                                    'ADD',
+                                    'Add quantity',
                                     style: TextStyle(
                                       color: Colors.white,
                                     ),
                                   ),
-                                  style: TextButton.styleFrom(
-                                    backgroundColor: Colors.transparent,
-                                    primary: Colors.white,
-                                  ),
-                                  onPressed: () {
-                                    productProvider.removeFromList(
-                                        productId, amount);
-                                    cart.addItem(
-                                      productId: product.id,
-                                      quantity: amount,
-                                      title: product.title,
-                                      price: product.hasDiscount
-                                          ? (product.price -
-                                              product.price *
-                                                  product.discountPercentage /
-                                                  100)
-                                          : product.price,
-                                      imageUrl: product.imageUrls.first,
-                                    );
-                                    ScaffoldMessenger.of(context).showSnackBar(
-                                      SnackBar(
-                                        content: Text(
-                                          amount > 1
-                                              ? '$amount item\'s added to your cart'
-                                              : '$amount item added to your cart',
-                                          style: TextStyle(
-                                            color: Colors.black,
-                                            fontSize: 20,
-                                          ),
-                                        ),
-                                        backgroundColor:
-                                            Theme.of(context).accentColor,
-                                        duration: Duration(milliseconds: 700),
+                                ),
+                                backgroundColor: Theme.of(context).primaryColor,
+                                shape: RoundedRectangleBorder(
+                                  borderRadius: BorderRadius.circular(10),
+                                ),
+                                scrollable: true,
+                                titlePadding: EdgeInsets.only(
+                                  bottom: 20,
+                                  top: 20,
+                                ),
+                                actionsPadding: EdgeInsets.all(0),
+                                contentPadding: EdgeInsets.only(
+                                  left: 70,
+                                  right: 70,
+                                ),
+                                actions: <Widget>[
+                                  TextButton(
+                                    child: Text(
+                                      'ADD',
+                                      style: TextStyle(
+                                        color: Colors.white,
                                       ),
-                                    );
-                                    setAmount(1);
-                                    cartItemId++;
-                                    Navigator.of(context).pop();
-                                  },
-                                ),
-                              ],
-                              content: Center(
-                                child: QuantityIcon(
-                                  amount: amount,
-                                  maxAmount: product.quantity,
-                                  setter: setAmount,
+                                    ),
+                                    style: TextButton.styleFrom(
+                                      backgroundColor: Colors.transparent,
+                                      primary: Colors.white,
+                                    ),
+                                    onPressed: () {
+                                      productProvider.removeFromList(
+                                          productId, amount);
+                                      cart.addItem(
+                                        productId: product.id,
+                                        quantity: amount,
+                                        title: product.title,
+                                        price: product.discountPercentage > 0
+                                            ? (product.price -
+                                                product.price *
+                                                    product.discountPercentage /
+                                                    100)
+                                            : product.price,
+                                        imageUrl: product.imageUrls.first,
+                                      );
+                                      ScaffoldMessenger.of(context)
+                                          .showSnackBar(
+                                        SnackBar(
+                                          content: Text(
+                                            amount > 1
+                                                ? '$amount item\'s added to your cart'
+                                                : '$amount item added to your cart',
+                                            style: TextStyle(
+                                              color: Colors.black,
+                                              fontSize: 20,
+                                            ),
+                                          ),
+                                          backgroundColor:
+                                              Theme.of(context).accentColor,
+                                          duration: Duration(milliseconds: 700),
+                                        ),
+                                      );
+                                      setAmount(1);
+                                      cartItemId++;
+                                      Navigator.of(context).pop();
+                                    },
+                                  ),
+                                ],
+                                // content: Center(                     !!!!!!!!!!!!!!!!!!
+                                //   child: QuantityIcon(               FIX MAX AMOUNT QUANTITY
+                                //     amount: amount,                  !!!!!!!!!!
+                                //     maxAmount: product.quantity,     !!!!!!!!!!!!!!!!!!
+                                //     setter: setAmount,               !!!!!!!!!!!!
+                                //   ),
+                                // ),
+                              );
+                            },
+                          ),
+                        },
+                        child: Row(
+                          mainAxisAlignment: MainAxisAlignment.center,
+                          children: [
+                            Icon(
+                              Icons.shopping_cart_outlined,
+                              size: 25,
+                            ),
+                            Padding(
+                              padding: const EdgeInsets.only(
+                                left: 7,
+                              ),
+                              child: Text(
+                                'ADD to Cart',
+                                style: TextStyle(
+                                  fontSize: 19,
+                                  color: Colors.white,
+                                  fontWeight: FontWeight.bold,
                                 ),
                               ),
-                            );
-                          },
+                            ),
+                          ],
                         ),
-                      },
-                      child: Row(
-                        mainAxisAlignment: MainAxisAlignment.center,
-                        children: [
-                          Icon(
-                            Icons.shopping_cart_outlined,
-                            size: 25,
-                          ),
-                          Padding(
-                            padding: const EdgeInsets.only(
-                              left: 7,
+                      )
+                    : Container(
+                        decoration: BoxDecoration(
+                            color: Color.fromARGB(255, 255, 100, 100),
+                            borderRadius:
+                                BorderRadius.all(Radius.circular(10))),
+                        child: Center(
+                          child: Text(
+                            'Soldout',
+                            style: TextStyle(
+                              fontSize: 20,
+                              color: Colors.white,
                             ),
-                            child: Text(
-                              'ADD to Cart',
-                              style: TextStyle(
-                                fontSize: 19,
-                                color: Colors.white,
-                                fontWeight: FontWeight.bold,
-                              ),
-                            ),
-                          ),
-                        ],
-                      ),
-                    )
-                  : Container(
-                      decoration: BoxDecoration(
-                          color: Color.fromARGB(255, 255, 100, 100),
-                          borderRadius: BorderRadius.all(Radius.circular(10))),
-                      child: Center(
-                        child: Text(
-                          'Soldout',
-                          style: TextStyle(
-                            fontSize: 20,
-                            color: Colors.white,
                           ),
                         ),
                       ),
-                    ),
+              ),
             ),
-          ),
         ],
       ),
     );

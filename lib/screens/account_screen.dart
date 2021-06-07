@@ -46,13 +46,17 @@ class AccountScreen extends StatelessWidget {
                 : Container(
                     height: 200,
                     child: ListView.builder(
-                        scrollDirection: Axis.horizontal,
-                        itemCount: sellerProducts.length,
-                        itemBuilder: (ctx, i) => ChangeNotifierProvider.value(
-                            value: sellerProducts[i],
-                            child: ProductItem(
-                              isSeller: true,
-                            ))),
+                      scrollDirection: Axis.horizontal,
+                      itemCount: sellerProducts.length,
+                      itemBuilder: (ctx, i) {
+                        return ChangeNotifierProvider.value(
+                          value: sellerProducts[i],
+                          child: ProductItem(
+                            isSeller: true,
+                          ),
+                        );
+                      },
+                    ),
                   );
           }),
           RecentSoldItems(),
@@ -81,7 +85,6 @@ class AccountScreen extends StatelessWidget {
           if (isPremium)
             PopupMenuButton(
               onSelected: (_) {
-                print('hamdi');
               },
               itemBuilder: (ctx) {
                 return [
