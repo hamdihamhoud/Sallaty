@@ -248,7 +248,37 @@ class ProductsProvider with ChangeNotifier {
     notifyListeners();
   }
 
+  void updateProduct(Product product, List<File> images) {
+    var index = _products.indexWhere((element) => element.id == product.id);
+    _products[index] = product = Product(
+      id: product.id,
+      title: product.title,
+      price: product.price,
+      colorsAndQuantityAndSizes: product.colorsAndQuantityAndSizes,
+      warranty: product.warranty,
+      returning: product.returning,
+      replacement: product.replacement,
+      category: product.category,
+      type: product.type,
+      description: product.description,
+      discountPercentage: product.discountPercentage,
+      specs: product.specs,
+      imageUrls: [
+        'https://upload.wikimedia.org/wikipedia/commons/thumb/e/e8/Trousers%2C_dress_%28AM_1960.022-8%29.jpg/512px-Trousers%2C_dress_%28AM_1960.022-8%29.jpg',
+        'https://cdn.pixabay.com/photo/2016/10/02/22/17/red-t-shirt-1710578_1280.jpg',
+        'https://upload.wikimedia.org/wikipedia/commons/thumb/1/14/Cast-Iron-Pan.jpg/1024px-Cast-Iron-Pan.jpg',
+      ],
+      ownerId: product.ownerId,
+      rating: product.rating,
+    );
+    notifyListeners();
+  }
+
   void addProduct(Product product, List<File> images) {
+    if (product.id != null) {
+      updateProduct(product, images);
+      return;
+    }
     product = Product(
       id: '1',
       title: product.title,

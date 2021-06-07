@@ -49,8 +49,41 @@ class _AddProductScreenState extends State<AddProductScreen> {
 
   Map<String, String> specs = {};
 
+  var product = Product();
+
+  var _init = true;
+
+  @override
+  void didChangeDependencies() {
+    if (_init) {
+      final id = ModalRoute.of(context).settings.arguments as String;
+      if (id != null) {
+        product = Provider.of<ProductsProvider>(context).findId(id);
+        title = product.title;
+        price = product.price;
+        description = product.description;
+        discount = product.discountPercentage;
+        colorsAndQuantity = product.colorsAndQuantityAndSizes;
+        if (product.colorsAndQuantityAndSizes.entries.first.value.entries.first
+                .key ==
+            '0') hasSizes = false;
+        warranty = product.warranty;
+        returnable = product.returning;
+        replaceable = product.replacement;
+        category = categories
+            .firstWhere((element) => element.title == product.category);
+        if (product.type != null)
+          type = category.types
+              .firstWhere((element) => element.title == product.type);
+        specs = product.specs;
+      }
+      _init = false;
+    }
+    super.didChangeDependencies();
+  }
+
   void saveForm() {
-    if (images.isEmpty) {
+    if (product.id == null && images.isEmpty) {
       showSnakBarError('At least one image must be added !');
       return;
     }
@@ -68,20 +101,24 @@ class _AddProductScreenState extends State<AddProductScreen> {
 
     if (!_form.currentState.validate() && discountValidate) return;
     _form.currentState.save();
+    product = Product(
+      id: product.id,
+      title: title,
+      price: price,
+      colorsAndQuantityAndSizes: colorsAndQuantity,
+      warranty: warranty,
+      returning: returnable,
+      replacement: replaceable,
+      category: category.title,
+      type: type == null ? '' : type.title,
+      description: description,
+      discountPercentage: discount,
+      specs: specs,
+      imageUrls: product.imageUrls,
+      ownerId: product.ownerId,
+    );
     Provider.of<ProductsProvider>(context, listen: false).addProduct(
-      Product(
-        title: title,
-        price: price,
-        colorsAndQuantityAndSizes: colorsAndQuantity,
-        warranty: warranty,
-        returning: returnable,
-        replacement: replaceable,
-        category: category.title,
-        type: type == null ? '' : type.title,
-        description: description,
-        discountPercentage: discount,
-        specs: specs,
-      ),
+      product,
       images,
     );
     Navigator.of(context).pop();
@@ -204,7 +241,7 @@ class _AddProductScreenState extends State<AddProductScreen> {
                 if (images.length != 0) AddImageViewer(images),
                 ImageInput(setImage),
                 TextFormField(
-                  initialValue: '', //_initValues['title'],
+                  initialValue: title,
                   decoration: const InputDecoration(labelText: 'Title'),
                   textInputAction: TextInputAction.next,
                   validator: (value) {
@@ -218,7 +255,7 @@ class _AddProductScreenState extends State<AddProductScreen> {
                   },
                 ),
                 TextFormField(
-                  initialValue: '', //_initValues['price'],
+                  initialValue: price != null ? price.toString() : null,
                   decoration: const InputDecoration(labelText: 'Price'),
                   textInputAction: TextInputAction.next,
                   keyboardType: TextInputType.number,
@@ -268,7 +305,7 @@ class _AddProductScreenState extends State<AddProductScreen> {
                   ),
                 ),
                 TextFormField(
-                  // initialValue: ,
+                  initialValue: description,
                   decoration: InputDecoration(
                     border: OutlineInputBorder(),
                     labelText: 'Description',
@@ -362,7 +399,8 @@ class _AddProductScreenState extends State<AddProductScreen> {
                         width: 40,
                         height: 20,
                         child: TextFormField(
-                          // initialValue: ,
+                          initialValue:
+                              discount != null ? discount.toString() : null,
                           keyboardType: TextInputType.number,
                           decoration: InputDecoration(
                             errorMaxLines: 1,
@@ -421,7 +459,7 @@ class _AddProductScreenState extends State<AddProductScreen> {
                   ...specs.entries
                       .map((e) => Container(
                             margin: const EdgeInsets.symmetric(horizontal: 14),
-                            height: 30,
+                            height: 35,
                             alignment: Alignment.centerLeft,
                             child: Row(
                               children: [
@@ -439,6 +477,17 @@ class _AddProductScreenState extends State<AddProductScreen> {
                                       fontWeight: FontWeight.w500,
                                       fontSize: 18),
                                 ),
+                                Spacer(),
+                                IconButton(
+                                  padding: const EdgeInsets.all(0),
+                                    icon: Icon(Icons.edit_outlined),
+                                    onPressed: () {
+                                      addSpecDialog(
+                                        context,
+                                        initName: e.key,
+                                        initValue: e.value,
+                                      );
+                                    })
                               ],
                             ),
                           ))
@@ -459,7 +508,11 @@ class _AddProductScreenState extends State<AddProductScreen> {
         ));
   }
 
-  Future addSpecDialog(BuildContext context) {
+  Future addSpecDialog(
+    BuildContext context, {
+    String initName,
+    String initValue,
+  }) {
     return showDialog(
         context: context,
         builder: (BuildContext context) {
@@ -471,6 +524,8 @@ class _AddProductScreenState extends State<AddProductScreen> {
             _specForm.currentState.save();
             Navigator.of(context).pop();
             setState(() {
+              if(initName != null)
+              specs.remove(initName);
               specs.putIfAbsent(_specName, () => _specValue);
             });
           }
@@ -495,6 +550,7 @@ class _AddProductScreenState extends State<AddProductScreen> {
                 mainAxisSize: MainAxisSize.min,
                 children: [
                   TextFormField(
+                    initialValue: initName,
                     decoration:
                         InputDecoration(labelText: 'Specification Name'),
                     cursorColor: Color(0xFF333333),
@@ -509,6 +565,7 @@ class _AddProductScreenState extends State<AddProductScreen> {
                     },
                   ),
                   TextFormField(
+                    initialValue: initValue,
                     decoration: InputDecoration(labelText: 'Value'),
                     cursorColor: Color(0xFF333333),
                     validator: (value) {

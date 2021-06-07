@@ -1,4 +1,5 @@
 import 'package:ecart/providers/cart.dart';
+import 'package:ecart/screens/add_product_screen.dart';
 import 'package:ecart/widgets/colors_circule.dart';
 import 'package:ecart/widgets/read_more.dart';
 import 'package:flutter/material.dart';
@@ -58,7 +59,12 @@ class ProductDetailsSceen extends StatelessWidget {
                       IconButton(
                         icon: FaIcon(FontAwesomeIcons.edit),
                         color: Colors.black,
-                        onPressed: () {},
+                        onPressed: () {
+                          Navigator.of(context).pushNamed(
+                            AddProductScreen.routeName,
+                            arguments: product.id,
+                          );
+                        },
                       ),
                   ],
                   automaticallyImplyLeading: true,
@@ -293,7 +299,7 @@ class ProductDetailsSceen extends StatelessWidget {
                                   ),
                                 ),
                                 Container(
-                                  child: product.returning.period == 0
+                                  child: product.returning.period != 0
                                       ? Text('${product.returning.period} ' +
                                           product.returning.type
                                               .toString()
@@ -323,7 +329,7 @@ class ProductDetailsSceen extends StatelessWidget {
                                   ),
                                 ),
                                 Container(
-                                  child: product.replacement.period == 0
+                                  child: product.replacement.period != 0
                                       ? Text('${product.replacement.period} ' +
                                           product.replacement.type
                                               .toString()
