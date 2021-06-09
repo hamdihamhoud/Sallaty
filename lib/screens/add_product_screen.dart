@@ -1,5 +1,6 @@
 import 'dart:io';
 
+import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:provider/provider.dart';
@@ -53,6 +54,21 @@ class _AddProductScreenState extends State<AddProductScreen> {
 
   var _init = true;
 
+  List<Widget> imageSlider = [];
+
+  void setSlider(File image) {
+    imageSlider.add(Container(
+      margin: EdgeInsets.all(5.0),
+      child: ClipRRect(
+        borderRadius: BorderRadius.all(Radius.circular(10.0)),
+        child: Image.file(
+          image,
+          fit: BoxFit.cover,
+        ),
+      ),
+    ));
+  }
+
   @override
   void didChangeDependencies() {
     if (_init) {
@@ -72,10 +88,20 @@ class _AddProductScreenState extends State<AddProductScreen> {
         replaceable = product.replacement;
         category = categories
             .firstWhere((element) => element.title == product.category);
-        if (product.type != null)
+        if (category.types != null && product.type != null)
           type = category.types
               .firstWhere((element) => element.title == product.type);
         specs = product.specs;
+        imageSlider.addAll(product.imageUrls.map((e) => Container(
+              margin: EdgeInsets.all(5.0),
+              child: ClipRRect(
+                borderRadius: BorderRadius.all(Radius.circular(10.0)),
+                child: CachedNetworkImage(
+                  imageUrl: e,
+                  fit: BoxFit.cover,
+                ),
+              ),
+            )));
       }
       _init = false;
     }
@@ -137,8 +163,9 @@ class _AddProductScreenState extends State<AddProductScreen> {
   }
 
   void setImage(File image) {
+    images.add(image);
     setState(() {
-      images.add(image);
+      setSlider(image);
     });
   }
 
@@ -238,7 +265,7 @@ class _AddProductScreenState extends State<AddProductScreen> {
               crossAxisAlignment: CrossAxisAlignment.stretch,
               mainAxisSize: MainAxisSize.min,
               children: [
-                if (images.length != 0) AddImageViewer(images),
+                if (imageSlider.length != 0) AddImageViewer(imageSlider),
                 ImageInput(setImage),
                 TextFormField(
                   initialValue: title,
@@ -479,7 +506,7 @@ class _AddProductScreenState extends State<AddProductScreen> {
                                 ),
                                 Spacer(),
                                 IconButton(
-                                  padding: const EdgeInsets.all(0),
+                                    padding: const EdgeInsets.all(0),
                                     icon: Icon(Icons.edit_outlined),
                                     onPressed: () {
                                       addSpecDialog(
@@ -524,8 +551,7 @@ class _AddProductScreenState extends State<AddProductScreen> {
             _specForm.currentState.save();
             Navigator.of(context).pop();
             setState(() {
-              if(initName != null)
-              specs.remove(initName);
+              if (initName != null) specs.remove(initName);
               specs.putIfAbsent(_specName, () => _specValue);
             });
           }

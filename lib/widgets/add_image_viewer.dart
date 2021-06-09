@@ -1,10 +1,8 @@
-import 'dart:io';
-
 import 'package:flutter/material.dart';
 import 'package:carousel_slider/carousel_slider.dart';
 
 class AddImageViewer extends StatefulWidget {
-  final List<File> imgList;
+  final List<Widget> imgList;
   AddImageViewer(this.imgList);
   @override
   State<StatefulWidget> createState() {
@@ -14,31 +12,13 @@ class AddImageViewer extends StatefulWidget {
 
 class _AddImageViewerState extends State<AddImageViewer> {
   int _current = 0;
-  List<Widget> imageSliders;
-  @override
-  void initState() {
-    super.initState();
-    imageSliders = widget.imgList
-        .map((item) => Container(
-              child: Container(
-                margin: EdgeInsets.all(5.0),
-                child: ClipRRect(
-                  borderRadius: BorderRadius.all(Radius.circular(10.0)),
-                  child: Image.file(
-                    item,
-                    fit: BoxFit.cover,
-                  ),
-                ),
-              ),
-            ))
-        .toList();
-  }
+  
 
   @override
   Widget build(BuildContext context) {
     return Column(children: [
       CarouselSlider(
-        items: imageSliders,
+        items: widget.imgList,
         options: CarouselOptions(
             aspectRatio: 3 / 2,
             viewportFraction: 1,

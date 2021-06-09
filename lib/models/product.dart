@@ -27,7 +27,7 @@ class Product with ChangeNotifier {
     this.price,
     this.imageUrls,
     this.category,
-    this.type = '',
+    this.type,
     this.description,
     this.specs,
     this.warranty,

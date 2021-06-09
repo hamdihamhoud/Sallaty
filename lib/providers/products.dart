@@ -1,3 +1,4 @@
+import 'dart:convert';
 import 'dart:io';
 
 import 'package:flutter/material.dart';
@@ -301,5 +302,15 @@ class ProductsProvider with ChangeNotifier {
     );
     _products.add(product);
     notifyListeners();
+    // print(
+    //   json.encode(
+    //     {
+    //       'title' : product.title,
+    //       'price' : product.price,
+    //       'colorsAndQuantityAndSizes' : product.colorsAndQuantityAndSizes.entries.map((e) => ),
+    //       'description' : product.description,
+    //     },
+    //   ),
+    // );
   }
 }
