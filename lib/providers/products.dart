@@ -1,4 +1,5 @@
 import 'dart:convert';
+import 'dart:developer';
 import 'dart:io';
 
 import 'package:flutter/material.dart';
@@ -18,8 +19,8 @@ class ProductsProvider with ChangeNotifier {
     //     'https://cdn.pixabay.com/photo/2016/10/02/22/17/red-t-shirt-1710578_1280.jpg',
     //     'https://upload.wikimedia.org/wikipedia/commons/thumb/1/14/Cast-Iron-Pan.jpg/1024px-Cast-Iron-Pan.jpg',
     //   ],
-    //   category: categories[1].title,
-    //   type: categories[1].types[1].title,
+    //   category: 'other',
+    //   type: 'other',
     //   description:
     //       'Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.',
     //   specs: {
@@ -249,9 +250,9 @@ class ProductsProvider with ChangeNotifier {
     notifyListeners();
   }
 
-  void updateProduct(Product product, List<File> images) {
+  void updateProduct(Product product, List<String> img64s) {
     var index = _products.indexWhere((element) => element.id == product.id);
-    _products[index] = product = Product(
+    _products[index] = Product(
       id: product.id,
       title: product.title,
       price: product.price,
@@ -268,18 +269,89 @@ class ProductsProvider with ChangeNotifier {
         'https://upload.wikimedia.org/wikipedia/commons/thumb/e/e8/Trousers%2C_dress_%28AM_1960.022-8%29.jpg/512px-Trousers%2C_dress_%28AM_1960.022-8%29.jpg',
         'https://cdn.pixabay.com/photo/2016/10/02/22/17/red-t-shirt-1710578_1280.jpg',
         'https://upload.wikimedia.org/wikipedia/commons/thumb/1/14/Cast-Iron-Pan.jpg/1024px-Cast-Iron-Pan.jpg',
-      ],
+      ], //product.imageUrls,
       ownerId: product.ownerId,
       rating: product.rating,
     );
+
     notifyListeners();
+    // log(
+    //   json.encode(
+    //     {
+    //       'id' : product.id,
+    //       'images': img64s,
+    //       'title': product.title,
+    //       'price': product.price,
+    //       'colorsAndQuantityAndSizes': product.colorsAndQuantityAndSizes.entries
+    //           .map(
+    //             (e) => {
+    //               'color': e.key.value,
+    //               'sizesAndQuantity': e.value.entries
+    //                   .map(
+    //                     (e) => {
+    //                       'size': e.key,
+    //                       'quantity': e.value,
+    //                     },
+    //                   )
+    //                   .toList(),
+    //             },
+    //           )
+    //           .toList(),
+    //       'warrantyPeriod': product.warranty.period,
+    //       'warrantyType': product.warranty.type.toString().split('.').last,
+    //       'returningPeriod': product.returning.period,
+    //       'returningType': product.returning.type.toString().split('.').last,
+    //       'replacementPeriod': product.replacement.period,
+    //       'replacementType':
+    //           product.replacement.type.toString().split('.').last,
+    //       'category': product.category,
+    //       'type': product.type,
+    //       'description': product.description,
+    //       'discountPercentage': product.discountPercentage,
+    //       'specs': product.specs,
+    //       'rating': product.rating,
+    //       'ownerId': product.ownerId,
+    //       'imageUrls': product.imageUrls
+    //     },
+    //   ),
+    // );
   }
 
-  void addProduct(Product product, List<File> images) {
+  // List<String> encodeImages(List<File> images) {
+  //   List<String> img64s = [];
+  //   for (var i = 0; i < images.length; i++) {
+  //     List<int> bytes = images[i].readAsBytesSync().toList();
+  //     img64s.add(base64Encode(bytes));
+  //   }
+  //   return img64s;
+  // }
+
+  Future<List<int>> _readFileByte(File image) async {
+    List<int> bytes;
+    await image.readAsBytes().then((value) {
+      bytes = value;
+      print('reading of bytes is completed');
+    }).catchError((onError) {
+      print('Exception Error while reading audio from path:' +
+          onError.toString());
+    });
+    return bytes;
+  }
+
+  Future<void> addProduct(Product product, List<File> images) async {
+    final List<String> img64s = [];
+    for (var i = 0; i < images.length; i++) {
+      img64s.add(
+        base64Encode(
+          await _readFileByte(images[i]),
+        ),
+      );
+    }
     if (product.id != null) {
-      updateProduct(product, images);
+      updateProduct(product, img64s);
       return;
     }
+
     product = Product(
       id: '1',
       title: product.title,
@@ -293,7 +365,6 @@ class ProductsProvider with ChangeNotifier {
       description: product.description,
       discountPercentage: product.discountPercentage,
       specs: product.specs,
-      
       imageUrls: [
         'https://upload.wikimedia.org/wikipedia/commons/thumb/e/e8/Trousers%2C_dress_%28AM_1960.022-8%29.jpg/512px-Trousers%2C_dress_%28AM_1960.022-8%29.jpg',
         'https://cdn.pixabay.com/photo/2016/10/02/22/17/red-t-shirt-1710578_1280.jpg',
@@ -303,15 +374,48 @@ class ProductsProvider with ChangeNotifier {
     );
     _products.add(product);
     notifyListeners();
-    // print(
+
+    // log(
     //   json.encode(
     //     {
-    //       'title' : product.title,
-    //       'price' : product.price,
-    //       'colorsAndQuantityAndSizes' : product.colorsAndQuantityAndSizes.entries.map((e) => ),
-    //       'description' : product.description,
+    //       'images': img64s,
+    //       'title': product.title,
+    //       'price': product.price,
+    //       'colorsAndQuantityAndSizes': product.colorsAndQuantityAndSizes.entries
+    //           .map(
+    //             (e) => {
+    //               'color': e.key.value,
+    //               'sizesAndQuantity': e.value.entries
+    //                   .map(
+    //                     (e) => {
+    //                       'size': e.key,
+    //                       'quantity': e.value,
+    //                     },
+    //                   )
+    //                   .toList(),
+    //             },
+    //           )
+    //           .toList(),
+    //       'warrantyPeriod': product.warranty.period,
+    //       'warrantyType': product.warranty.type.toString().split('.').last,
+    //       'returningPeriod': product.returning.period,
+    //       'returningType': product.returning.type.toString().split('.').last,
+    //       'replacementPeriod': product.replacement.period,
+    //       'replacementType':
+    //           product.replacement.type.toString().split('.').last,
+    //       'category': product.category,
+    //       'type': product.type,
+    //       'description': product.description,
+    //       'discountPercentage': product.discountPercentage,
+    //       'specs': product.specs,
+    //       'rating': product.rating,
+    //       'ownerId': product.ownerId,
     //     },
     //   ),
     // );
+  }
+
+  List<Product> premiumAllProducts() {
+    return products;
   }
 }
