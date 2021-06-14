@@ -18,6 +18,7 @@ import 'screens/orders_history_screen.dart';
 import 'screens/feedback.dart';
 import 'screens/add_product_screen.dart';
 import 'screens/filter_products_premium_screen.dart';
+import 'screens/analytics_premium_screen.dart';
 
 void main() {
   runApp(MyApp());
@@ -83,6 +84,7 @@ class MyApp extends StatelessWidget {
           AppBottomNavigationBarController.routeName: (ctx) =>
               AppBottomNavigationBarController(),
           FilterProductsScreen.routeName: (ctx) => FilterProductsScreen(),
+          AnalyticsScreen.routeName: (ctx) => AnalyticsScreen(),
         },
       ),
     );

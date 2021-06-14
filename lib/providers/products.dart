@@ -193,6 +193,16 @@ class ProductsProvider with ChangeNotifier {
     // _products.where((element) => element.type == type).toList();
   }
 
+  List<Product> getFavorites() {
+    // fetch by id first
+    return products;
+  }
+
+  List<Product> getOffers() {
+    //fetch by discount
+    return products;
+  }
+
   List<Product> fetchBy(String fetchMechanism) {
     return products;
   }
