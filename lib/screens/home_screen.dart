@@ -1,9 +1,6 @@
 import 'package:ecart/models/product_details_screen_args.dart';
 import 'package:flutter/material.dart';
-import 'dart:io';
-import '../widgets/categories_row.dart';
 import '../widgets/home_suggestion_item.dart';
-import '../widgets/bottom_navigation_bar.dart';
 import '../screens/product_details_screen.dart';
 import '../widgets/product_item.dart';
 import '../providers/products.dart';
@@ -22,21 +19,10 @@ class _HomeScreenState extends State<HomeScreen> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: Colors.white,
-      appBar:  AppBar(
-        backgroundColor: Colors.white,
-        
-        
+      appBar: AppBar(
         title: Text(
-          'Salaty',
-          style: TextStyle(
-            fontWeight: FontWeight.bold,
-            color: Theme.of(context).primaryColor,
-            fontSize: 25,
-            letterSpacing: 2.0,
-          ),
+          'Sallaty',
         ),
-        elevation: 0,
         actions: [
           IconButton(
               icon: Icon(Icons.search),
@@ -116,7 +102,7 @@ class SearchItem extends SearchDelegate<SearchItem> {
               title: Text(suggestions[i].title),
               onTap: () {
                 Navigator.of(context).pushNamed(ProductDetailsSceen.routeName,
-                    arguments: ProducDetailsScreenArgs(id:suggestions[i].id) );
+                    arguments: ProducDetailsScreenArgs(id: suggestions[i].id));
               },
             ));
   }

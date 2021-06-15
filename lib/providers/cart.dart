@@ -1,8 +1,6 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/foundation.dart';
 
-int cartItemId = 0; // Habad haboooood
-
 enum Status {
   Ordered,
   Shiped,
@@ -29,15 +27,14 @@ class CartItem {
 
 class Cart with ChangeNotifier {
   Map<String, CartItem> _items = {
-/*     'p111111': CartItem(
+    'p111111': CartItem(
       id: 'p1',
       title: 'Adidas Shoes',
       quantity: 2,
       price: 12,
-      imageUrl: 
-        'https://freeiconshop.com/wp-content/uploads/edd/burger-flat.png',
-      ,
-    ) */
+      imageUrl:
+          'https://upload.wikimedia.org/wikipedia/commons/thumb/1/14/Cast-Iron-Pan.jpg/1024px-Cast-Iron-Pan.jpg',
+    )
   };
 
   Map<String, CartItem> get items {
@@ -88,14 +85,13 @@ class Cart with ChangeNotifier {
       _items.putIfAbsent(
         productId,
         () => CartItem(
-          id: cartItemId.toString(),
+          id: DateTime.now().toString(),
           title: title,
           price: price * quantity,
           quantity: quantity,
           imageUrl: imageUrl,
         ),
       );
-      cartItemId++;
     }
     notifyListeners();
   }

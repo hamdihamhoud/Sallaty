@@ -7,19 +7,19 @@ class ColorCircule extends StatelessWidget {
   Widget build(BuildContext context) {
     return Padding(
       padding: const EdgeInsets.only(
-        left: 5,
+        bottom: 3,
       ),
       child: Container(
         decoration: BoxDecoration(
           border: Border.all(
-            color: Theme.of(context).accentColor,
-            width: 1,
+            color: Theme.of(context).primaryColor,
+            width: 2,
           ),
           borderRadius: BorderRadius.circular(50),
           color: color,
         ),
-        height: 30,
-        width: 30,
+        height: 32,
+        width: 32,
       ),
     );
   }

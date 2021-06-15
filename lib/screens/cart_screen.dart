@@ -21,16 +21,10 @@ class _CartScreenState extends State<CartScreen> {
     final Map<String, CartItem> items = cart.items;
     final List<CartItem> components = items.values.toList();
     return Scaffold(
-      backgroundColor: Theme.of(context).primaryColor,
       appBar: AppBar(
         title: Text(
           'My Cart',
-          style: TextStyle(
-            fontSize: 25,
-            fontWeight: FontWeight.w600,
-          ),
         ),
-        elevation: 0,
       ),
       drawer: DrawerScreen(),
       body: components.length == 0
