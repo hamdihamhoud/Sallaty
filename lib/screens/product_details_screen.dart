@@ -1,28 +1,27 @@
 import 'package:ecart/providers/cart.dart';
-import 'package:ecart/screens/add_product_screen.dart';
+import 'package:ecart/widgets/alert_dialog.dart';
 import 'package:ecart/widgets/colors_circule.dart';
+import 'package:ecart/widgets/favorite_icon.dart';
 import 'package:ecart/widgets/read_more.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_rating_bar/flutter_rating_bar.dart';
+import 'package:menu_button/menu_button.dart';
 import 'package:provider/provider.dart';
-import 'package:font_awesome_flutter/font_awesome_flutter.dart';
-
 import '../models/product.dart';
 import '../providers/products.dart';
 import '../widgets/product_images_carousel.dart';
-
 import '../models/product_details_screen_args.dart';
 
-// ignore: must_be_immutable
-class ProductDetailsSceen extends StatelessWidget {
-  bool darkmode = false;
+class ProductDetailsSceen extends StatefulWidget {
   static const routeName = '/product-details';
+  @override
+  _ProductDetailsSceenState createState() => _ProductDetailsSceenState();
+}
+
+class _ProductDetailsSceenState extends State<ProductDetailsSceen> {
   bool isSeller = false;
-  double size = 1;
   int amount = 1;
   void setAmount(int a) => amount = a;
-  int cartItemId = 0;
-  double price = 0;
   @override
   Widget build(BuildContext context) {
     final args =
@@ -34,868 +33,294 @@ class ProductDetailsSceen extends StatelessWidget {
     final Product product = productProvider.findId(productId);
     final cart = Provider.of<Cart>(context);
     final mediaQuery = MediaQuery.of(context);
-    if (product.discountPercentage > 0)
-      price =
-          (product.price - product.price * product.discountPercentage / 100);
-    return Scaffold(
-      // backgroundColor: Colors.blue,
-      body: Column(
-        children: [
-          Expanded(
-            child: CustomScrollView(
-              slivers: [
-                SliverAppBar(
-                  expandedHeight: 416,
-                  pinned: true,
-                  leading: IconButton(
-                    icon: Icon(Icons.arrow_back),
-                    color: Colors.black87,
-                    onPressed: () {
-                      Navigator.pop(context);
-                    },
-                  ),
-                  actions: [
-                    if (isSeller)
-                      IconButton(
-                        icon: FaIcon(FontAwesomeIcons.edit),
-                        color: Colors.black,
-                        onPressed: () {
-                          Navigator.of(context).pushNamed(
-                            AddProductScreen.routeName,
-                            arguments: product.id,
-                          );
-                        },
-                      ),
-                  ],
-                  automaticallyImplyLeading: true,
-                  flexibleSpace: FlexibleSpaceBar(
-                      background: Container(
-                        color: Colors.white,
-                        child: CarouselWithIndicator(product.imageUrls),
-                      ),
-                      title: SABT(
-                        child: Container(
-                          width: MediaQuery.of(context).size.width * 0.45,
-                          child: Text(
-                            product.title,
-                            overflow: TextOverflow.ellipsis,
-                          ),
-                        ),
-                      )),
-                ),
-                SliverList(
-                    delegate: SliverChildListDelegate([
-                  Container(
-                    decoration: BoxDecoration(
-                        color: Theme.of(context).primaryColor,
-                        borderRadius: BorderRadius.only(
-                          topLeft: Radius.circular(30),
-                          topRight: Radius.circular(30),
-                        )),
-                    child: Padding(
-                      padding: const EdgeInsets.only(
-                        right: 25,
-                        left: 25,
-                        top: 25,
-                      ),
-                      child: Column(
-                        crossAxisAlignment: CrossAxisAlignment.start,
-                        children: [
-                          Padding(
-                            padding: const EdgeInsets.only(
-                              bottom: 15,
-                            ),
-                            child: Center(
-                              child: Divider(
-                                endIndent: 125,
-                                indent: 125,
-                                color: Theme.of(context).accentColor,
-                                thickness: 3.5,
-                              ),
-                            ),
-                          ),
-                          Text(
-                            '${product.title}',
-                            style: TextStyle(
-                              color: Color.fromARGB(255, 31, 52, 76),
-                              fontSize: 25,
-                              fontWeight: FontWeight.w600,
-                            ),
-                          ),
-                          Padding(
-                            padding: const EdgeInsets.only(
-                              top: 0,
-                              bottom: 10,
-                            ),
-                            child: Text(
-                              productProvider.findSeller().name,
-                              style: TextStyle(
-                                color: Color.fromARGB(255, 180, 180, 180),
-                                fontSize: 20,
-                                fontWeight: FontWeight.w500,
-                              ),
-                            ),
-                          ),
-                          Padding(
-                            padding: const EdgeInsets.only(
-                              bottom: 15,
-                            ),
-                            child: Row(
-                              mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                              children: [
-                                Column(
-                                  children: [
-                                    if (product.discountPercentage == 0)
-                                      Text(
-                                        '${product.price.toInt()} S.P',
-                                        style: TextStyle(
-                                          color: Theme.of(context).accentColor,
-                                          fontSize: 25,
-                                          fontWeight: FontWeight.w700,
-                                        ),
-                                      ),
-                                    if (product.discountPercentage > 0)
-                                      Padding(
-                                        padding: const EdgeInsets.only(
-                                          bottom: 2,
-                                        ),
-                                        child: Text(
-                                          '${product.price.toInt()} S.P',
-                                          style: TextStyle(
-                                            color:
-                                                Theme.of(context).accentColor,
-                                            fontSize: 25,
-                                            fontWeight: FontWeight.w700,
-                                            decoration:
-                                                TextDecoration.lineThrough,
-                                          ),
-                                        ),
-                                      ),
-                                    if (product.discountPercentage > 0)
-                                      Text(
-                                        '${price.toInt()} S.P',
-                                        style: TextStyle(
-                                          color: Theme.of(context).accentColor,
-                                          fontSize: 25,
-                                          fontWeight: FontWeight.w700,
-                                        ),
-                                      ),
-                                  ],
-                                ),
-                                Row(
-                                  children: [
-                                    // Should be List view
-                                    ColorCircule(Colors.black),
-                                    ColorCircule(Colors.red),
-                                    ColorCircule(Colors.orange),
-                                    ColorCircule(Colors.blue),
-                                  ],
-                                ),
-                              ],
-                            ),
-                          ),
-                          Padding(
-                            padding: const EdgeInsets.only(
-                              bottom: 15,
-                            ),
-                            child: RatingBarIndicator(
-                              rating: product.rating,
-                              itemBuilder: (context, index) => Icon(
-                                Icons.star_rounded,
-                                color: Colors.yellow,
-                              ),
-                            ),
-                          ),
-                          Padding(
-                            padding: const EdgeInsets.only(
-                              bottom: 10,
-                            ),
-                            child: Text(
-                              'Descreption',
-                              style: TextStyle(
-                                color: Colors.black,
-                                fontSize: 18,
-                              ),
-                            ),
-                          ),
-                          Padding(
-                            padding: const EdgeInsets.only(
-                              bottom: 15,
-                            ),
-                            child: ReadMoreText(
-                              '${product.description} ',
-                              style: TextStyle(
-                                color: Color.fromARGB(255, 200, 200, 200),
-                                fontSize: 15,
-                              ),
-                              colorClickableText: Colors.white,
-                              trimCollapsedText: ' ... read more',
-                            ),
-                          ),
-                          Padding(
-                            padding: const EdgeInsets.only(
-                              bottom: 10,
-                            ),
-                            child: Text(
-                              'Item details',
-                              style: TextStyle(
-                                color: Colors.black,
-                                fontSize: 18,
-                              ),
-                            ),
-                          ),
-                          ...product.specs.keys.map((e) {
-                            return Padding(
-                              padding: const EdgeInsets.only(
-                                bottom: 7,
-                              ),
-                              child: Row(
-                                mainAxisAlignment: MainAxisAlignment.start,
-                                children: [
-                                  Text(
-                                    "$e:  ",
-                                    style: TextStyle(
-                                      color: Theme.of(context).accentColor,
-                                      fontSize: 15,
-                                    ),
-                                  ),
-                                  Text(
-                                    product.specs[e],
-                                    style: TextStyle(
-                                      color: Color.fromARGB(255, 200, 200, 200),
-                                      fontSize: 15,
-                                    ),
-                                  ),
-                                ],
-                              ),
-                            );
-                          }).toList(),
-                          Padding(
-                            padding: const EdgeInsets.only(
-                              bottom: 10,
-                              top: 8,
-                            ),
-                            child: Text(
-                              'Returns & Replacement',
-                              style: TextStyle(
-                                color: Colors.black,
-                                fontSize: 18,
-                              ),
-                            ),
-                          ),
-                          Padding(
-                            padding: const EdgeInsets.only(
-                              bottom: 10,
-                            ),
-                            child: Row(
-                              mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                              children: [
-                                Container(
-                                  child: Text(
-                                    'Return',
-                                    style: TextStyle(
-                                      color: Color.fromARGB(255, 200, 200, 200),
-                                    ),
-                                  ),
-                                ),
-                                Container(
-                                  child: product.returning.period != 0
-                                      ? Text('${product.returning.period} ' +
-                                          product.returning.type
-                                              .toString()
-                                              .split('.')
-                                              .last)
-                                      : Text(
-                                          'X',
-                                          style: TextStyle(color: Colors.red),
-                                        ),
-                                ),
-                              ],
-                            ),
-                          ),
-                          Padding(
-                            padding: const EdgeInsets.only(
-                              bottom: 15,
-                            ),
-                            child: Row(
-                              mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                              children: [
-                                Container(
-                                  child: Text(
-                                    'Replace',
-                                    style: TextStyle(
-                                      color: Color.fromARGB(255, 200, 200, 200),
-                                    ),
-                                  ),
-                                ),
-                                Container(
-                                  child: product.replacement.period != 0
-                                      ? Text('${product.replacement.period} ' +
-                                          product.replacement.type
-                                              .toString()
-                                              .split('.')
-                                              .last)
-                                      : Text(
-                                          'X',
-                                          style: TextStyle(color: Colors.red),
-                                        ),
-                                ),
-                              ],
-                            ),
-                          ),
-                        ],
-                      ),
-                    ),
-                  ),
-                  /* Positioned(
-                    right: 30,
-                    top: 70,
-                    child: Container(
-                      width: 50,
-                      height: 50,
-                      decoration: BoxDecoration(
-                        borderRadius: BorderRadius.circular(50),
-                        color: Color.fromARGB(255, 255, 120, 117),
-                      ),
-                      child: Center(
-                        child: FavoriteIcon(product: product),
-                      ),
-                    ),
-                  ), */
-                ])),
-              ],
-            ),
-          ),
-          if (!isSeller)
-            Container(
-              color: Theme.of(context).primaryColor,
-              width: mediaQuery.size.width,
-              height: 80,
-              child: Padding(
-                padding: const EdgeInsets.only(
-                  left: 25,
-                  right: 25,
-                  top: 15,
-                  bottom: 15,
-                ),
-                child: (productProvider.checkIfAvailable(productId))
-                    ? ElevatedButton(
-                        style: ElevatedButton.styleFrom(
-                          primary: Theme.of(context).accentColor,
-                          shape: RoundedRectangleBorder(
-                            borderRadius: BorderRadius.circular(10),
-                          ),
-                        ),
-                        onPressed: () => {
-                          showDialog(
-                            context: context,
-                            barrierDismissible: false,
-                            builder: (context) {
-                              return AlertDialog(
-                                title: Center(
-                                  child: Text(
-                                    'Add quantity',
-                                    style: TextStyle(
-                                      color: Colors.white,
-                                    ),
-                                  ),
-                                ),
-                                backgroundColor: Theme.of(context).primaryColor,
-                                shape: RoundedRectangleBorder(
-                                  borderRadius: BorderRadius.circular(10),
-                                ),
-                                scrollable: true,
-                                titlePadding: EdgeInsets.only(
-                                  bottom: 20,
-                                  top: 20,
-                                ),
-                                actionsPadding: EdgeInsets.all(0),
-                                contentPadding: EdgeInsets.only(
-                                  left: 70,
-                                  right: 70,
-                                ),
-                                actions: <Widget>[
-                                  TextButton(
-                                    child: Text(
-                                      'ADD',
-                                      style: TextStyle(
-                                        color: Colors.white,
-                                      ),
-                                    ),
-                                    style: TextButton.styleFrom(
-                                      backgroundColor: Colors.transparent,
-                                      primary: Colors.white,
-                                    ),
-                                    onPressed: () {
-                                      productProvider.removeFromList(
-                                          productId, amount);
-                                      cart.addItem(
-                                        productId: product.id,
-                                        quantity: amount,
-                                        title: product.title,
-                                        price: product.discountPercentage > 0
-                                            ? (product.price -
-                                                product.price *
-                                                    product.discountPercentage /
-                                                    100)
-                                            : product.price,
-                                        imageUrl: product.imageUrls.first,
-                                      );
-                                      ScaffoldMessenger.of(context)
-                                          .showSnackBar(
-                                        SnackBar(
-                                          content: Text(
-                                            amount > 1
-                                                ? '$amount item\'s added to your cart'
-                                                : '$amount item added to your cart',
-                                            style: TextStyle(
-                                              color: Colors.black,
-                                              fontSize: 20,
-                                            ),
-                                          ),
-                                          backgroundColor:
-                                              Theme.of(context).accentColor,
-                                          duration: Duration(milliseconds: 700),
-                                        ),
-                                      );
-                                      setAmount(1);
-                                      cartItemId++;
-                                      Navigator.of(context).pop();
-                                    },
-                                  ),
-                                ],
-                                // content: Center(                     !!!!!!!!!!!!!!!!!!
-                                //   child: QuantityIcon(               FIX MAX AMOUNT QUANTITY
-                                //     amount: amount,                  !!!!!!!!!!
-                                //     maxAmount: product.quantity,     !!!!!!!!!!!!!!!!!!
-                                //     setter: setAmount,               !!!!!!!!!!!!
-                                //   ),
-                                // ),
-                              );
-                            },
-                          ),
-                        },
-                        child: Row(
-                          mainAxisAlignment: MainAxisAlignment.center,
-                          children: [
-                            Icon(
-                              Icons.shopping_cart_outlined,
-                              size: 25,
-                            ),
-                            Padding(
-                              padding: const EdgeInsets.only(
-                                left: 7,
-                              ),
-                              child: Text(
-                                'ADD to Cart',
-                                style: TextStyle(
-                                  fontSize: 19,
-                                  color: Colors.white,
-                                  fontWeight: FontWeight.bold,
-                                ),
-                              ),
-                            ),
-                          ],
-                        ),
-                      )
-                    : Container(
-                        decoration: BoxDecoration(
-                            color: Color.fromARGB(255, 255, 100, 100),
-                            borderRadius:
-                                BorderRadius.all(Radius.circular(10))),
-                        child: Center(
-                          child: Text(
-                            'Soldout',
-                            style: TextStyle(
-                              fontSize: 20,
-                              color: Colors.white,
-                            ),
-                          ),
-                        ),
-                      ),
-              ),
-            ),
-        ],
-      ),
-    );
-  }
-}
+    final colorsNumber = product.colorsAndQuantityAndSizes.keys.length;
+    final List<String> sizes = [];
+    Color selectedvalue;
 
-class FavoriteIcon extends StatefulWidget {
-  const FavoriteIcon({
-    Key key,
-    @required this.product,
-  }) : super(key: key);
-
-  final Product product;
-
-  @override
-  _FavoriteIconState createState() => _FavoriteIconState();
-}
-
-class _FavoriteIconState extends State<FavoriteIcon> {
-  @override
-  Widget build(BuildContext context) {
-    return IconButton(
-      iconSize: 25,
-      padding: const EdgeInsets.all(0),
-      color: Colors.white,
-      icon: widget.product.isFavorite
-          ? Icon(Icons.favorite_rounded)
-          : Icon(Icons.favorite_border_rounded),
-      onPressed: () {
-        setState(() {
-          widget.product.toggleFav();
-        });
-      },
-    );
-  }
-}
-
-// ignore: must_be_immutable
-class QuantityIcon extends StatefulWidget {
-  QuantityIcon({
-    Key key,
-    @required this.amount,
-    @required this.maxAmount,
-    @required this.setter,
-  }) : super(key: key);
-  int amount;
-  int maxAmount;
-  Function setter;
-  @override
-  _QuantityIconState createState() => _QuantityIconState();
-}
-
-class _QuantityIconState extends State<QuantityIcon> {
-  bool addButtonState = true;
-  bool removeButtonState = false;
-  @override
-  Widget build(BuildContext context) {
-    return Row(
-      crossAxisAlignment: CrossAxisAlignment.center,
-      mainAxisAlignment: MainAxisAlignment.spaceBetween,
-      children: [
-        Container(
-          width: 35,
-          height: 35,
-          decoration: BoxDecoration(
-            border: Border.all(
-              color: widget.amount == 1
-                  ? Color.fromARGB(255, 66, 66, 66)
-                  : Theme.of(context).accentColor,
-            ),
-            borderRadius: BorderRadius.circular(5),
-            color: widget.amount == 1
-                ? Color.fromARGB(255, 66, 66, 66)
-                : Theme.of(context).accentColor,
-          ),
-          child: Center(
-            child: IconButton(
-              splashColor: removeButtonState
-                  ? ThemeData().splashColor
-                  : Colors.transparent,
-              enableFeedback: removeButtonState,
-              highlightColor: removeButtonState
-                  ? ThemeData().highlightColor
-                  : Colors.transparent,
-              icon: const Icon(
-                Icons.remove,
-                color: Colors.white,
-                size: 18,
-              ),
-              onPressed: () {
-                if (widget.amount > 1) {
-                  setState(() {
-                    removeButtonState = true;
-                    addButtonState = true;
-                    widget.amount--;
-                    widget.setter(widget.amount);
-                  });
-                  if (widget.amount == 1) {
-                    setState(() {
-                      removeButtonState = false;
-                    });
-                  }
-                }
-              },
-            ),
-          ),
-        ),
-        Text(
-          widget.amount.toString(),
-          style: const TextStyle(
-            fontSize: 24,
-            color: Colors.white,
-          ),
-        ),
-        Container(
-          width: 35,
-          height: 35,
-          decoration: BoxDecoration(
-            border: Border.all(
-              color: widget.amount == widget.maxAmount
-                  ? Color.fromARGB(255, 66, 66, 66)
-                  : Theme.of(context).accentColor,
-            ),
-            borderRadius: BorderRadius.circular(5),
-            color: widget.amount == widget.maxAmount
-                ? Color.fromARGB(255, 66, 66, 66)
-                : Theme.of(context).accentColor,
-          ),
-          child: Center(
-            child: IconButton(
-              splashColor:
-                  addButtonState ? ThemeData().splashColor : Colors.transparent,
-              enableFeedback: addButtonState,
-              highlightColor: addButtonState
-                  ? ThemeData().highlightColor
-                  : Colors.transparent,
-              icon: const Icon(
-                Icons.add,
-                color: Colors.white,
-                size: 18,
-              ),
-              onPressed: () {
-                if (widget.amount < widget.maxAmount) {
-                  setState(() {
-                    removeButtonState = true;
-                    widget.amount++;
-                    widget.setter(widget.amount);
-                  });
-                  if (widget.amount == widget.maxAmount) {
-                    setState(() {
-                      addButtonState = false;
-                    });
-                  }
-                }
-              },
-            ),
-          ),
-        ),
-      ],
-    );
-  }
-}
-
-class SABT extends StatefulWidget {
-  final Widget child;
-  const SABT({
-    Key key,
-    @required this.child,
-  }) : super(key: key);
-  @override
-  _SABTState createState() {
-    return new _SABTState();
-  }
-}
-
-class _SABTState extends State<SABT> {
-  ScrollPosition _position;
-  bool _visible;
-  @override
-  void dispose() {
-    _removeListener();
-    super.dispose();
-  }
-
-  @override
-  void didChangeDependencies() {
-    super.didChangeDependencies();
-    _removeListener();
-    _addListener();
-  }
-
-  void _addListener() {
-    _position = Scrollable.of(context)?.position;
-    _position?.addListener(_positionListener);
-    _positionListener();
-  }
-
-  void _removeListener() {
-    _position?.removeListener(_positionListener);
-  }
-
-  void _positionListener() {
-    final FlexibleSpaceBarSettings settings =
-        context.dependOnInheritedWidgetOfExactType();
-    // print(settings.minExtent);
-    bool visible =
-        settings == null || settings.currentExtent > settings.minExtent + 10;
-    if (_visible != visible) {
-      setState(() {
-        _visible = visible;
-      });
+    final List<int> quantity = [];
+    for (int i = 0; i < colorsNumber; i++) {
+      for (int j = 0;
+          j <
+              product.colorsAndQuantityAndSizes.entries
+                  .elementAt(i)
+                  .value
+                  .values
+                  .length;
+          j++) {
+        if (j == 0)
+          quantity.insert(
+              i,
+              product.colorsAndQuantityAndSizes.entries
+                  .elementAt(i)
+                  .value
+                  .values
+                  .elementAt(j)
+                  .toInt());
+        else
+          quantity[i] += product.colorsAndQuantityAndSizes.entries
+              .elementAt(i)
+              .value
+              .values
+              .elementAt(j)
+              .toInt();
+      }
     }
-  }
-
-  @override
-  Widget build(BuildContext context) {
-    return AnimatedOpacity(
-      duration: Duration(milliseconds: 300),
-      opacity: _visible ? 0 : 1,
-      child: widget.child,
-    );
-  }
-}
-
-/* Column(
+    return Scaffold(
+      body: Stack(
         children: [
-          Expanded(
-            child: CustomScrollView(
-              slivers: [
-                SliverAppBar(
-                  expandedHeight: 400,
-                  pinned: true,
-                  leading: IconButton(
-                    icon: Icon(Icons.arrow_back),
-                    color: Colors.black87,
+          CustomScrollView(
+            slivers: <Widget>[
+              SliverAppBar(
+                bottom: PreferredSize(
+                  child: Container(),
+                  preferredSize: Size(0, 20),
+                ),
+                pinned: false,
+                expandedHeight: mediaQuery.size.height * 0.65,
+                actions: [
+                  Padding(
+                    padding: const EdgeInsets.only(
+                      right: 5,
+                    ),
+                    child: !isSeller
+                        ? IconButton(
+                            onPressed: () {},
+                            icon: Icon(
+                              Icons.shopping_cart,
+                              color: Color(0xFF333333),
+                            ),
+                          )
+                        : IconButton(
+                            onPressed: () {},
+                            icon: Icon(
+                              Icons.edit,
+                              color: Color(0xFF333333),
+                            ),
+                          ),
+                  ),
+                ],
+                leading: Padding(
+                  padding: const EdgeInsets.only(
+                    left: 5,
+                  ),
+                  child: IconButton(
                     onPressed: () {
                       Navigator.pop(context);
                     },
+                    icon: Icon(Icons.arrow_back),
+                    color: Color(0xFF333333),
                   ),
-                  automaticallyImplyLeading: true,
-                  flexibleSpace: FlexibleSpaceBar(
-                      background: Container(
-                        color: Colors.white,
-                        child: CarouselWithIndicator(product.imageUrls),
-                      ),
-                      title: SABT(
-                        child: Text(
-                          product.title,
-                        ),
-                      )),
                 ),
-                SliverList(
-                    delegate: SliverChildListDelegate([
-                  Stack(
-                    children: [
-                      Container(
+                flexibleSpace: Stack(
+                  children: [
+                    Positioned(
+                        child: CarouselWithIndicator(product.imageUrls),
+                        top: 0,
+                        left: 0,
+                        right: 0,
+                        bottom: 0),
+                    Positioned(
+                      child: Container(
+                        height: 30,
                         decoration: BoxDecoration(
-<<<<<<< HEAD
-                         
-                            color: darkmode ? Color(0xFF333333) : Colors.white,
-=======
-                            color: Color.fromARGB(255, 155, 155, 155),
->>>>>>> 6253111e94b48705ab6f075ed382ec1ab7829533
-                            borderRadius: BorderRadius.only(
-                              topLeft: Radius.circular(30),
-                              topRight: Radius.circular(30),
-                            )),
+                          color: Colors.white,
+                          borderRadius: BorderRadius.vertical(
+                            top: Radius.circular(50),
+                          ),
+                        ),
+                        child: Align(
+                          alignment: Alignment.bottomCenter,
+                          child: Divider(
+                            color: Color(0xFF828282),
+                            height: 20,
+                            thickness: 3,
+                            endIndent: 175,
+                            indent: 175,
+                          ),
+                        ),
+                      ),
+                      bottom: 0,
+                      left: 0,
+                      right: 0,
+                    ),
+                    Positioned(
+                      bottom: 5,
+                      right: 25,
+                      child: FavoriteIcon(product: product),
+                    ),
+                  ],
+                ),
+              ),
+              SliverList(
+                delegate: SliverChildBuilderDelegate(
+                  // ignore: missing_return
+                  (BuildContext context, int index) {
+                    if (index == 0) {
+                      return Container(
+                        color: Colors.white,
                         child: Padding(
                           padding: const EdgeInsets.only(
-                            right: 25,
-                            left: 25,
-                            top: 25,
+                            left: 20,
+                            right: 20,
                           ),
                           child: Column(
                             crossAxisAlignment: CrossAxisAlignment.start,
                             children: [
-                              Padding(
-                                padding: const EdgeInsets.only(
-                                  bottom: 15,
-                                ),
-                                child: Center(
-                                  child: Divider(
-                                    endIndent: 125,
-                                    indent: 125,
-                                    color: Color.fromARGB(255, 200, 200, 200),
-                                    thickness: 3.5,
-                                  ),
-                                ),
-                              ),
-                              Text(
-                                '${product.title}',
-                                style: TextStyle(
-                                  color: Colors.black54,
-                                  fontSize: 25,
-                                ),
-                              ),
-                              Padding(
-                                padding: const EdgeInsets.only(
-                                  top: 7,
-                                  bottom: 15,
-                                ),
-                                child: Text(
-                                  productProvider.findSeller().name,
-                                  style: TextStyle(
-                                    color: Color.fromARGB(255, 180, 180, 180),
-                                    fontSize: 20,
-                                  ),
-                                ),
-                              ),
-                              Padding(
-                                padding: const EdgeInsets.only(
-                                  bottom: 15,
-                                ),
-                                child: Row(
-                                  mainAxisAlignment:
-                                      MainAxisAlignment.spaceBetween,
-                                  children: [
-                                    Column(
-                                      children: [
-                                        if (!product.hasDiscount)
-                                          Text(
-                                            '${product.price.toInt()} S.P',
-                                            style: TextStyle(
-                                              color:
-                                                  Theme.of(context).accentColor,
-                                              fontSize: 25,
-                                              fontWeight: FontWeight.w500,
-                                            ),
+                              Row(
+                                mainAxisAlignment:
+                                    MainAxisAlignment.spaceBetween,
+                                children: [
+                                  Column(
+                                    crossAxisAlignment:
+                                        CrossAxisAlignment.start,
+                                    children: [
+                                      Padding(
+                                        padding: const EdgeInsets.only(
+                                          bottom: 10,
+                                        ),
+                                        child: Text(
+                                          '${product.title}',
+                                          style: TextStyle(
+                                            color: Color(0xFF333333),
+                                            fontSize: 25,
+                                            fontWeight: FontWeight.bold,
                                           ),
-                                        if (product.hasDiscount)
+                                        ),
+                                      ),
+                                      Padding(
+                                        padding: const EdgeInsets.only(
+                                          bottom: 10,
+                                        ),
+                                        child: Text(
+                                          productProvider.findSeller().name,
+                                          style: TextStyle(
+                                            color: Color(0xFF828282),
+                                            fontSize: 20,
+                                            fontWeight: FontWeight.bold,
+                                          ),
+                                        ),
+                                      ),
+                                      Padding(
+                                        padding: const EdgeInsets.only(
+                                          bottom: 5,
+                                        ),
+                                        child: Row(
+                                          children: [
+                                            if (product.discountPercentage == 0)
+                                              Text(
+                                                '${product.price.toInt()} S.P',
+                                                style: TextStyle(
+                                                  color: Theme.of(context)
+                                                      .primaryColor,
+                                                  fontSize: 20,
+                                                  fontWeight: FontWeight.bold,
+                                                ),
+                                              ),
+                                            if (product.discountPercentage > 0)
+                                              Text(
+                                                '${product.price.toInt()} S.P',
+                                                style: TextStyle(
+                                                  color: Theme.of(context)
+                                                      .primaryColor,
+                                                  fontSize: 18,
+                                                  fontWeight: FontWeight.bold,
+                                                  decoration: TextDecoration
+                                                      .lineThrough,
+                                                ),
+                                              ),
+                                            if (product.discountPercentage > 0)
+                                              Padding(
+                                                padding: const EdgeInsets.only(
+                                                  left: 5,
+                                                ),
+                                                child: Text(
+                                                  '${(product.price - product.price * product.discountPercentage / 100)} S.P',
+                                                  style: TextStyle(
+                                                    color: Theme.of(context)
+                                                        .primaryColor,
+                                                    fontSize: 20,
+                                                    fontWeight: FontWeight.bold,
+                                                  ),
+                                                ),
+                                              ),
+                                          ],
+                                        ),
+                                      ),
+                                      Padding(
+                                        padding: const EdgeInsets.only(
+                                          bottom: 10,
+                                          left: 0,
+                                        ),
+                                        child: RatingBarIndicator(
+                                          rating: product.rating,
+                                          itemBuilder: (context, index) => Icon(
+                                            Icons.star_rounded,
+                                            color: Colors.yellow,
+                                          ),
+                                        ),
+                                      ),
+                                    ],
+                                  ),
+                                  InkWell(
+                                    onTap: () {
+                                      showAlertDialog(
+                                          context: context,
+                                          colorsAndQuantityAndSizes:
+                                              product.colorsAndQuantityAndSizes,
+                                          quantity: quantity);
+                                    },
+                                    child: Column(
+                                      children: [
+                                        if (colorsNumber <= 3)
+                                          for (int i = 0; i < colorsNumber; i++)
+                                            ColorCircule(
+                                              product.colorsAndQuantityAndSizes
+                                                  .keys
+                                                  .elementAt(i),
+                                            ),
+                                        if (colorsNumber > 3)
+                                          for (int i = 0; i < 3; i++)
+                                            ColorCircule(
+                                              product.colorsAndQuantityAndSizes
+                                                  .keys
+                                                  .elementAt(i),
+                                            ),
+                                        if (colorsNumber > 3)
                                           Padding(
                                             padding: const EdgeInsets.only(
-                                              bottom: 2,
+                                              bottom: 3,
                                             ),
-                                            child: Text(
-                                              '${product.price.toInt()} S.P',
-                                              style: TextStyle(
-                                                color: Theme.of(context)
-                                                    .accentColor,
-                                                fontSize: 25,
-                                                fontWeight: FontWeight.w500,
-                                                decoration:
-                                                    TextDecoration.lineThrough,
+                                            child: Container(
+                                              width: 32,
+                                              height: 32,
+                                              decoration: BoxDecoration(
+                                                borderRadius: BorderRadius.all(
+                                                  Radius.circular(25),
+                                                ),
+                                                border: Border.all(
+                                                  color: Theme.of(context)
+                                                      .primaryColor,
+                                                  width: 3,
+                                                ),
+                                                color: Colors.black12,
+                                              ),
+                                              child: Center(
+                                                child: Text(
+                                                  "+${colorsNumber - 3}",
+                                                  style: TextStyle(
+                                                    color: Theme.of(context)
+                                                        .primaryColor,
+                                                    fontSize: 15,
+                                                    fontWeight: FontWeight.bold,
+                                                  ),
+                                                ),
                                               ),
                                             ),
                                           ),
-                                        if (product.hasDiscount)
-                                          Text(
-                                            '${price.toInt()} S.P',
-                                            style: TextStyle(
-                                              color:
-                                                  Theme.of(context).accentColor,
-                                              fontSize: 25,
-                                              fontWeight: FontWeight.w500,
-                                            ),
-                                          ),
                                       ],
                                     ),
-                                    Row(
-                                      children: [
-                                        // Should be List view
-                                        ColorCircule(Colors.black),
-                                        ColorCircule(Colors.red),
-                                        ColorCircule(Colors.orange),
-                                        ColorCircule(Colors.blue),
-                                      ],
-                                    ),
-                                  ],
-                                ),
-                              ),
-                              Padding(
-                                padding: const EdgeInsets.only(
-                                  bottom: 15,
-                                ),
-                                child: RatingBarIndicator(
-                                  rating: product.rating,
-                                  itemBuilder: (context, index) => Icon(
-                                    Icons.star_rounded,
-                                    color: Color.fromARGB(255, 254, 212, 145),
-                                  ),
-                                ),
+                                  )
+                                ],
                               ),
                               Padding(
                                 padding: const EdgeInsets.only(
@@ -904,77 +329,96 @@ class _SABTState extends State<SABT> {
                                 child: Text(
                                   'Descreption',
                                   style: TextStyle(
-                                    color: Colors.white,
-                                    fontSize: 18 * size,
+                                    color: Color(0xFF333333),
+                                    fontSize: 20,
                                   ),
                                 ),
                               ),
                               Padding(
                                 padding: const EdgeInsets.only(
-                                  bottom: 15,
+                                  bottom: 10,
                                 ),
                                 child: ReadMoreText(
                                   '${product.description} ',
                                   style: TextStyle(
-                                    color: Color.fromARGB(255, 200, 200, 200),
-                                    fontSize: 15,
+                                    color: Color(0xFF828282),
+                                    fontSize: 16,
                                   ),
-                                  colorClickableText: Colors.white,
-                                  trimCollapsedText: ' ... read more',
+                                  colorClickableText: Color(0xFF333333),
                                 ),
                               ),
-                              Padding(
-                                padding: const EdgeInsets.only(
-                                  bottom: 10,
-                                ),
-                                child: Text(
-                                  'Item details',
-                                  style: TextStyle(
-                                    color: Colors.white,
-                                    fontSize: 18,
-                                  ),
-                                ),
-                              ),
+                              (product.specs.length != 0)
+                                  ? Padding(
+                                      padding: const EdgeInsets.only(
+                                        bottom: 10,
+                                      ),
+                                      child: Text(
+                                        'Item details',
+                                        style: TextStyle(
+                                          color: Color(0xFF333333),
+                                          fontSize: 20,
+                                        ),
+                                      ),
+                                    )
+                                  : Padding(
+                                      padding: const EdgeInsets.only(
+                                        bottom: 0,
+                                      ),
+                                    ),
                               ...product.specs.keys.map((e) {
-                                return Padding(
-                                  padding: const EdgeInsets.only(
-                                    bottom: 7,
-                                  ),
-                                  child: Row(
-                                    mainAxisAlignment: MainAxisAlignment.start,
-                                    children: [
-                                      Text(
-                                        "$e:  ",
-                                        style: TextStyle(
-                                          color: Theme.of(context).accentColor,
-                                          fontSize: 15,
+                                if (product.specs.length != 0)
+                                  return Padding(
+                                    padding: const EdgeInsets.only(
+                                      bottom: 7,
+                                    ),
+                                    child: Row(
+                                      mainAxisAlignment:
+                                          MainAxisAlignment.start,
+                                      children: [
+                                        Text(
+                                          "$e:  ",
+                                          style: TextStyle(
+                                            color: Color(0xFF333333),
+                                            fontSize: 16,
+                                          ),
                                         ),
-                                      ),
-                                      Text(
-                                        product.specs[e],
-                                        style: TextStyle(
-                                          color: Color.fromARGB(
-                                              255, 200, 200, 200),
-                                          fontSize: 15,
+                                        Text(
+                                          product.specs[e],
+                                          style: TextStyle(
+                                            color: Color(0xFF828282),
+                                            fontSize: 16,
+                                          ),
                                         ),
-                                      ),
-                                    ],
-                                  ),
-                                );
+                                      ],
+                                    ),
+                                  );
                               }).toList(),
-                              Padding(
-                                padding: const EdgeInsets.only(
-                                  bottom: 10,
-                                  top: 8,
-                                ),
-                                child: Text(
-                                  'Returns & Replacement',
-                                  style: TextStyle(
-                                    color: Colors.white,
-                                    fontSize: 18,
-                                  ),
-                                ),
-                              ),
+                              (product.specs.length != 0)
+                                  ? Padding(
+                                      padding: const EdgeInsets.only(
+                                        bottom: 10,
+                                        top: 3,
+                                      ),
+                                      child: Text(
+                                        'Returns & Replacement',
+                                        style: TextStyle(
+                                          color: Color(0xFF333333),
+                                          fontSize: 20,
+                                        ),
+                                      ),
+                                    )
+                                  : Padding(
+                                      padding: const EdgeInsets.only(
+                                        bottom: 10,
+                                      ),
+                                      child: Text(
+                                        'Returns & Replacement',
+                                        style: TextStyle(
+                                          color: Color(0xFF333333),
+                                          fontSize: 20,
+                                        ),
+                                      ),
+                                    ),
                               Padding(
                                 padding: const EdgeInsets.only(
                                   bottom: 10,
@@ -987,19 +431,30 @@ class _SABTState extends State<SABT> {
                                       child: Text(
                                         'Return',
                                         style: TextStyle(
-                                          color: Color.fromARGB(
-                                              255, 200, 200, 200),
+                                          color: Color(0xFF333333),
+                                          fontSize: 16,
                                         ),
                                       ),
                                     ),
                                     Container(
-                                      child: product.isReturnable
+                                      child: product.returning.period != 0
                                           ? Text(
-                                              '${product.returningPeriod} day')
+                                              '${product.returning.period} ' +
+                                                  product.returning.type
+                                                      .toString()
+                                                      .split('.')
+                                                      .last,
+                                              style: TextStyle(
+                                                color: Color(0xFF828282),
+                                                fontSize: 16,
+                                              ),
+                                            )
                                           : Text(
                                               'X',
-                                              style:
-                                                  TextStyle(color: Colors.red),
+                                              style: TextStyle(
+                                                color: Color(0xFF828282),
+                                                fontSize: 16,
+                                              ),
                                             ),
                                     ),
                                   ],
@@ -1007,7 +462,7 @@ class _SABTState extends State<SABT> {
                               ),
                               Padding(
                                 padding: const EdgeInsets.only(
-                                  bottom: 15,
+                                  bottom: 7,
                                 ),
                                 child: Row(
                                   mainAxisAlignment:
@@ -1017,198 +472,227 @@ class _SABTState extends State<SABT> {
                                       child: Text(
                                         'Replace',
                                         style: TextStyle(
-                                          color: Color.fromARGB(
-                                              255, 200, 200, 200),
+                                          color: Color(0xFF333333),
+                                          fontSize: 16,
                                         ),
                                       ),
                                     ),
                                     Container(
-                                      child: product.isReturnable
+                                      child: product.replacement.period != 0
                                           ? Text(
-                                              '${product.replacementPeriod} day')
+                                              '${product.replacement.period} ' +
+                                                  product.replacement.type
+                                                      .toString()
+                                                      .split('.')
+                                                      .last,
+                                              style: TextStyle(
+                                                color: Color(0xFF828282),
+                                                fontSize: 16,
+                                              ),
+                                            )
                                           : Text(
                                               'X',
-                                              style:
-                                                  TextStyle(color: Colors.red),
+                                              style: TextStyle(
+                                                color: Color(0xFF828282),
+                                                fontSize: 16,
+                                              ),
                                             ),
                                     ),
                                   ],
                                 ),
                               ),
+                              SizedBox(
+                                height: 85,
+                                width: mediaQuery.size.width,
+                              )
                             ],
                           ),
                         ),
-                      ),
-                      if (!isSeller)
-                        Positioned(
-                          right: 30,
-                          top: 70,
-                          child: Container(
-                            width: 50,
-                            height: 50,
-                            decoration: BoxDecoration(
-                              borderRadius: BorderRadius.circular(50),
-                              color: Color.fromARGB(255, 255, 120, 117),
-                            ),
-                            child: Center(
-                              child: FavoriteIcon(product: product),
-                            ),
-                          ),
-                        ),
-                    ],
-                  ),
-                ])),
-              ],
-            ),
+                      );
+                    }
+                  },
+                ),
+              ),
+            ],
           ),
           if (!isSeller)
-            Container(
-              color: Theme.of(context).primaryColor,
-              width: mediaQuery.size.width,
-              height: 80,
-              child: Padding(
-                padding: const EdgeInsets.only(
-                  left: 25,
-                  right: 25,
-                  top: 15,
-                  bottom: 15,
-                ),
-                child: (productProvider.checkIfAvailable(productId))
-                    ? ElevatedButton(
-                        style: ElevatedButton.styleFrom(
-                          primary: Theme.of(context).accentColor,
-                          shape: RoundedRectangleBorder(
-                            borderRadius: BorderRadius.circular(10),
-                          ),
-                        ),
-                        onPressed: () => {
-                          showDialog(
-                            context: context,
-                            barrierDismissible: false,
-                            builder: (context) {
-                              return AlertDialog(
-                                title: Center(
-                                  child: Text(
-                                    'Add quantity',
-                                    style: TextStyle(
-                                      color: Colors.white,
-                                    ),
-                                  ),
-                                ),
-                                backgroundColor: Theme.of(context).primaryColor,
-                                shape: RoundedRectangleBorder(
-                                  borderRadius: BorderRadius.circular(10),
-                                ),
-                                scrollable: true,
-                                titlePadding: EdgeInsets.only(
-                                  bottom: 20,
-                                  top: 20,
-                                ),
-                                actionsPadding: EdgeInsets.all(0),
-                                contentPadding: EdgeInsets.only(
-                                  left: 70,
-                                  right: 70,
-                                ),
-                                actions: <Widget>[
-                                  TextButton(
-                                    child: Text(
-                                      'ADD',
-                                      style: TextStyle(
-                                        color: Colors.white,
-                                      ),
-                                    ),
-                                    style: TextButton.styleFrom(
-                                      backgroundColor: Colors.transparent,
-                                      primary: Colors.white,
-                                    ),
-                                    onPressed: () {
-                                      productProvider.removeFromList(
-                                          productId, amount);
-                                      cart.addItem(
-                                        productId: product.id,
-                                        quantity: amount,
-                                        title: product.title,
-                                        price: product.hasDiscount
-                                            ? (product.price -
-                                                product.price *
-                                                    product.discountPercentage /
-                                                    100)
-                                            : product.price,
-                                        imageUrl: product.imageUrls.first,
-                                      );
-                                      ScaffoldMessenger.of(context)
-                                          .showSnackBar(
-                                        SnackBar(
-                                          content: Text(
-                                            amount > 1
-                                                ? '$amount item\'s added to your cart'
-                                                : '$amount item added to your cart',
-                                            style: TextStyle(
-                                              color: Colors.black,
-                                              fontSize: 20,
-                                            ),
-                                          ),
-                                          backgroundColor:
-                                              Theme.of(context).accentColor,
-                                          duration: Duration(milliseconds: 700),
-                                        ),
-                                      );
-                                      setAmount(1);
-                                      cartItemId++;
-                                      Navigator.of(context).pop();
-                                    },
-                                  ),
-                                ],
-                                content: Center(
-                                  child: QuantityIcon(
-                                    amount: amount,
-                                    maxAmount: product.quantity,
-                                    setter: setAmount,
-                                  ),
-                                ),
-                              );
-                            },
-                          ),
-                        },
-                        child: Row(
-                          mainAxisAlignment: MainAxisAlignment.center,
-                          children: [
-                            Icon(
-                              Icons.shopping_cart_outlined,
-                              size: 25,
-                            ),
-                            Padding(
-                              padding: const EdgeInsets.only(
-                                left: 7,
-                              ),
-                              child: Text(
-                                'ADD to Cart',
+            Positioned(
+              bottom: 20,
+              right: 20,
+              left: 20,
+              child: ElevatedButton(
+                onPressed: () {
+                  showModalBottomSheet(
+                    backgroundColor: Colors.white,
+                    barrierColor: Colors.black38,
+                    shape: RoundedRectangleBorder(
+                      borderRadius: BorderRadius.only(
+                        topRight: Radius.circular(25),
+                        topLeft: Radius.circular(25),
+                      ),
+                    ),
+                    context: context,
+                    builder: (context) => Padding(
+                      padding: const EdgeInsets.all(20),
+                      child: Column(
+                        mainAxisAlignment: MainAxisAlignment.start,
+                        children: [
+                          Row(
+                            mainAxisAlignment: MainAxisAlignment.spaceAround,
+                            children: [
+                              Text(
+                                "Choose your Color",
                                 style: TextStyle(
-                                  fontSize: 19,
-                                  color: Colors.white,
-                                  fontWeight: FontWeight.bold,
+                                  color: Color(0xFF333333),
+                                  fontSize: 20,
                                 ),
                               ),
-                            ),
-                          ],
-                        ),
-                      )
-                    : Container(
-                        decoration: BoxDecoration(
-                            color: Color.fromARGB(255, 255, 100, 100),
-                            borderRadius:
-                                BorderRadius.all(Radius.circular(10))),
-                        child: Center(
-                          child: Text(
-                            'Soldout',
-                            style: TextStyle(
-                              fontSize: 20,
-                              color: Colors.white,
-                            ),
+                              DropdownButton(
+                                value: selectedvalue,
+                                onChanged: (newvalue) {
+                                  setState(
+                                    () {
+                                      selectedvalue = newvalue;
+                                      for (int j = 0;
+                                          j <
+                                              product.colorsAndQuantityAndSizes
+                                                  .entries
+                                                  .firstWhere((element) =>
+                                                      element.key ==
+                                                      selectedvalue)
+                                                  .value
+                                                  .length;
+                                          j++) {
+                                        print(product
+                                            .colorsAndQuantityAndSizes.entries
+                                            .firstWhere((element) =>
+                                                element.key == selectedvalue)
+                                            .value
+                                            .keys
+                                            .elementAt(j));
+                                        sizes.insert(
+                                            j,
+                                            product.colorsAndQuantityAndSizes
+                                                .entries
+                                                .firstWhere((element) =>
+                                                    element.key ==
+                                                    selectedvalue)
+                                                .value
+                                                .keys
+                                                .elementAt(j));
+                                      }
+                                    },
+                                  );
+                                },
+                                items: product.colorsAndQuantityAndSizes.keys
+                                    .map(
+                                      (e) => DropdownMenuItem(
+                                        child: Container(
+                                          decoration: BoxDecoration(
+                                              color: e,
+                                              borderRadius: BorderRadius.all(
+                                                Radius.circular(5),
+                                              ),
+                                              border: Border.all(
+                                                color: Theme.of(context)
+                                                    .primaryColor,
+                                                width: 2,
+                                              )),
+                                          width: mediaQuery.size.width * 0.33,
+                                          height: 30,
+                                        ),
+                                        value: e,
+                                      ),
+                                    )
+                                    .toList(),
+                                hint: Text('Colors'),
+                              ),
+                            ],
                           ),
+                          Row(
+                            mainAxisAlignment: MainAxisAlignment.spaceAround,
+                            children: [
+                              Text(
+                                "Choose your Size",
+                                style: TextStyle(
+                                  color: Color(0xFF333333),
+                                  fontSize: 20,
+                                ),
+                              ),
+                              DropdownButton(
+                                items: sizes
+                                    .map(
+                                      (e) => DropdownMenuItem(
+                                        child: Text(e),
+                                        value: e,
+                                      ),
+                                    )
+                                    .toList(),
+                              ),
+                            ],
+                          ),
+                          if (product.colorsAndQuantityAndSizes.entries
+                                  .elementAt(0)
+                                  .value
+                                  .keys
+                                  .elementAt(0) !=
+                              '0')
+                            Row(
+                              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                              children: [
+                                TextButton(
+                                  onPressed: () {
+                                    Navigator.pop(context);
+                                  },
+                                  child: Text('Discard'),
+                                ),
+                                TextButton(
+                                  onPressed: () {},
+                                  child: Text('Add'),
+                                ),
+                              ],
+                            )
+                        ],
+                      ),
+                    ),
+                  );
+                },
+                child: Container(
+                  height: 60,
+                  width: mediaQuery.size.width,
+                  child: Row(
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    crossAxisAlignment: CrossAxisAlignment.center,
+                    children: [
+                      Text(
+                        "Add to Cart",
+                        style: TextStyle(
+                          color: Colors.white,
+                          fontSize: 20,
                         ),
                       ),
+                      SizedBox(
+                        width: 10,
+                      ),
+                      Icon(
+                        Icons.shopping_cart_outlined,
+                        size: 25,
+                        color: Colors.white,
+                      ),
+                    ],
+                  ),
+                ),
+                style: ElevatedButton.styleFrom(
+                  primary: Color(0xFF333333),
+                  onPrimary: Color(0xFF828282),
+                  shape: RoundedRectangleBorder(
+                    borderRadius: BorderRadius.circular(40),
+                  ),
+                ),
               ),
             ),
         ],
-      ), */
+      ),
+    );
+  }
+}

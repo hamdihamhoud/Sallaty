@@ -4,7 +4,6 @@ import 'package:provider/provider.dart';
 import '../providers/products.dart';
 
 import '../models/product.dart';
-import '../models/category.dart';
 import './product_item.dart';
 
 class HomeSuggestionItem extends StatelessWidget {

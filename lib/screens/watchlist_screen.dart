@@ -1,6 +1,4 @@
 import 'package:flutter/material.dart';
-
-import '../widgets/bottom_navigation_bar.dart';
 import 'drawer_screen.dart';
 
 class WatchlistScreen extends StatelessWidget {
@@ -9,7 +7,6 @@ class WatchlistScreen extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: Theme.of(context).primaryColor,
       appBar: AppBar(
         title: Text('Watchlist'),
       ),

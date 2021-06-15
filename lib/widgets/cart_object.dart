@@ -1,9 +1,7 @@
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:ecart/providers/cart.dart';
 import 'package:ecart/providers/products.dart';
-import 'package:ecart/widgets/alert_dialog.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter_slidable/flutter_slidable.dart';
 import 'package:provider/provider.dart';
 
 // ignore: must_be_immutable
@@ -22,10 +20,10 @@ class CartObject extends StatelessWidget {
     final cart = Provider.of<Cart>(context);
     return Padding(
       padding: const EdgeInsets.only(
-        left: 5,
-        right: 5,
-        top: 10,
-        bottom: 10,
+        left: 15,
+        right: 15,
+        top: 15,
+        bottom: 15,
       ),
       child: Row(
         mainAxisAlignment: MainAxisAlignment.spaceBetween,
@@ -33,183 +31,154 @@ class CartObject extends StatelessWidget {
           Row(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
-              Stack(
-                children: [
-                  Padding(
-                    padding: const EdgeInsets.only(
-                      left: 10,
-                      right: 15,
-                      top: 10,
-                      bottom: 5,
-                    ),
-                    child: CachedNetworkImage(
-                      width: MediaQuery.of(context).size.width / 4 * 0.8,
-                      height: 90,
-                      imageUrl: cartItem.imageUrl,
-                      fit: BoxFit.fitWidth,
-                      progressIndicatorBuilder: (ctx, str, downloadProgress) =>
-                          Center(
-                        child: CircularProgressIndicator(
-                          valueColor: AlwaysStoppedAnimation<Color>(
-                              Theme.of(context).accentColor),
-                        ),
-                      ),
-                      errorWidget: (context, url, error) =>
-                          const Center(child: const Icon(Icons.error)),
+              Container(
+                clipBehavior: Clip.hardEdge,
+                decoration: BoxDecoration(
+                  borderRadius: BorderRadius.all(
+                    Radius.circular(20),
+                  ),
+                ),
+                child: CachedNetworkImage(
+                  width: MediaQuery.of(context).size.width / 4 * 0.8,
+                  height: 90,
+                  imageUrl: cartItem.imageUrl,
+                  fit: BoxFit.cover,
+                  progressIndicatorBuilder: (ctx, str, downloadProgress) =>
+                      Center(
+                    child: CircularProgressIndicator(
+                      valueColor: AlwaysStoppedAnimation<Color>(
+                          Theme.of(context).accentColor),
                     ),
                   ),
-                  Container(
-                    decoration: BoxDecoration(
-                        color: Colors.transparent,
-                        border: Border.all(
-                          color: Theme.of(context).primaryColor,
-                          width: 10,
-                        ),
-                        borderRadius: BorderRadius.all(
-                          Radius.circular(20),
-                        )),
-                    width: MediaQuery.of(context).size.width / 4,
-                    height: 105,
-                  )
-                ],
+                  errorWidget: (context, url, error) =>
+                      const Center(child: const Icon(Icons.error)),
+                ),
               ),
-              Padding(
-                padding: const EdgeInsets.only(
-                  top: 10,
-                  right: 15,
-                ),
-                child: Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    Text(
-                      cartItem.title,
-                      style: TextStyle(
-                        color: Colors.white,
-                        fontSize: 18,
-                        fontWeight: FontWeight.w400,
-                      ),
+              Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  Text(
+                    cartItem.title,
+                    style: TextStyle(
+                      color: Color(0xFF333333),
+                      fontSize: 20,
+                      fontWeight: FontWeight.w400,
                     ),
-                    Text(
-                      "${cartItem.price.toStringAsFixed(0)} S.P",
-                      style: TextStyle(
-                        color: Theme.of(context).accentColor,
-                        fontSize: 18,
-                        fontWeight: FontWeight.w400,
-                      ),
+                  ),
+                  Text(
+                    "${cartItem.price.toStringAsFixed(0)} S.P",
+                    style: TextStyle(
+                      color: Theme.of(context).primaryColor,
+                      fontSize: 16,
+                      fontWeight: FontWeight.w400,
                     ),
-                  ],
-                ),
+                  ),
+                ],
               )
             ],
           ),
-          Padding(
-            padding: const EdgeInsets.only(
-              right: 12,
-            ),
-            child: Row(
-              children: [
-                Padding(
-                  padding: const EdgeInsets.only(
-                    right: 10,
-                  ),
-                  child: Container(
-                    width: 30,
-                    height: 30,
-                    decoration: BoxDecoration(
-                      border: Border.all(
-                        color: cartItem.quantity > 1
-                            ? Theme.of(context).accentColor
-                            : Color.fromARGB(255, 66, 66, 66),
-                      ),
-                      borderRadius: BorderRadius.circular(5),
+          Row(
+            children: [
+              Padding(
+                padding: const EdgeInsets.only(
+                  right: 10,
+                ),
+                child: Container(
+                  width: 30,
+                  height: 30,
+                  decoration: BoxDecoration(
+                    border: Border.all(
                       color: cartItem.quantity > 1
                           ? Theme.of(context).accentColor
                           : Color.fromARGB(255, 66, 66, 66),
                     ),
-                    child: Center(
-                      child: IconButton(
-                          splashColor: cartItem.quantity > 1
-                              ? ThemeData().splashColor
-                              : Colors.transparent,
-                          enableFeedback: cartItem.quantity > 1,
-                          highlightColor: cartItem.quantity > 1
-                              ? ThemeData().highlightColor
-                              : Colors.transparent,
-                          icon: Center(
-                            child: const Icon(
-                              Icons.remove,
-                              color: Colors.white,
-                              size: 13,
-                            ),
+                    borderRadius: BorderRadius.circular(5),
+                    color: cartItem.quantity > 1
+                        ? Theme.of(context).accentColor
+                        : Color.fromARGB(255, 66, 66, 66),
+                  ),
+                  child: Center(
+                    child: IconButton(
+                        splashColor: cartItem.quantity > 1
+                            ? ThemeData().splashColor
+                            : Colors.transparent,
+                        enableFeedback: cartItem.quantity > 1,
+                        highlightColor: cartItem.quantity > 1
+                            ? ThemeData().highlightColor
+                            : Colors.transparent,
+                        icon: Center(
+                          child: const Icon(
+                            Icons.remove,
+                            color: Colors.white,
+                            size: 13,
                           ),
-                          onPressed: () {
-                            if (cartItem.quantity > 1) {
-                              cart.undoAddingItem(productId);
-                              productProvider.addToList(productId, 1);
-                            }
-                          }),
-                    ),
+                        ),
+                        onPressed: () {
+                          if (cartItem.quantity > 1) {
+                            cart.undoAddingItem(productId);
+                            productProvider.addToList(productId, 1);
+                          }
+                        }),
                   ),
                 ),
-                Text(
-                  cartItem.quantity.toStringAsFixed(0),
-                  style: const TextStyle(
-                    fontSize: 20,
-                    color: Colors.white,
-                  ),
+              ),
+              Text(
+                cartItem.quantity.toStringAsFixed(0),
+                style: const TextStyle(
+                  fontSize: 20,
+                  color: Colors.white,
                 ),
-                Padding(
-                  padding: const EdgeInsets.only(
-                    left: 12,
-                  ),
-                  child: Container(
-                    width: 30,
-                    height: 30,
-                    decoration: BoxDecoration(
-                      border: Border.all(
-                        color: productProvider.checkIfAvailable(productId)
-                            ? Theme.of(context).accentColor
-                            : Color.fromARGB(255, 66, 66, 66),
-                      ),
-                      borderRadius: BorderRadius.circular(5),
+              ),
+              Padding(
+                padding: const EdgeInsets.only(
+                  left: 12,
+                ),
+                child: Container(
+                  width: 30,
+                  height: 30,
+                  decoration: BoxDecoration(
+                    border: Border.all(
                       color: productProvider.checkIfAvailable(productId)
                           ? Theme.of(context).accentColor
                           : Color.fromARGB(255, 66, 66, 66),
                     ),
-                    child: Center(
-                      child: IconButton(
-                          splashColor:
-                              productProvider.checkIfAvailable(productId)
-                                  ? ThemeData().splashColor
-                                  : Colors.transparent,
-                          enableFeedback:
-                              productProvider.checkIfAvailable(productId),
-                          highlightColor:
-                              productProvider.checkIfAvailable(productId)
-                                  ? ThemeData().highlightColor
-                                  : Colors.transparent,
-                          icon: Center(
-                            child: const Icon(
-                              Icons.add,
-                              color: Colors.white,
-                              size: 13,
-                            ),
+                    borderRadius: BorderRadius.circular(5),
+                    color: productProvider.checkIfAvailable(productId)
+                        ? Theme.of(context).accentColor
+                        : Color.fromARGB(255, 66, 66, 66),
+                  ),
+                  child: Center(
+                    child: IconButton(
+                        splashColor: productProvider.checkIfAvailable(productId)
+                            ? ThemeData().splashColor
+                            : Colors.transparent,
+                        enableFeedback:
+                            productProvider.checkIfAvailable(productId),
+                        highlightColor:
+                            productProvider.checkIfAvailable(productId)
+                                ? ThemeData().highlightColor
+                                : Colors.transparent,
+                        icon: Center(
+                          child: const Icon(
+                            Icons.add,
+                            color: Colors.white,
+                            size: 13,
                           ),
-                          onPressed: () {
-                            if (productProvider.removeFromList(productId, 1)) {
-                              cart.addItem(
-                                productId: productId,
-                                price: (cartItem.price / cartItem.quantity),
-                                title: cartItem.title,
-                                quantity: 1,
-                              );
-                            }
-                          }),
-                    ),
+                        ),
+                        onPressed: () {
+                          if (productProvider.removeFromList(productId, 1)) {
+                            cart.addItem(
+                              productId: productId,
+                              price: (cartItem.price / cartItem.quantity),
+                              title: cartItem.title,
+                              quantity: 1,
+                            );
+                          }
+                        }),
                   ),
                 ),
-              ],
-            ),
+              ),
+            ],
           ),
         ],
       ),

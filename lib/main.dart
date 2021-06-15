@@ -33,7 +33,7 @@ class MyApp extends StatelessWidget {
         ChangeNotifierProvider<Orders>(create: (_) => Orders()),
       ],
       child: MaterialApp(
-        title: "Discover",
+        title: 'Sallaty',
         debugShowCheckedModeBanner: false,
         theme: ThemeData(
           // canvasColor: Color(0xFF828282),
