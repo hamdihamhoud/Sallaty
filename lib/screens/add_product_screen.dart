@@ -56,17 +56,50 @@ class _AddProductScreenState extends State<AddProductScreen> {
 
   List<Widget> imageSlider = [];
 
+  void deleteImageUrl(String url) {
+    var i = product.imageUrls.indexOf(url);
+    product.imageUrls.removeAt(i);
+    imageSlider.removeAt(i);
+    setState(() {});
+  }
+
+  void deleteImage(File image) {
+    var i = images.indexOf(image);
+    images.removeAt(i);
+    if (product.imageUrls != null) i = i + product.imageUrls.length;
+    imageSlider.removeAt(i);
+    setState(() {});
+  }
+
   void setSlider(File image) {
-    imageSlider.add(Container(
-      margin: EdgeInsets.all(5.0),
-      child: ClipRRect(
-        borderRadius: BorderRadius.all(Radius.circular(10.0)),
-        child: Image.file(
-          image,
-          fit: BoxFit.cover,
-        ),
+    imageSlider.add(
+      Stack(
+        alignment: AlignmentDirectional.center,
+        children: [
+          Container(
+            margin: EdgeInsets.all(5.0),
+            child: ClipRRect(
+              borderRadius: BorderRadius.all(Radius.circular(10.0)),
+              child: Image.file(
+                image,
+                fit: BoxFit.cover,
+              ),
+            ),
+          ),
+          Positioned(
+            top: 0,
+            right: 0,
+            child: IconButton(
+              padding: const EdgeInsets.all(0),
+              icon: Icon(Icons.cancel),
+              onPressed: () {
+                deleteImage(image);
+              },
+            ),
+          )
+        ],
       ),
-    ));
+    );
   }
 
   @override
@@ -92,24 +125,46 @@ class _AddProductScreenState extends State<AddProductScreen> {
           type = category.types
               .firstWhere((element) => element.title == product.type);
         specs = product.specs;
-        imageSlider.addAll(product.imageUrls.map((e) => Container(
-              margin: EdgeInsets.all(5.0),
-              child: ClipRRect(
-                borderRadius: BorderRadius.all(Radius.circular(10.0)),
-                child: CachedNetworkImage(
-                  imageUrl: e,
-                  fit: BoxFit.cover,
+        imageSlider.addAll(
+          product.imageUrls.map(
+            (e) => Stack(
+              alignment: AlignmentDirectional.center,
+              children: [
+                Container(
+                  margin: EdgeInsets.all(5.0),
+                  child: ClipRRect(
+                    borderRadius: BorderRadius.all(Radius.circular(10.0)),
+                    child: CachedNetworkImage(
+                      imageUrl: e,
+                      fit: BoxFit.cover,
+                    ),
+                  ),
                 ),
-              ),
-            )));
+                Positioned(
+                  top: 0,
+                  right: 0,
+                  child: IconButton(
+                    padding: const EdgeInsets.all(0),
+                    icon: Icon(Icons.cancel),
+                    onPressed: () {
+                      deleteImageUrl(e);
+                    },
+                  ),
+                )
+              ],
+            ),
+          ),
+        );
       }
       _init = false;
     }
     super.didChangeDependencies();
   }
 
-  void saveForm() {
-    if (product.id == null && images.isEmpty) {
+  Future<void> saveForm() async {
+    if (images.isEmpty &&
+        product.imageUrls != null &&
+        product.imageUrls.length == 0) {
       showSnakBarError('At least one image must be added !');
       return;
     }
@@ -136,14 +191,14 @@ class _AddProductScreenState extends State<AddProductScreen> {
       returning: returnable,
       replacement: replaceable,
       category: category.title,
-      type: type == null ? '' : type.title,
+      type: type == null ? null : type.title,
       description: description,
       discountPercentage: discount,
       specs: specs,
       imageUrls: product.imageUrls,
       ownerId: product.ownerId,
     );
-    Provider.of<ProductsProvider>(context, listen: false).addProduct(
+    await Provider.of<ProductsProvider>(context, listen: false).addProduct(
       product,
       images,
     );

@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
 
+import '../screens/filter_products_premium_screen.dart';
+
 class SellerFilteringRow extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
@@ -12,7 +14,10 @@ class SellerFilteringRow extends StatelessWidget {
           Padding(
             padding: const EdgeInsets.symmetric(horizontal: 8.0),
             child: TextButton(
-                onPressed: () {},
+                onPressed: () {
+                  Navigator.pushNamed(context, FilterProductsScreen.routeName,
+                      arguments: FilterType.all_products);
+                },
                 child: Text(
                   'All Products',
                   style: TextStyle(color: Colors.white),
@@ -21,7 +26,10 @@ class SellerFilteringRow extends StatelessWidget {
           Padding(
             padding: const EdgeInsets.symmetric(horizontal: 8.0),
             child: TextButton(
-                onPressed: () {},
+                onPressed: () {
+                  Navigator.pushNamed(context, FilterProductsScreen.routeName,
+                      arguments: FilterType.orders);
+                },
                 child: Text(
                   'Orders',
                   style: TextStyle(color: Colors.white),
@@ -30,7 +38,10 @@ class SellerFilteringRow extends StatelessWidget {
           Padding(
             padding: const EdgeInsets.symmetric(horizontal: 8.0),
             child: TextButton(
-                onPressed: () {},
+                onPressed: () {
+                  Navigator.pushNamed(context, FilterProductsScreen.routeName,
+                      arguments: FilterType.shiped);
+                },
                 child: Text(
                   'Shiped',
                   style: TextStyle(color: Colors.white),
@@ -39,7 +50,10 @@ class SellerFilteringRow extends StatelessWidget {
           Padding(
             padding: const EdgeInsets.symmetric(horizontal: 8.0),
             child: TextButton(
-                onPressed: () {},
+                onPressed: () {
+                  Navigator.pushNamed(context, FilterProductsScreen.routeName,
+                      arguments: FilterType.sold);
+                },
                 child: Text(
                   'Sold',
                   style: TextStyle(

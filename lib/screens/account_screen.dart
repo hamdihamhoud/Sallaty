@@ -1,4 +1,5 @@
 import 'package:cached_network_image/cached_network_image.dart';
+import 'package:ecart/screens/analytics_premium_screen.dart';
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
 import 'package:provider/provider.dart';
@@ -85,14 +86,15 @@ class AccountScreen extends StatelessWidget {
           if (isPremium)
             PopupMenuButton(
               onSelected: (_) {
+                Navigator.of(context).pushNamed(AnalyticsScreen.routeName);
               },
               itemBuilder: (ctx) {
                 return [
                   PopupMenuItem(
                     child: Text(
-                      'Analytics',
+                      'Analytics & Earnings',
                     ),
-                    value: 'Analytics',
+                    value: 'Analytics & Earnings',
                   ),
                 ];
               },
