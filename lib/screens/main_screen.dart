@@ -1,5 +1,6 @@
 import 'package:ecart/screens/account_screen.dart';
 import 'package:ecart/screens/cart_screen.dart';
+import 'package:ecart/screens/drawer_screen.dart';
 import 'package:ecart/screens/home_screen.dart';
 import 'package:ecart/screens/offers_screen.dart';
 import 'package:ecart/screens/watchlist_screen.dart';
@@ -108,6 +109,7 @@ class _AppBottomNavigationBarControllerState
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      drawer: DrawerScreen(),
       bottomNavigationBar: _bottomNavigationBar(_selectedIndex),
       backgroundColor: Theme.of(context).primaryColor,
       body: PageStorage(
@@ -117,59 +119,3 @@ class _AppBottomNavigationBarControllerState
     );
   }
 }
-
-/* CurvedNavigationBar(
-        onTap: (int index) => setState(() => _selectedIndex = index),
-        index: _selectedIndex,
-        
-        letIndexChange: (index) => true,
-        // backgroundColor: Color.fromARGB(255, 135, 135, 135),
-        // color: Color.fromARGB(255, 67, 67, 67),
-        buttonBackgroundColor: Theme.of(context).accentColor,
-        height: 60,
-        items: <Widget>[
-          Icon(
-            Icons.store_outlined,
-            size: 30,
-            color: Color.fromARGB(255, 235, 235, 235),
-          ),
-          Icon(
-            Icons.favorite_border_rounded,
-            size: 30,
-            color: Color.fromARGB(255, 235, 235, 235),
-          ),
-          0 == 0
-              ? //cart item count !!!!!!!!!!!
-              Badge(
-                  child: Icon(
-                    Icons.shopping_cart_outlined,
-                    size: 30,
-                    color: Color.fromARGB(255, 235, 235, 235),
-                  ),
-                  value: '0',
-                  color: Colors.red,
-                )
-              : Icon(
-                  Icons.shopping_cart_outlined,
-                  size: 30,
-                  color: Color.fromARGB(255, 235, 235, 235),
-                ),
-          Icon(
-            Icons.local_offer_outlined,
-            size: 30,
-            color: Color.fromARGB(255, 235, 235, 235),
-          ),
-          Icon(
-            Icons.account_circle_outlined,
-            size: 30,
-            color: Color.fromARGB(255, 235, 235, 235),
-          ),
-        ],
-      ); */
-
-/* tabShadow: [
-              BoxShadow(
-                color: Colors.grey.withOpacity(0.5),
-                blurRadius: 8,
-              ),
-            ], */

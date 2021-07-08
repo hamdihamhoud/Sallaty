@@ -5,12 +5,14 @@ import 'package:ecart/widgets/favorite_icon.dart';
 import 'package:ecart/widgets/read_more.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_rating_bar/flutter_rating_bar.dart';
+import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:menu_button/menu_button.dart';
 import 'package:provider/provider.dart';
 import '../models/product.dart';
 import '../providers/products.dart';
 import '../widgets/product_images_carousel.dart';
 import '../models/product_details_screen_args.dart';
+import 'add_product_screen.dart';
 
 class ProductDetailsSceen extends StatefulWidget {
   static const routeName = '/product-details';
@@ -22,6 +24,7 @@ class _ProductDetailsSceenState extends State<ProductDetailsSceen> {
   bool isSeller = false;
   int amount = 1;
   void setAmount(int a) => amount = a;
+  Color selectedvalue;
   @override
   Widget build(BuildContext context) {
     final args =
@@ -34,9 +37,6 @@ class _ProductDetailsSceenState extends State<ProductDetailsSceen> {
     final cart = Provider.of<Cart>(context);
     final mediaQuery = MediaQuery.of(context);
     final colorsNumber = product.colorsAndQuantityAndSizes.keys.length;
-    final List<String> sizes = [];
-    Color selectedvalue;
-
     final List<int> quantity = [];
     for (int i = 0; i < colorsNumber; i++) {
       for (int j = 0;
@@ -91,11 +91,14 @@ class _ProductDetailsSceenState extends State<ProductDetailsSceen> {
                             ),
                           )
                         : IconButton(
-                            onPressed: () {},
-                            icon: Icon(
-                              Icons.edit,
-                              color: Color(0xFF333333),
-                            ),
+                            icon: FaIcon(FontAwesomeIcons.edit),
+                            color: Colors.black,
+                            onPressed: () {
+                              Navigator.of(context).pushNamed(
+                                AddProductScreen.routeName,
+                                arguments: product.id,
+                              );
+                            },
                           ),
                   ),
                 ],
@@ -523,139 +526,16 @@ class _ProductDetailsSceenState extends State<ProductDetailsSceen> {
               child: ElevatedButton(
                 onPressed: () {
                   showModalBottomSheet(
-                    backgroundColor: Colors.white,
-                    barrierColor: Colors.black38,
-                    shape: RoundedRectangleBorder(
-                      borderRadius: BorderRadius.only(
-                        topRight: Radius.circular(25),
-                        topLeft: Radius.circular(25),
+                      backgroundColor: Colors.white,
+                      barrierColor: Colors.black38,
+                      shape: RoundedRectangleBorder(
+                        borderRadius: BorderRadius.only(
+                          topRight: Radius.circular(25),
+                          topLeft: Radius.circular(25),
+                        ),
                       ),
-                    ),
-                    context: context,
-                    builder: (context) => Padding(
-                      padding: const EdgeInsets.all(20),
-                      child: Column(
-                        mainAxisAlignment: MainAxisAlignment.start,
-                        children: [
-                          Row(
-                            mainAxisAlignment: MainAxisAlignment.spaceAround,
-                            children: [
-                              Text(
-                                "Choose your Color",
-                                style: TextStyle(
-                                  color: Color(0xFF333333),
-                                  fontSize: 20,
-                                ),
-                              ),
-                              DropdownButton(
-                                value: selectedvalue,
-                                onChanged: (newvalue) {
-                                  setState(
-                                    () {
-                                      selectedvalue = newvalue;
-                                      for (int j = 0;
-                                          j <
-                                              product.colorsAndQuantityAndSizes
-                                                  .entries
-                                                  .firstWhere((element) =>
-                                                      element.key ==
-                                                      selectedvalue)
-                                                  .value
-                                                  .length;
-                                          j++) {
-                                        print(product
-                                            .colorsAndQuantityAndSizes.entries
-                                            .firstWhere((element) =>
-                                                element.key == selectedvalue)
-                                            .value
-                                            .keys
-                                            .elementAt(j));
-                                        sizes.insert(
-                                            j,
-                                            product.colorsAndQuantityAndSizes
-                                                .entries
-                                                .firstWhere((element) =>
-                                                    element.key ==
-                                                    selectedvalue)
-                                                .value
-                                                .keys
-                                                .elementAt(j));
-                                      }
-                                    },
-                                  );
-                                },
-                                items: product.colorsAndQuantityAndSizes.keys
-                                    .map(
-                                      (e) => DropdownMenuItem(
-                                        child: Container(
-                                          decoration: BoxDecoration(
-                                              color: e,
-                                              borderRadius: BorderRadius.all(
-                                                Radius.circular(5),
-                                              ),
-                                              border: Border.all(
-                                                color: Theme.of(context)
-                                                    .primaryColor,
-                                                width: 2,
-                                              )),
-                                          width: mediaQuery.size.width * 0.33,
-                                          height: 30,
-                                        ),
-                                        value: e,
-                                      ),
-                                    )
-                                    .toList(),
-                                hint: Text('Colors'),
-                              ),
-                            ],
-                          ),
-                          Row(
-                            mainAxisAlignment: MainAxisAlignment.spaceAround,
-                            children: [
-                              Text(
-                                "Choose your Size",
-                                style: TextStyle(
-                                  color: Color(0xFF333333),
-                                  fontSize: 20,
-                                ),
-                              ),
-                              DropdownButton(
-                                items: sizes
-                                    .map(
-                                      (e) => DropdownMenuItem(
-                                        child: Text(e),
-                                        value: e,
-                                      ),
-                                    )
-                                    .toList(),
-                              ),
-                            ],
-                          ),
-                          if (product.colorsAndQuantityAndSizes.entries
-                                  .elementAt(0)
-                                  .value
-                                  .keys
-                                  .elementAt(0) !=
-                              '0')
-                            Row(
-                              mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                              children: [
-                                TextButton(
-                                  onPressed: () {
-                                    Navigator.pop(context);
-                                  },
-                                  child: Text('Discard'),
-                                ),
-                                TextButton(
-                                  onPressed: () {},
-                                  child: Text('Add'),
-                                ),
-                              ],
-                            )
-                        ],
-                      ),
-                    ),
-                  );
+                      context: context,
+                      builder: (context) => BottomSheetContent(product));
                 },
                 child: Container(
                   height: 60,
@@ -691,6 +571,133 @@ class _ProductDetailsSceenState extends State<ProductDetailsSceen> {
                 ),
               ),
             ),
+        ],
+      ),
+    );
+  }
+}
+
+class BottomSheetContent extends StatefulWidget {
+  final Product product;
+  BottomSheetContent(this.product);
+
+  @override
+  _BottomSheetContentState createState() => _BottomSheetContentState();
+}
+
+class _BottomSheetContentState extends State<BottomSheetContent> {
+  final List<String> sizes = [];
+  Color selectedvalue;
+  @override
+  Widget build(BuildContext context) {
+    return Padding(
+      padding: const EdgeInsets.all(20),
+      child: Column(
+        mainAxisAlignment: MainAxisAlignment.start,
+        children: [
+          Row(
+            mainAxisAlignment: MainAxisAlignment.spaceAround,
+            children: [
+              Text(
+                "Choose your Color",
+                style: TextStyle(
+                  color: Color(0xFF333333),
+                  fontSize: 20,
+                ),
+              ),
+              DropdownButton(
+                value: selectedvalue,
+                onChanged: (newvalue) {
+                  selectedvalue = newvalue;
+                  setState(() {});
+                  // for (int j = 0;
+                  //     j <
+                  //         product.colorsAndQuantityAndSizes
+                  //             .entries
+                  //             .firstWhere((element) =>
+                  //                 element.key ==
+                  //                 selectedvalue)
+                  //             .value
+                  //             .length;
+                  //     j++) {
+                  //     sizes.insert(
+                  //       j,
+                  //       product.colorsAndQuantityAndSizes
+                  //           .entries
+                  //           .firstWhere((element) =>
+                  //               element.key ==
+                  //               selectedvalue)
+                  //           .value
+                  //           .keys
+                  //           .elementAt(j));
+                },
+                items: widget.product.colorsAndQuantityAndSizes.keys
+                    .map(
+                      (e) => DropdownMenuItem(
+                        child: Container(
+                          decoration: BoxDecoration(
+                              color: e,
+                              borderRadius: BorderRadius.all(
+                                Radius.circular(5),
+                              ),
+                              border: Border.all(
+                                color: Theme.of(context).primaryColor,
+                                width: 2,
+                              )),
+                          width: MediaQuery.of(context).size.width * 0.33,
+                          height: 30,
+                        ),
+                        value: e,
+                      ),
+                    )
+                    .toList(),
+                hint: Text('Colors'),
+              ),
+            ],
+          ),
+          Row(
+            mainAxisAlignment: MainAxisAlignment.spaceAround,
+            children: [
+              Text(
+                "Choose your Size",
+                style: TextStyle(
+                  color: Color(0xFF333333),
+                  fontSize: 20,
+                ),
+              ),
+              DropdownButton(
+                items: sizes
+                    .map(
+                      (e) => DropdownMenuItem(
+                        child: Text(e),
+                        value: e,
+                      ),
+                    )
+                    .toList(),
+              ),
+            ],
+          ),
+          if (widget.product.colorsAndQuantityAndSizes.entries
+                  .elementAt(0)
+                  .value
+                  .keys
+                  .elementAt(0) !=
+              '0')
+            Row(
+              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+              children: [
+                TextButton(
+                  onPressed: () {
+                    Navigator.pop(context);
+                  },
+                  child: Text('Discard'),
+                ),
+                TextButton(
+                  onPressed: () {},
+                  child: Text('Add'),
+                ),
+              ],
+            )
         ],
       ),
     );
