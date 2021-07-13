@@ -114,10 +114,10 @@ class CartObject extends StatelessWidget {
                           ),
                         ),
                         onPressed: () {
-                          if (cartItem.quantity > 1) {
+                          /*  if (cartItem.quantity > 1) {
                             cart.undoAddingItem(productId);
                             productProvider.addToList(productId, 1);
-                          }
+                          } */
                         }),
                   ),
                 ),
@@ -134,7 +134,7 @@ class CartObject extends StatelessWidget {
                   left: 12,
                 ),
                 child: Container(
-                  width: 30,
+                    /*  width: 30,
                   height: 30,
                   decoration: BoxDecoration(
                     border: Border.all(
@@ -175,8 +175,8 @@ class CartObject extends StatelessWidget {
                             );
                           }
                         }),
-                  ),
-                ),
+                  ), */
+                    ),
               ),
             ],
           ),

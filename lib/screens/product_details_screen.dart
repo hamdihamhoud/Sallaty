@@ -2,6 +2,7 @@ import 'package:ecart/providers/cart.dart';
 import 'package:ecart/widgets/alert_dialog.dart';
 import 'package:ecart/widgets/colors_circule.dart';
 import 'package:ecart/widgets/favorite_icon.dart';
+import 'package:ecart/widgets/quantity_icon.dart';
 import 'package:ecart/widgets/read_more.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_rating_bar/flutter_rating_bar.dart';
@@ -28,43 +29,18 @@ class _ProductDetailsSceenState extends State<ProductDetailsSceen> {
         ModalRoute.of(context).settings.arguments as ProducDetailsScreenArgs;
     final String productId = args.id;
     isSeller = args.isSeller;
-    final productProvider =
-        Provider.of<ProductsProvider>(context, listen: false);
+    final productProvider = Provider.of<ProductsProvider>(context);
     final Product product = productProvider.findId(productId);
     final cart = Provider.of<Cart>(context);
     final mediaQuery = MediaQuery.of(context);
     final colorsNumber = product.colorsAndQuantityAndSizes.keys.length;
-    final List<String> sizes = [];
-    Color selectedvalue;
-
-    final List<int> quantity = [];
-    for (int i = 0; i < colorsNumber; i++) {
-      for (int j = 0;
-          j <
-              product.colorsAndQuantityAndSizes.entries
-                  .elementAt(i)
-                  .value
-                  .values
-                  .length;
-          j++) {
-        if (j == 0)
-          quantity.insert(
-              i,
-              product.colorsAndQuantityAndSizes.entries
-                  .elementAt(i)
-                  .value
-                  .values
-                  .elementAt(j)
-                  .toInt());
-        else
-          quantity[i] += product.colorsAndQuantityAndSizes.entries
-              .elementAt(i)
-              .value
-              .values
-              .elementAt(j)
-              .toInt();
-      }
-    }
+    Color selectedColor;
+    final List<int> quantity =
+        productProvider.quantityCounter(product, colorsNumber);
+    String selectedSize;
+    int selectedSizeIndex;
+    bool hasSizes = false;
+    List<String> sizes = [];
     return Scaffold(
       body: Stack(
         children: [
@@ -548,38 +524,44 @@ class _ProductDetailsSceenState extends State<ProductDetailsSceen> {
                                 ),
                               ),
                               DropdownButton(
-                                value: selectedvalue,
+                                value: selectedColor,
                                 onChanged: (newvalue) {
                                   setState(
                                     () {
-                                      selectedvalue = newvalue;
-                                      for (int j = 0;
-                                          j <
+                                      print(hasSizes);
+                                      selectedColor = newvalue;
+                                      if (product
+                                              .colorsAndQuantityAndSizes.entries
+                                              .elementAt(0)
+                                              .value
+                                              .keys
+                                              .elementAt(0) !=
+                                          '0') {
+                                        hasSizes = true;
+                                        for (int j = 0;
+                                            j <
+                                                product
+                                                    .colorsAndQuantityAndSizes
+                                                    .entries
+                                                    .firstWhere((element) =>
+                                                        element.key ==
+                                                        selectedColor)
+                                                    .value
+                                                    .length;
+                                            j++) {
+                                          sizes.insert(
+                                              j,
                                               product.colorsAndQuantityAndSizes
                                                   .entries
                                                   .firstWhere((element) =>
                                                       element.key ==
-                                                      selectedvalue)
+                                                      selectedColor)
                                                   .value
-                                                  .length;
-                                          j++) {
-                                        print(product
-                                            .colorsAndQuantityAndSizes.entries
-                                            .firstWhere((element) =>
-                                                element.key == selectedvalue)
-                                            .value
-                                            .keys
-                                            .elementAt(j));
-                                        sizes.insert(
-                                            j,
-                                            product.colorsAndQuantityAndSizes
-                                                .entries
-                                                .firstWhere((element) =>
-                                                    element.key ==
-                                                    selectedvalue)
-                                                .value
-                                                .keys
-                                                .elementAt(j));
+                                                  .keys
+                                                  .elementAt(j));
+                                          print(sizes[j]);
+                                        }
+                                        print(hasSizes);
                                       }
                                     },
                                   );
@@ -598,7 +580,10 @@ class _ProductDetailsSceenState extends State<ProductDetailsSceen> {
                                                     .primaryColor,
                                                 width: 2,
                                               )),
-                                          width: mediaQuery.size.width * 0.33,
+                                          width: MediaQuery.of(context)
+                                                  .size
+                                                  .width *
+                                              0.33,
                                           height: 30,
                                         ),
                                         value: e,
@@ -609,49 +594,69 @@ class _ProductDetailsSceenState extends State<ProductDetailsSceen> {
                               ),
                             ],
                           ),
-                          Row(
-                            mainAxisAlignment: MainAxisAlignment.spaceAround,
-                            children: [
-                              Text(
-                                "Choose your Size",
-                                style: TextStyle(
-                                  color: Color(0xFF333333),
-                                  fontSize: 20,
-                                ),
-                              ),
-                              DropdownButton(
-                                items: sizes
-                                    .map(
-                                      (e) => DropdownMenuItem(
-                                        child: Text(e),
-                                        value: e,
-                                      ),
-                                    )
-                                    .toList(),
-                              ),
-                            ],
-                          ),
-                          if (product.colorsAndQuantityAndSizes.entries
-                                  .elementAt(0)
-                                  .value
-                                  .keys
-                                  .elementAt(0) !=
-                              '0')
+                          if (hasSizes)
                             Row(
-                              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                              mainAxisAlignment: MainAxisAlignment.spaceAround,
                               children: [
-                                TextButton(
-                                  onPressed: () {
-                                    Navigator.pop(context);
-                                  },
-                                  child: Text('Discard'),
+                                Text(
+                                  "Choose your Size",
+                                  style: TextStyle(
+                                    color: Color(0xFF333333),
+                                    fontSize: 20,
+                                  ),
                                 ),
-                                TextButton(
-                                  onPressed: () {},
-                                  child: Text('Add'),
+                                DropdownButton(
+                                  value: selectedSize,
+                                  items: sizes
+                                      .map(
+                                        (e) => DropdownMenuItem(
+                                          child: Text(e),
+                                          value: e,
+                                        ),
+                                      )
+                                      .toList(),
                                 ),
                               ],
-                            )
+                            ),
+                          /*       if (!hasSizes)
+                            QuantityIcon(
+                                amount: amount,
+                                maxAmount: product
+                                    .colorsAndQuantityAndSizes.entries
+                                    .firstWhere((element) =>
+                                        element.key == selectedvalue)
+                                    .value
+                                    .entries
+                                    .elementAt(0)
+                                    .value,
+                                setter: setAmount),
+                          if (hasSizes)
+                            QuantityIcon(
+                                amount: amount,
+                                maxAmount: product
+                                    .colorsAndQuantityAndSizes.entries
+                                    .firstWhere((element) =>
+                                        element.key == selectedvalue)
+                                    .value
+                                    .entries
+                                    .elementAt(selectedSizeIndex)
+                                    .value,
+                                setter: setAmount), */
+                          Row(
+                            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                            children: [
+                              TextButton(
+                                onPressed: () {
+                                  Navigator.pop(context);
+                                },
+                                child: Text('Discard'),
+                              ),
+                              TextButton(
+                                onPressed: () {},
+                                child: Text('Add'),
+                              ),
+                            ],
+                          )
                         ],
                       ),
                     ),
