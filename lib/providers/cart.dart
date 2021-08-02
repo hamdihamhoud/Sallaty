@@ -1,5 +1,6 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/foundation.dart';
+import 'package:flutter/material.dart';
 
 enum Status {
   Ordered,
@@ -13,6 +14,8 @@ class CartItem {
   final int quantity;
   final double price;
   final String imageUrl;
+  final Color color;
+  final String size;
   final Status status;
 
   CartItem({
@@ -21,6 +24,8 @@ class CartItem {
     @required this.quantity,
     @required this.price,
     @required this.imageUrl,
+    @required this.color,
+    this.size = '0',
     this.status = Status.Ordered,
   });
 }
@@ -30,6 +35,7 @@ class Cart with ChangeNotifier {
     'p111111': CartItem(
       id: 'p1',
       title: 'Adidas Shoes',
+      color: Colors.white,
       quantity: 2,
       price: 12,
       imageUrl:
@@ -64,11 +70,13 @@ class Cart with ChangeNotifier {
   }
 
   void addItem({
-    @required String productId,
-    @required double price,
-    @required String title,
+    @required final String productId,
+    @required final double price,
+    @required final String title,
     @required int quantity,
-    final String imageUrl,
+    @required final Color color,
+    @required final String imageUrl,
+    final String size = '0',
   }) {
     if (_items.containsKey(productId)) {
       _items.update(
@@ -79,6 +87,8 @@ class Cart with ChangeNotifier {
           price: existingCartItem.price + (price * quantity),
           quantity: existingCartItem.quantity + quantity,
           imageUrl: existingCartItem.imageUrl,
+          color: existingCartItem.color,
+          size: existingCartItem.size,
         ),
       );
     } else {
@@ -90,6 +100,8 @@ class Cart with ChangeNotifier {
           price: price * quantity,
           quantity: quantity,
           imageUrl: imageUrl,
+          color: color,
+          size: size,
         ),
       );
     }
@@ -113,6 +125,8 @@ class Cart with ChangeNotifier {
           price: value.price - picePrice,
           quantity: value.quantity - 1,
           imageUrl: value.imageUrl,
+          color: value.color,
+          size: value.size,
         ),
       );
     else

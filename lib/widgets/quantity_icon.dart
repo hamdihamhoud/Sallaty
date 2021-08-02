@@ -22,7 +22,7 @@ class _QuantityIconState extends State<QuantityIcon> {
   Widget build(BuildContext context) {
     return Row(
       crossAxisAlignment: CrossAxisAlignment.center,
-      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+      mainAxisAlignment: MainAxisAlignment.spaceAround,
       children: [
         Container(
           width: 35,
@@ -31,12 +31,12 @@ class _QuantityIconState extends State<QuantityIcon> {
             border: Border.all(
               color: widget.amount == 1
                   ? Color.fromARGB(255, 66, 66, 66)
-                  : Theme.of(context).accentColor,
+                  : Theme.of(context).primaryColor,
             ),
             borderRadius: BorderRadius.circular(5),
             color: widget.amount == 1
                 ? Color.fromARGB(255, 66, 66, 66)
-                : Theme.of(context).accentColor,
+                : Theme.of(context).primaryColor,
           ),
           child: Center(
             child: IconButton(
@@ -74,7 +74,7 @@ class _QuantityIconState extends State<QuantityIcon> {
           widget.amount.toString(),
           style: const TextStyle(
             fontSize: 24,
-            color: Colors.white,
+            color: Colors.black,
           ),
         ),
         Container(
@@ -84,12 +84,12 @@ class _QuantityIconState extends State<QuantityIcon> {
             border: Border.all(
               color: widget.amount == widget.maxAmount
                   ? Color.fromARGB(255, 66, 66, 66)
-                  : Theme.of(context).accentColor,
+                  : Theme.of(context).primaryColor,
             ),
             borderRadius: BorderRadius.circular(5),
             color: widget.amount == widget.maxAmount
                 ? Color.fromARGB(255, 66, 66, 66)
-                : Theme.of(context).accentColor,
+                : Theme.of(context).primaryColor,
           ),
           child: Center(
             child: IconButton(

@@ -1,17 +1,18 @@
 import 'package:ecart/providers/cart.dart';
+import 'package:ecart/widgets/add_to_cart.dart';
 import 'package:ecart/widgets/alert_dialog.dart';
 import 'package:ecart/widgets/colors_circule.dart';
 import 'package:ecart/widgets/favorite_icon.dart';
-import 'package:ecart/widgets/quantity_icon.dart';
 import 'package:ecart/widgets/read_more.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_rating_bar/flutter_rating_bar.dart';
-import 'package:menu_button/menu_button.dart';
+import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:provider/provider.dart';
 import '../models/product.dart';
 import '../providers/products.dart';
 import '../widgets/product_images_carousel.dart';
 import '../models/product_details_screen_args.dart';
+import 'add_product_screen.dart';
 
 class ProductDetailsSceen extends StatefulWidget {
   static const routeName = '/product-details';
@@ -21,8 +22,6 @@ class ProductDetailsSceen extends StatefulWidget {
 
 class _ProductDetailsSceenState extends State<ProductDetailsSceen> {
   bool isSeller = false;
-  int amount = 1;
-  void setAmount(int a) => amount = a;
   @override
   Widget build(BuildContext context) {
     final args =
@@ -34,13 +33,38 @@ class _ProductDetailsSceenState extends State<ProductDetailsSceen> {
     final cart = Provider.of<Cart>(context);
     final mediaQuery = MediaQuery.of(context);
     final colorsNumber = product.colorsAndQuantityAndSizes.keys.length;
-    Color selectedColor;
-    final List<int> quantity =
-        productProvider.quantityCounter(product, colorsNumber);
-    String selectedSize;
-    int selectedSizeIndex;
-    bool hasSizes = false;
-    List<String> sizes = [];
+    final List<int> quantity = [];
+
+    // initialization quantity list (IS that true?!)
+    for (int i = 0; i < colorsNumber; i++) {
+      for (int j = 0;
+          j <
+              product.colorsAndQuantityAndSizes.entries
+                  .elementAt(i)
+                  .value
+                  .values
+                  .length;
+          j++) {
+        if (j == 0)
+          quantity.insert(
+              i,
+              product.colorsAndQuantityAndSizes.entries
+                  .elementAt(i)
+                  .value
+                  .values
+                  .elementAt(j)
+                  .toInt());
+        else
+          quantity[i] += product.colorsAndQuantityAndSizes.entries
+              .elementAt(i)
+              .value
+              .values
+              .elementAt(j)
+              .toInt();
+      }
+    }
+    /***********************************/
+
     return Scaffold(
       body: Stack(
         children: [
@@ -49,7 +73,7 @@ class _ProductDetailsSceenState extends State<ProductDetailsSceen> {
               SliverAppBar(
                 bottom: PreferredSize(
                   child: Container(),
-                  preferredSize: Size(0, 20),
+                  preferredSize: Size(0, 35),
                 ),
                 pinned: false,
                 expandedHeight: mediaQuery.size.height * 0.65,
@@ -67,11 +91,14 @@ class _ProductDetailsSceenState extends State<ProductDetailsSceen> {
                             ),
                           )
                         : IconButton(
-                            onPressed: () {},
-                            icon: Icon(
-                              Icons.edit,
-                              color: Color(0xFF333333),
-                            ),
+                            icon: FaIcon(FontAwesomeIcons.edit),
+                            color: Colors.black,
+                            onPressed: () {
+                              Navigator.of(context).pushNamed(
+                                AddProductScreen.routeName,
+                                arguments: product.id,
+                              );
+                            },
                           ),
                   ),
                 ],
@@ -238,13 +265,7 @@ class _ProductDetailsSceenState extends State<ProductDetailsSceen> {
                                     ],
                                   ),
                                   InkWell(
-                                    onTap: () {
-                                      showAlertDialog(
-                                          context: context,
-                                          colorsAndQuantityAndSizes:
-                                              product.colorsAndQuantityAndSizes,
-                                          quantity: quantity);
-                                    },
+                                    onTap: () {},
                                     child: Column(
                                       children: [
                                         if (colorsNumber <= 3)
@@ -499,168 +520,23 @@ class _ProductDetailsSceenState extends State<ProductDetailsSceen> {
               child: ElevatedButton(
                 onPressed: () {
                   showModalBottomSheet(
-                    backgroundColor: Colors.white,
-                    barrierColor: Colors.black38,
-                    shape: RoundedRectangleBorder(
-                      borderRadius: BorderRadius.only(
-                        topRight: Radius.circular(25),
-                        topLeft: Radius.circular(25),
+                      isScrollControlled: true,
+                      backgroundColor: Colors.white,
+                      barrierColor: Colors.black38,
+                      shape: RoundedRectangleBorder(
+                        borderRadius: BorderRadius.only(
+                          topRight: Radius.circular(25),
+                          topLeft: Radius.circular(25),
+                        ),
                       ),
-                    ),
-                    context: context,
-                    builder: (context) => Padding(
-                      padding: const EdgeInsets.all(20),
-                      child: Column(
-                        mainAxisAlignment: MainAxisAlignment.start,
-                        children: [
-                          Row(
-                            mainAxisAlignment: MainAxisAlignment.spaceAround,
+                      context: context,
+                      builder: (context) => Wrap(
                             children: [
-                              Text(
-                                "Choose your Color",
-                                style: TextStyle(
-                                  color: Color(0xFF333333),
-                                  fontSize: 20,
-                                ),
-                              ),
-                              DropdownButton(
-                                value: selectedColor,
-                                onChanged: (newvalue) {
-                                  setState(
-                                    () {
-                                      print(hasSizes);
-                                      selectedColor = newvalue;
-                                      if (product
-                                              .colorsAndQuantityAndSizes.entries
-                                              .elementAt(0)
-                                              .value
-                                              .keys
-                                              .elementAt(0) !=
-                                          '0') {
-                                        hasSizes = true;
-                                        for (int j = 0;
-                                            j <
-                                                product
-                                                    .colorsAndQuantityAndSizes
-                                                    .entries
-                                                    .firstWhere((element) =>
-                                                        element.key ==
-                                                        selectedColor)
-                                                    .value
-                                                    .length;
-                                            j++) {
-                                          sizes.insert(
-                                              j,
-                                              product.colorsAndQuantityAndSizes
-                                                  .entries
-                                                  .firstWhere((element) =>
-                                                      element.key ==
-                                                      selectedColor)
-                                                  .value
-                                                  .keys
-                                                  .elementAt(j));
-                                          print(sizes[j]);
-                                        }
-                                        print(hasSizes);
-                                      }
-                                    },
-                                  );
-                                },
-                                items: product.colorsAndQuantityAndSizes.keys
-                                    .map(
-                                      (e) => DropdownMenuItem(
-                                        child: Container(
-                                          decoration: BoxDecoration(
-                                              color: e,
-                                              borderRadius: BorderRadius.all(
-                                                Radius.circular(5),
-                                              ),
-                                              border: Border.all(
-                                                color: Theme.of(context)
-                                                    .primaryColor,
-                                                width: 2,
-                                              )),
-                                          width: MediaQuery.of(context)
-                                                  .size
-                                                  .width *
-                                              0.33,
-                                          height: 30,
-                                        ),
-                                        value: e,
-                                      ),
-                                    )
-                                    .toList(),
-                                hint: Text('Colors'),
+                              AddtoCart(
+                                product: product,
                               ),
                             ],
-                          ),
-                          if (hasSizes)
-                            Row(
-                              mainAxisAlignment: MainAxisAlignment.spaceAround,
-                              children: [
-                                Text(
-                                  "Choose your Size",
-                                  style: TextStyle(
-                                    color: Color(0xFF333333),
-                                    fontSize: 20,
-                                  ),
-                                ),
-                                DropdownButton(
-                                  value: selectedSize,
-                                  items: sizes
-                                      .map(
-                                        (e) => DropdownMenuItem(
-                                          child: Text(e),
-                                          value: e,
-                                        ),
-                                      )
-                                      .toList(),
-                                ),
-                              ],
-                            ),
-                          /*       if (!hasSizes)
-                            QuantityIcon(
-                                amount: amount,
-                                maxAmount: product
-                                    .colorsAndQuantityAndSizes.entries
-                                    .firstWhere((element) =>
-                                        element.key == selectedvalue)
-                                    .value
-                                    .entries
-                                    .elementAt(0)
-                                    .value,
-                                setter: setAmount),
-                          if (hasSizes)
-                            QuantityIcon(
-                                amount: amount,
-                                maxAmount: product
-                                    .colorsAndQuantityAndSizes.entries
-                                    .firstWhere((element) =>
-                                        element.key == selectedvalue)
-                                    .value
-                                    .entries
-                                    .elementAt(selectedSizeIndex)
-                                    .value,
-                                setter: setAmount), */
-                          Row(
-                            mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                            children: [
-                              TextButton(
-                                onPressed: () {
-                                  Navigator.pop(context);
-                                },
-                                child: Text('Discard'),
-                              ),
-                              TextButton(
-                                onPressed: () {},
-                                child: Text('Add'),
-                              ),
-                            ],
-                          )
-                        ],
-                      ),
-                    ),
-                  );
+                          ));
                 },
                 child: Container(
                   height: 60,

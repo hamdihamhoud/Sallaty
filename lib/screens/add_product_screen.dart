@@ -1,6 +1,8 @@
 import 'dart:io';
 
 import 'package:cached_network_image/cached_network_image.dart';
+import 'package:ecart/widgets/alert_dialog.dart';
+import 'package:ecart/widgets/badge.dart';
 import 'package:flutter/material.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:provider/provider.dart';
@@ -300,6 +302,7 @@ class _AddProductScreenState extends State<AddProductScreen> {
 
   @override
   Widget build(BuildContext context) {
+    final mediaQuery = MediaQuery.of(context);
     return Scaffold(
         appBar: AppBar(
           title: Text(
@@ -369,8 +372,175 @@ class _AddProductScreenState extends State<AddProductScreen> {
                 ),
                 Container(
                   height: 50,
+                  margin: const EdgeInsets.symmetric(vertical: 5),
                   alignment: Alignment.center,
-                  child: Text('COLORS LISTVIEW HERE '),
+                  child: ListView.builder(
+                    scrollDirection: Axis.horizontal,
+                    itemCount: colorsAndQuantity.keys.length,
+                    itemBuilder: (ctx, index) => hasSizes
+                        ? InkWell(
+                            onTap: () {
+                              showModalBottomSheet(
+                                context: context,
+                                builder: (ctx) => Container(
+                                    height: mediaQuery.size.height * 0.75,
+                                    child: Column(
+                                      children: [
+                                        Container(
+                                          margin: const EdgeInsets.symmetric(
+                                              vertical: 10),
+                                          child: Row(
+                                            mainAxisAlignment:
+                                                MainAxisAlignment.spaceAround,
+                                            children: [
+                                              Container(
+                                                child: Text(
+                                                  'Sizes',
+                                                  style: TextStyle(
+                                                    fontSize: 20,
+                                                    color: Theme.of(context)
+                                                        .primaryColor,
+                                                    fontWeight: FontWeight.bold,
+                                                  ),
+                                                ),
+                                                alignment: Alignment.center,
+                                                width: 100,
+                                              ),
+                                              Container(
+                                                child: Text(
+                                                  'Quantity',
+                                                  style: TextStyle(
+                                                    fontSize: 20,
+                                                    color: Theme.of(context)
+                                                        .primaryColor,
+                                                    fontWeight: FontWeight.bold,
+                                                  ),
+                                                ),
+                                                alignment: Alignment.center,
+                                                width: 100,
+                                              ),
+                                              Container(
+                                                width: 30,
+                                              )
+                                            ],
+                                          ),
+                                        ),
+                                        Expanded(
+                                          child: ListView.builder(
+                                            itemCount: colorsAndQuantity.values
+                                                .elementAt(index)
+                                                .keys
+                                                .length,
+                                            itemBuilder: (ctx, i) => Container(
+                                              margin: const EdgeInsets.all(10),
+                                              child: Row(
+                                                mainAxisAlignment:
+                                                    MainAxisAlignment
+                                                        .spaceAround,
+                                                children: [
+                                                  Container(
+                                                    width: 100,
+                                                    alignment: Alignment.center,
+                                                    child: Text(
+                                                      colorsAndQuantity.values
+                                                          .elementAt(index)
+                                                          .keys
+                                                          .elementAt(i),
+                                                      style: TextStyle(
+                                                        fontSize: 18,
+                                                      ),
+                                                    ),
+                                                  ),
+                                                  Container(
+                                                    width: 100,
+                                                    alignment: Alignment.center,
+                                                    child: Text(
+                                                      colorsAndQuantity.values
+                                                          .elementAt(index)
+                                                          .values
+                                                          .elementAt(i)
+                                                          .toString(),
+                                                      style: TextStyle(
+                                                        fontSize: 18,
+                                                      ),
+                                                    ),
+                                                  ),
+                                                  Container(
+                                                    width: 30,
+                                                    child: IconButton(
+                                                      icon: Icon(
+                                                        Icons.edit,
+                                                        color:
+                                                            Color(0xFF333333),
+                                                      ),
+                                                      onPressed: () {
+                                                        editSizesQuantityDialog(
+                                                            context, index, i);
+                                                      },
+                                                    ),
+                                                  )
+                                                ],
+                                              ),
+                                            ),
+                                          ),
+                                        )
+                                      ],
+                                    )),
+                              );
+                            },
+                            child: Container(
+                              decoration: BoxDecoration(
+                                shape: BoxShape.circle,
+                                // borderRadius: BorderRadius.circular(25),
+                                color: colorsAndQuantity.keys.elementAt(index),
+                              ),
+                              child: Container(
+                                height: 40,
+                                width: 40,
+                                margin:
+                                    const EdgeInsets.symmetric(horizontal: 8),
+                              ),
+                            ),
+                          )
+                        : Container(
+                            margin: const EdgeInsets.symmetric(horizontal: 8),
+                            child: Badge(
+                              child: Container(
+                                decoration: BoxDecoration(
+                                  shape: BoxShape.circle,
+                                  color:
+                                      colorsAndQuantity.keys.elementAt(index),
+                                ),
+                                child: Stack(
+                                  children: [
+                                    Container(
+                                      height: 40,
+                                      width: 40,
+                                    ),
+                                    Center(
+                                      child: IconButton(
+                                        padding: const EdgeInsets.all(0),
+                                        icon: Icon(
+                                          Icons.edit,
+                                          size: 18,
+                                          color: Color(0xFF333333),
+                                        ),
+                                        onPressed: () {
+                                          editQuantityDialog(context, index);
+                                        },
+                                      ),
+                                    )
+                                  ],
+                                ),
+                              ),
+                              value: colorsAndQuantity.values
+                                  .elementAt(index)
+                                  .values
+                                  .first
+                                  .toString(),
+                            ),
+                          ),
+                  ),
                 ),
                 ElevatedButton(
                   onPressed: () {
@@ -588,6 +758,104 @@ class _AddProductScreenState extends State<AddProductScreen> {
             ),
           ),
         ));
+  }
+
+  Future editSizesQuantityDialog(BuildContext context, int index, int i) {
+    return showDialog(
+        context: context,
+        builder: (context) {
+          final _qForm = GlobalKey<FormState>();
+          return Form(
+            key: _qForm,
+            child: AlertDialog(
+              actions: [
+                TextButton(
+                  onPressed: () {
+                    if (!_qForm.currentState.validate()) return;
+                    _qForm.currentState.save();
+                    setState(() {});
+                    Navigator.of(context).pop();
+                  },
+                  child: Text(
+                    'Ok',
+                  ),
+                ),
+              ],
+              content: TextFormField(
+                initialValue: colorsAndQuantity.values
+                    .elementAt(index)
+                    .values
+                    .elementAt(i)
+                    .toString(),
+                keyboardType: TextInputType.number,
+                cursorColor: Color(0xFF333333),
+                validator: (value) {
+                  value.trim();
+                  if (value.isEmpty) return 'This can\'t be empty';
+                  if (int.tryParse(value) == null)
+                    return 'This must be a number';
+                  return null;
+                },
+                onSaved: (newValue) {
+                  newValue.trim();
+                  colorsAndQuantity.values.elementAt(index).update(
+                      colorsAndQuantity.values
+                          .elementAt(index)
+                          .keys
+                          .elementAt(i),
+                      (value) => int.parse(newValue));
+                },
+              ),
+            ),
+          );
+        });
+  }
+
+  Future editQuantityDialog(BuildContext context, int index) {
+    return showDialog(
+        context: context,
+        builder: (BuildContext context) {
+          final _editQuantityForm = GlobalKey<FormState>();
+          return Form(
+            key: _editQuantityForm,
+            child: AlertDialog(
+              actions: [
+                TextButton(
+                  onPressed: () {
+                    if (!_editQuantityForm.currentState.validate()) return;
+                    _editQuantityForm.currentState.save();
+                    setState(() {});
+                    Navigator.of(context).pop();
+                  },
+                  child: Text('Ok'),
+                )
+              ],
+              content: TextFormField(
+                initialValue: colorsAndQuantity.values
+                    .elementAt(index)
+                    .values
+                    .first
+                    .toString(),
+                keyboardType: TextInputType.number,
+                cursorColor: Color(0xFF333333),
+                validator: (value) {
+                  value.trim();
+                  if (value.isEmpty) return 'This can\'t be empty';
+                  if (int.tryParse(value) == null)
+                    return 'This must be a number';
+                  return null;
+                },
+                onSaved: (value) {
+                  value.trim();
+                  colorsAndQuantity.values.elementAt(index).clear();
+                  colorsAndQuantity.values
+                      .elementAt(index)
+                      .putIfAbsent('0', () => int.parse(value));
+                },
+              ),
+            ),
+          );
+        });
   }
 
   Future addSpecDialog(
