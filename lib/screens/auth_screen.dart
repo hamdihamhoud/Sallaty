@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import '../models/http_exception.dart';
 import '../providers/auth.dart';
 import 'package:provider/provider.dart';
+import 'auth_verification_screen.dart';
 
 enum AuthMode { Signup, Login }
 
@@ -147,7 +148,7 @@ class _AuthCardState extends State<AuthCard>
     try {
       if (_authMode == AuthMode.Login) {
         // Log user in
-        if (_authData['username'].isEmpty)
+        if (_authData['email'] == '')
           await Provider.of<AuthProvider>(context, listen: false)
               .signInWithNumber(
             _authData['number'],
@@ -155,18 +156,36 @@ class _AuthCardState extends State<AuthCard>
           );
         else
           await Provider.of<AuthProvider>(context, listen: false)
-              .signInWithUsername(
-            _authData['username'],
+              .signInWithEmail(
+            _authData['email'],
             _authData['password'],
           );
       } else {
         // Sign user up
-        Provider.of<AuthProvider>(context, listen: false).signUp(
+        await Provider.of<AuthProvider>(context, listen: false).signUp(
           _authData['username'],
           _authData['number'],
           _authData['email'],
           _authData['password'],
         );
+        showDialog(
+            context: context,
+            builder: (ctx) => AlertDialog(
+                  actions: [
+                    TextButton(
+                        onPressed: () async {
+                          final code = await Provider.of<AuthProvider>(context,
+                                  listen: false)
+                              .generateCode();
+                          Navigator.pushNamed(
+                              context, VerificationScreen.routeName,
+                              arguments: code);
+                        },
+                        child: Text('Ok')),
+                  ],
+                  content:
+                      Text('A confirmation code will be sent to your email'),
+                ));
       }
     } on HttpException catch (error) {
       var errorMessage = 'Authentication failed';
@@ -241,7 +260,7 @@ class _AuthCardState extends State<AuthCard>
                   decoration: _authMode == AuthMode.Signup
                       ? const InputDecoration(labelText: 'Username')
                       : const InputDecoration(
-                          labelText: 'Username or Phone Number'),
+                          labelText: 'Email or Phone Number'),
                   validator: (value) {
                     if (value.isEmpty) return "This can't be empty!";
                     if (_authMode == AuthMode.Signup && isNumeric(value))
@@ -249,9 +268,11 @@ class _AuthCardState extends State<AuthCard>
                     return null;
                   },
                   onSaved: (value) {
-                    !isNumeric(value)
+                    _authMode == AuthMode.Signup
                         ? _authData['username'] = value
-                        : _authData['number'] = value;
+                        : !isNumeric(value)
+                            ? _authData['email'] = value
+                            : _authData['number'] = value;
                   },
                 ),
                 TextFormField(
@@ -305,6 +326,7 @@ class _AuthCardState extends State<AuthCard>
                                     }
                                   : null,
                               onSaved: (value) {
+                                if(_authMode == AuthMode.Signup)
                                 _authData['email'] = value;
                               },
                             ),

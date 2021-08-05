@@ -6,21 +6,23 @@ import '../providers/products.dart';
 import '../models/product.dart';
 import './product_item.dart';
 
+import '../screens/product_suggestion_screen.dart';
+
 class HomeSuggestionItem extends StatelessWidget {
   final String type;
   const HomeSuggestionItem(this.type);
 
   @override
   Widget build(BuildContext context) {
-    final List<Product> products =
-        Provider.of<ProductsProvider>(context).fetchBy(type);
+    List<Product> products = [];
     return Container(
       // height: 200,
       child: Column(
         children: [
           InkWell(
             onTap: () {
-              // Navigator.of(context).pushNamed(,arguments: );
+              Navigator.of(context).pushNamed(ProductSuggestionScreen.routeName,
+                  arguments: type);
             },
             child: Container(
               margin: const EdgeInsets.symmetric(vertical: 10, horizontal: 8),
@@ -34,7 +36,9 @@ class HomeSuggestionItem extends StatelessWidget {
                   IconButton(
                     icon: Icon(Icons.arrow_forward_rounded),
                     onPressed: () {
-                      // Navigator.of(context).pushNamed(,arguments: );
+                      Navigator.of(context).pushNamed(
+                          ProductSuggestionScreen.routeName,
+                          arguments: type);
                     },
                   )
                 ],
@@ -43,11 +47,21 @@ class HomeSuggestionItem extends StatelessWidget {
           ),
           Container(
             height: 190,
-            child: ListView.builder(
-                scrollDirection: Axis.horizontal,
-                itemCount: products.length,
-                itemBuilder: (ctx, index) => ChangeNotifierProvider.value(
-                    value: products[index], child: ProductItem())),
+            child: FutureBuilder(
+                future: Provider.of<ProductsProvider>(context).fetchBy(type),
+                builder: (ctx, snapshot) {
+                  if (snapshot.connectionState == ConnectionState.waiting)
+                    return Center(child: CircularProgressIndicator());
+                  products = snapshot.data;
+                  return ListView.builder(
+                    scrollDirection: Axis.horizontal,
+                    itemCount: products.length,
+                    itemBuilder: (ctx, index) => ChangeNotifierProvider.value(
+                      value: products[index],
+                      child: ProductItem(),
+                    ),
+                  );
+                }),
           ),
         ],
       ),

@@ -9,7 +9,7 @@ class TypesRow extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Container(
-      height: 127,
+      height: 140,
       child: ListView(
         scrollDirection: Axis.horizontal,
         children: types

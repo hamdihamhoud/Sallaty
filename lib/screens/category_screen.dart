@@ -8,6 +8,7 @@ import '../models/category.dart';
 import '../widgets/product_item.dart';
 //import '../widgets/home_suggestion_item.dart';
 import '../widgets/types_row.dart';
+import 'type_screen.dart';
 
 class CategoryScreen extends StatelessWidget {
   static const routeName = '/category';
@@ -16,90 +17,119 @@ class CategoryScreen extends StatelessWidget {
   Widget build(BuildContext context) {
     final Category category =
         ModalRoute.of(context).settings.arguments as Category;
-    final List<Product> products =
-        Provider.of<ProductsProvider>(context).fetchByCategory(category.title);
+    List<Product> products = [];
     return Scaffold(
-      appBar: AppBar(
-        title: Text(
-          category.title,
-          style: TextStyle(fontWeight: FontWeight.bold),
-        ),
-        actions: [
-          if (category.types.length == 0)
-            IconButton(icon: Icon(Icons.filter_alt_rounded), onPressed: () {}),
-          IconButton(
-            icon: Icon(Icons.search),
-            onPressed: () {},
+        appBar: AppBar(
+          title: Text(
+            category.title,
+            style: TextStyle(fontWeight: FontWeight.bold),
           ),
-        ],
-      ),
-      body: category.types.length == 0
-          ? GridView.builder(
-              padding: const EdgeInsets.all(10),
-              gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
-                crossAxisCount: 2,
-                mainAxisSpacing: 10,
-                crossAxisSpacing: 10,
-              ),
-              itemBuilder: (ctx, i) => ChangeNotifierProvider.value(
-                value: products[i],
-                child: ProductItem(
-                  isGridView: true,
-                ),
-              ),
-              itemCount: products.length,
-            )
-          : ListView(
-              children: [
-                TypesRow(category.types),
-                SizedBox(
-                  height: 10,
-                ),
-                ...category.types
-                    .map((e) => Column(
-                          children: [
-                            InkWell(
-                              onTap: () {
-                                // Navigator.of(context).pushNamed(,arguments: );
-                              },
-                              child: Container(
-                                margin: const EdgeInsets.symmetric(
-                                    vertical: 10, horizontal: 8),
-                                child: Row(
-                                  mainAxisAlignment:
-                                      MainAxisAlignment.spaceBetween,
-                                  children: [
-                                    Text(
-                                      e.title,
-                                      style: TextStyle(
-                                          fontSize: 18,
-                                          fontWeight: FontWeight.w500),
-                                    ),
-                                    IconButton(
-                                      icon: Icon(Icons.arrow_forward_rounded),
-                                      onPressed: () {
-                                        // Navigator.of(context).pushNamed(,arguments: );
-                                      },
-                                    )
-                                  ],
-                                ),
-                              ),
-                            ),
-                            Container(
-                              height: 190,
-                              child: ListView.builder(
-                                  scrollDirection: Axis.horizontal,
-                                  itemCount: 3,
-                                  itemBuilder: (ctx, index) =>
-                                      ChangeNotifierProvider.value(
-                                          value: products[index],
-                                          child: ProductItem())),
-                            ),
-                          ],
-                        ))
-                    .toList()
-              ],
+          actions: [
+            if (category.types.length == 0)
+              IconButton(
+                  icon: Icon(Icons.filter_alt_rounded), onPressed: () {}),
+            IconButton(
+              icon: Icon(Icons.search),
+              onPressed: () {},
             ),
-    );
+          ],
+        ),
+        body: FutureBuilder(
+            future: Provider.of<ProductsProvider>(context)
+                .fetchByCategory(category.title),
+            builder: (ctx, snapshot) {
+              if (snapshot.connectionState == ConnectionState.waiting)
+                return Center(child: CircularProgressIndicator());
+              products = snapshot.data;
+              return category.types.length == 0
+                  ? GridView.builder(
+                      padding: const EdgeInsets.all(10),
+                      gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
+                        crossAxisCount: 2,
+                        mainAxisSpacing: 10,
+                        crossAxisSpacing: 10,
+                      ),
+                      itemBuilder: (ctx, i) => ChangeNotifierProvider.value(
+                        value: products[i],
+                        child: ProductItem(
+                          isGridView: true,
+                        ),
+                      ),
+                      itemCount: products.length,
+                    )
+                  : ListView(
+                      children: [
+                        TypesRow(category.types),
+                        SizedBox(
+                          height: 10,
+                        ),
+                        ...category.types
+                            .map((e) => Column(
+                                  children: [
+                                    InkWell(
+                                      onTap: () {
+                                        Navigator.of(context).pushNamed(
+                                            TypeScreen.routeName,
+                                            arguments: e);
+                                      },
+                                      child: Container(
+                                        margin: const EdgeInsets.symmetric(
+                                            vertical: 10, horizontal: 8),
+                                        child: Row(
+                                          mainAxisAlignment:
+                                              MainAxisAlignment.spaceBetween,
+                                          children: [
+                                            Text(
+                                              e.title,
+                                              style: TextStyle(
+                                                  fontSize: 18,
+                                                  fontWeight: FontWeight.w500),
+                                            ),
+                                            IconButton(
+                                              icon: Icon(
+                                                  Icons.arrow_forward_rounded),
+                                              onPressed: () {
+                                                Navigator.of(context).pushNamed(
+                                                    TypeScreen.routeName,
+                                                    arguments: e);
+                                              },
+                                            )
+                                          ],
+                                        ),
+                                      ),
+                                    ),
+                                    Container(
+                                        height: 190,
+                                        child: FutureBuilder(
+                                          future: Provider.of<ProductsProvider>(
+                                                  context)
+                                              .fetchByType(e.title),
+                                          builder: (ctx, snapshot) {
+                                            if (snapshot.connectionState ==
+                                                ConnectionState.waiting)
+                                              return Center(
+                                                  child:
+                                                      CircularProgressIndicator());
+                                            List<Product> typeProducts =
+                                                snapshot.data;
+                                            return ListView.builder(
+                                                scrollDirection:
+                                                    Axis.horizontal,
+                                                itemCount: typeProducts.length,
+                                                itemBuilder: (ctx, index) =>
+                                                    ChangeNotifierProvider
+                                                        .value(
+                                                            value: typeProducts[
+                                                                index],
+                                                            child:
+                                                                ProductItem()));
+                                          },
+                                        )),
+                                  ],
+                                ))
+                            .toList()
+                      ],
+                    );
+            }));
   }
 }

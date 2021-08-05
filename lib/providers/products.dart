@@ -1,5 +1,5 @@
 import 'dart:convert';
-import 'dart:developer';
+import 'package:http/http.dart' as http;
 import 'dart:io';
 import 'package:ecart/models/period.dart';
 import 'package:flutter/material.dart';
@@ -272,6 +272,16 @@ class ProductsProvider with ChangeNotifier {
     //   colors: [Colors.black, Colors.blue, Colors.red],
     // ),
   ];
+  String _token;
+  String _userId;
+
+  void setToken(String token) {
+    _token = token;
+  }
+
+  void setUserId(String id) {
+    _userId = id;
+  }
 
   List<Product> get products => [..._products];
 
@@ -279,12 +289,22 @@ class ProductsProvider with ChangeNotifier {
     return products.firstWhere((element) => element.id == id);
   }
 
-  List<Product> fetchByCategory(String category) {
+  Future<List<Product>> fetchByCategory(String category) async {
+    final url =
+        Uri.parse("https://hamdi1234.herokuapp.com/product?category=$category");
+        print(url);
+    print(_token);
+    final response = await http.get(url, headers: {
+      'usertype': 'vendor',
+      'Content-Type': 'application/json; charset=UTF-8',
+      'authorization': _token,
+    });
+    print(response.body);
     return products;
     //_products.where((element) => element.category == category).toList();
   }
 
-  List<Product> fetchByType(String type) {
+  Future<List<Product>> fetchByType(String type) async {
     return products;
     // _products.where((element) => element.type == type).toList();
   }
@@ -299,7 +319,7 @@ class ProductsProvider with ChangeNotifier {
     return products;
   }
 
-  List<Product> fetchBy(String fetchMechanism) {
+  Future<List<Product>> fetchBy(String fetchMechanism) async {
     return products;
   }
 
@@ -334,7 +354,10 @@ class ProductsProvider with ChangeNotifier {
     );
   }
 
-  bool removeFromList(String id, int amount,) {
+  bool removeFromList(
+    String id,
+    int amount,
+  ) {
     // if (_products.firstWhere((element) => element.id == id).quantity >=
     //     amount) {
     //   _products.firstWhere((element) => element.id == id).quantity -= amount;
@@ -478,46 +501,74 @@ class ProductsProvider with ChangeNotifier {
       ],
       ownerId: 'h1',
     );
-    _products.add(product);
-    notifyListeners();
+    // _products.add(product);
+    // notifyListeners();
 
+    final url = Uri.parse("https://hamdi1234.herokuapp.com/product");
+    var response = await http.post(
+      url,
+      headers: {
+        'usertype': 'vendor',
+        'Content-Type': 'application/json; charset=UTF-8',
+        'authorization': // TOKEN
+            "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJfaWQiOiI2MTA4MTE0MDAyMjAxZTAwMTVkYWYwNDkiLCJpYXQiOjE2Mjc5MTg2NTYsImV4cCI6MTY1OTQ3NjI1Nn0.08iCb0dRonZX2Dj3xYbqHnbYT-ygESZ1fRQ0GJCEkK0",
+      },
+      body: json.encode(
+        {
+          'owner': "6108114002201e0015daf049", // USER_ID !!!
+          'images': img64s,
+          'name': product.title,
+          'price': product.price,
+          'colorsAndQuantityAndSizes': product.colorsAndQuantityAndSizes.entries
+              .map(
+                (e) => {
+                  'color': e.key.value,
+                  'sizesAndQuantity': e.value.entries
+                      .map(
+                        (e) => {
+                          'size': e.key,
+                          'quantity': e.value,
+                        },
+                      )
+                      .toList(),
+                },
+              )
+              .toList(),
+          'warranty_period': product.warranty.period,
+          'warrantyType': product.warranty.type.toString().split('.').last,
+          'returning_period': product.returning.period,
+          'returningType': product.returning.type.toString().split('.').last,
+          'replacing_period': product.replacement.period,
+          'replacementType':
+              product.replacement.type.toString().split('.').last,
+          'category': product.category,
+          'type': product.type,
+          'discription': product.description,
+          'discountPercentage': product.discountPercentage,
+          'specs': product.specs,
+          'rating': product.rating,
+        },
+      ),
+    );
+    if (response.statusCode == 200 || response.statusCode == 201) {
+      var responseData = json.decode(response.body);
+      print(response.headers);
+      print(responseData);
+      // name = responseData['name'];
+      // number = responseData['number'];
+      // email = responseData['email'];
+      // _token = response.headers['authorization'];
+      // isSeller = responseData['role'] == 'normal' ? false : true;
+      // saveToken();
+      notifyListeners();
+    } else {
+      print('Request failed with status: ${response.statusCode}.');
+      var responseData = json.decode(response.body);
+      print(responseData);
+      throw HttpException(responseData);
+    }
     // log(
-    //   json.encode(
-    //     {
-    //       'images': img64s,
-    //       'title': product.title,
-    //       'price': product.price,
-    //       'colorsAndQuantityAndSizes': product.colorsAndQuantityAndSizes.entries
-    //           .map(
-    //             (e) => {
-    //               'color': e.key.value,
-    //               'sizesAndQuantity': e.value.entries
-    //                   .map(
-    //                     (e) => {
-    //                       'size': e.key,
-    //                       'quantity': e.value,
-    //                     },
-    //                   )
-    //                   .toList(),
-    //             },
-    //           )
-    //           .toList(),
-    //       'warrantyPeriod': product.warranty.period,
-    //       'warrantyType': product.warranty.type.toString().split('.').last,
-    //       'returningPeriod': product.returning.period,
-    //       'returningType': product.returning.type.toString().split('.').last,
-    //       'replacementPeriod': product.replacement.period,
-    //       'replacementType':
-    //           product.replacement.type.toString().split('.').last,
-    //       'category': product.category,
-    //       'type': product.type,
-    //       'description': product.description,
-    //       'discountPercentage': product.discountPercentage,
-    //       'specs': product.specs,
-    //       'rating': product.rating,
-    //       'ownerId': product.ownerId,
-    //     },
-    //   ),
+
     // );
   }
 

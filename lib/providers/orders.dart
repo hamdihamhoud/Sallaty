@@ -82,6 +82,16 @@ class Orders with ChangeNotifier {
       ],
     ),
   ];
+    String _token;
+  String _userId;
+
+  void setToken(String token) {
+    _token = token;
+  }
+
+  void setUserId(String id) {
+    _userId = id;
+  }
 
   List<OrderItem> get orders {
     return [..._orders];

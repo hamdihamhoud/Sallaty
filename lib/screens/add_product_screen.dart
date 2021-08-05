@@ -58,6 +58,8 @@ class _AddProductScreenState extends State<AddProductScreen> {
 
   List<Widget> imageSlider = [];
 
+  var _isLoading = false;
+
   void deleteImageUrl(String url) {
     var i = product.imageUrls.indexOf(url);
     product.imageUrls.removeAt(i);
@@ -200,11 +202,44 @@ class _AddProductScreenState extends State<AddProductScreen> {
       imageUrls: product.imageUrls,
       ownerId: product.ownerId,
     );
-    await Provider.of<ProductsProvider>(context, listen: false).addProduct(
-      product,
-      images,
+    setState(() {
+      _isLoading = true;
+    });
+    try {
+      await Provider.of<ProductsProvider>(context, listen: false).addProduct(
+        product,
+        images,
+      );
+      Navigator.of(context).pop();
+    } on HttpException catch (_) {
+      var errorMessage = 'Adding failed failed';
+      _showErrorDialog(errorMessage);
+    } catch (error) {
+      const errorMessage =
+          'Could not add product. Please try again later.';
+      _showErrorDialog(errorMessage);
+    }
+    setState(() {
+      _isLoading = false;
+    });
+  }
+
+  void _showErrorDialog(String message) {
+    showDialog(
+      context: context,
+      builder: (ctx) => AlertDialog(
+        title: const Text('An Error Occurred!'),
+        content: Text(message),
+        actions: <Widget>[
+          TextButton(
+            child: const Text('Okay'),
+            onPressed: () {
+              Navigator.of(ctx).pop();
+            },
+          )
+        ],
+      ),
     );
-    Navigator.of(context).pop();
   }
 
   ScaffoldFeatureController<SnackBar, SnackBarClosedReason> showSnakBarError(
@@ -310,10 +345,12 @@ class _AddProductScreenState extends State<AddProductScreen> {
             'Product Details',
           ),
           actions: [
-            IconButton(
-              icon: FaIcon(FontAwesomeIcons.save),
-              onPressed: saveForm,
-            )
+            _isLoading
+                ? Center(child: CircularProgressIndicator())
+                : IconButton(
+                    icon: FaIcon(FontAwesomeIcons.save),
+                    onPressed: saveForm,
+                  )
           ],
         ),
         body: Form(
