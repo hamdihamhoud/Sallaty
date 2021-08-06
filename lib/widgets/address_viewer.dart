@@ -1,11 +1,15 @@
+import 'package:awesome_dialog/awesome_dialog.dart';
 import 'package:cool_alert/cool_alert.dart';
 import 'package:ecart/providers/addresses.dart';
+import 'package:ecart/providers/cart.dart';
+import 'package:ecart/screens/main_screen.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
 class AddressesViewer extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
+    final cartProvider = Provider.of<Cart>(context);
     final theme = Theme.of(context);
     final mediaquery = MediaQuery.of(context);
     final addressesProvider = Provider.of<AddressesProvider>(context);
@@ -46,12 +50,16 @@ class AddressesViewer extends StatelessWidget {
                               width: mediaquery.size.width,
                               child: TextButton(
                                 onPressed: () {
-                                  CoolAlert.show(
+                                  Navigator.pop(context);
+                                  cartProvider.clearCart();
+                                  AwesomeDialog(
                                     context: context,
-                                    type: CoolAlertType.success,
-                                    animType: CoolAlertAnimType.scale,
-                                    title: 'ads',
-                                  );
+                                    dialogType: DialogType.SUCCES,
+                                    animType: AnimType.SCALE,
+                                    body: Text('adddddddd'),
+                                    closeIcon: Icon(Icons.error),
+                                    title: 'daaaaaaaeqqe',
+                                  )..show();
                                 },
                                 child: Text(
                                   'Select Address',
