@@ -10,6 +10,7 @@ enum Status {
 
 class CartItem {
   final String id;
+  final String productId;
   final String title;
   final int quantity;
   final double price;
@@ -20,6 +21,7 @@ class CartItem {
 
   CartItem({
     @required this.id,
+    @required this.productId,
     @required this.title,
     @required this.quantity,
     @required this.price,
@@ -31,17 +33,7 @@ class CartItem {
 }
 
 class Cart with ChangeNotifier {
-  Map<String, CartItem> _items = {
-    'p111111': CartItem(
-      id: 'p1',
-      title: 'Adidas Shoes',
-      color: Colors.white,
-      quantity: 2,
-      price: 12,
-      imageUrl:
-          'https://upload.wikimedia.org/wikipedia/commons/thumb/1/14/Cast-Iron-Pan.jpg/1024px-Cast-Iron-Pan.jpg',
-    )
-  };
+  Map<String, CartItem> _items = {};
 
   Map<String, CartItem> get items {
     return {..._items};
@@ -70,19 +62,21 @@ class Cart with ChangeNotifier {
   }
 
   void addItem({
+    @required final String keys,
     @required final String productId,
     @required final double price,
     @required final String title,
-    @required int quantity,
     @required final Color color,
     @required final String imageUrl,
+    @required int quantity,
     final String size = '0',
   }) {
-    if (_items.containsKey(productId)) {
+    if (_items.containsKey(keys)) {
       _items.update(
-        productId,
+        keys,
         (existingCartItem) => CartItem(
           id: existingCartItem.id,
+          productId: existingCartItem.productId,
           title: existingCartItem.title,
           price: existingCartItem.price + (price * quantity),
           quantity: existingCartItem.quantity + quantity,
@@ -93,9 +87,10 @@ class Cart with ChangeNotifier {
       );
     } else {
       _items.putIfAbsent(
-        productId,
+        keys,
         () => CartItem(
           id: DateTime.now().toString(),
+          productId: productId,
           title: title,
           price: price * quantity,
           quantity: quantity,
@@ -113,13 +108,14 @@ class Cart with ChangeNotifier {
     notifyListeners();
   }
 
-  void undoAddingItem(String productId) {
-    double picePrice = (_items[productId].price) / (_items[productId].quantity);
-    if (!_items.containsKey(productId)) return;
-    if (_items[productId].quantity > 1)
+  void undoAddingItem({String keys}) {
+    double picePrice = (_items[keys].price) / (_items[keys].quantity);
+    if (!_items.containsKey(keys)) return;
+    if (_items[keys].quantity > 1)
       _items.update(
-        productId,
+        keys,
         (value) => CartItem(
+          productId: value.productId,
           id: value.id,
           title: value.title,
           price: value.price - picePrice,
@@ -130,7 +126,7 @@ class Cart with ChangeNotifier {
         ),
       );
     else
-      deleteProductFromCart(productId);
+      deleteProductFromCart(keys);
     notifyListeners();
   }
 

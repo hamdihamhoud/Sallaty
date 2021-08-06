@@ -234,7 +234,7 @@ class _AddtoCartState extends State<AddtoCart> {
                   curve: Curves.ease,
                   height: 42,
                   width: notAvailable
-                      ? mediaQuery.size.width * 0.90
+                      ? mediaQuery.size.width * 0.89
                       : mediaQuery.size.width * 0.42,
                   child: TextButton(
                     onPressed: () {
@@ -272,6 +272,9 @@ class _AddtoCartState extends State<AddtoCart> {
                               size: _selectedSize,
                             );
                             cartProvider.addItem(
+                              keys: widget.product.id.toString() +
+                                  _selectedColor.value.toString() +
+                                  _selectedSize.toString(),
                               productId: widget.product.id,
                               price: widget.product.price,
                               title: widget.product.title,

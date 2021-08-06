@@ -16,10 +16,10 @@ class QuantityIcon extends StatefulWidget {
 }
 
 class _QuantityIconState extends State<QuantityIcon> {
-  bool addButtonState = true;
-  bool removeButtonState = false;
   @override
   Widget build(BuildContext context) {
+    bool addButtonState = (widget.amount < widget.maxAmount);
+    bool removeButtonState = (widget.amount > 1);
     return Row(
       crossAxisAlignment: CrossAxisAlignment.center,
       mainAxisAlignment: MainAxisAlignment.spaceAround,

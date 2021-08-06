@@ -1,5 +1,4 @@
 import 'dart:convert';
-import 'dart:developer';
 import 'dart:io';
 import 'package:ecart/models/period.dart';
 import 'package:flutter/material.dart';
@@ -27,10 +26,10 @@ class ProductsProvider with ChangeNotifier {
       returning: Period(type: TimeType.days, period: 3),
       colorsAndQuantityAndSizes: {
         Color(0xFF352333): {
-          '0': 20,
+          '0': 1,
         },
         Color(0xFF828282): {
-          '0': 40,
+          '0': 10,
         },
       },
       specs: {
@@ -42,7 +41,7 @@ class ProductsProvider with ChangeNotifier {
     Product(
       id: 'p1',
       ownerId: 'o1',
-      title: 'Adidas shoes',
+      title: 'Adidas',
       price: 30,
       imageUrls: [
         'https://upload.wikimedia.org/wikipedia/commons/thumb/e/e8/Trousers%2C_dress_%28AM_1960.022-8%29.jpg/512px-Trousers%2C_dress_%28AM_1960.022-8%29.jpg',
@@ -58,20 +57,20 @@ class ProductsProvider with ChangeNotifier {
       returning: Period(type: TimeType.days, period: 3),
       colorsAndQuantityAndSizes: {
         Color(0xFF323143): {
-          '10': 20,
-          '20': 30,
+          '10': 2,
+          '20': 3,
         },
         Color(0xFF111349): {
-          '5': 20,
-          '7': 30,
+          '5': 4,
+          '7': 5,
         },
         Color(0xFF113433): {
-          '19': 20,
-          '2': 30,
+          '19': 6,
+          '2': 7,
         },
         Color(0xFF442365): {
-          '18': 20,
-          '2': 30,
+          '18': 8,
+          '2': 9,
         },
       },
       specs: {
@@ -149,23 +148,13 @@ class ProductsProvider with ChangeNotifier {
       @required int amount,
       String size = '0'}) {
     var productIndex = _products.indexWhere((element) => element.id == id);
-    if (size == '0') {
-      _products[productIndex]
-          .colorsAndQuantityAndSizes
-          .entries
-          .firstWhere((element) => element.key == color)
-          .value
-          .update('0', (value) => value - amount);
-      notifyListeners();
-    } else {
-      _products[productIndex]
-          .colorsAndQuantityAndSizes
-          .entries
-          .firstWhere((element) => element.key == color)
-          .value
-          .update(size, (value) => value - amount);
-      notifyListeners();
-    }
+    _products[productIndex]
+        .colorsAndQuantityAndSizes
+        .entries
+        .firstWhere((element) => element.key == color)
+        .value
+        .update(size, (value) => value - amount);
+    notifyListeners();
   }
 
   bool checkIfAvailable(
@@ -174,25 +163,6 @@ class ProductsProvider with ChangeNotifier {
       @required int amount,
       String size = '0'}) {
     var productIndex = _products.indexWhere((element) => element.id == id);
-    if (size == '0') {
-      if (_products[productIndex]
-              .colorsAndQuantityAndSizes
-              .entries
-              .firstWhere((element) => element.key == color)
-              .value
-              .entries
-              .elementAt(0)
-              .value >=
-          amount)
-        _products[productIndex]
-            .colorsAndQuantityAndSizes
-            .entries
-            .firstWhere((element) => element.key == color)
-            .value
-            .update('0', (value) => value - amount);
-      notifyListeners();
-      return true;
-    }
     if (_products[productIndex]
             .colorsAndQuantityAndSizes
             .entries
@@ -202,13 +172,6 @@ class ProductsProvider with ChangeNotifier {
             .firstWhere((element) => element.key == size)
             .value >=
         amount) {
-      _products[productIndex]
-          .colorsAndQuantityAndSizes
-          .entries
-          .firstWhere((element) => element.key == color)
-          .value
-          .update(size, (value) => value - amount);
-      notifyListeners();
       return true;
     }
     return false;
@@ -220,23 +183,35 @@ class ProductsProvider with ChangeNotifier {
       @required int amount,
       String size = '0'}) {
     var productIndex = _products.indexWhere((element) => element.id == id);
-    if (size == '0') {
-      _products[productIndex]
-          .colorsAndQuantityAndSizes
-          .entries
-          .firstWhere((element) => element.key == color)
-          .value
-          .update('0', (value) => value + amount);
-      notifyListeners();
-    } else {
-      _products[productIndex]
-          .colorsAndQuantityAndSizes
-          .entries
-          .firstWhere((element) => element.key == color)
-          .value
-          .update(size, (value) => value + amount);
-      notifyListeners();
+    _products[productIndex]
+        .colorsAndQuantityAndSizes
+        .entries
+        .firstWhere((element) => element.key == color)
+        .value
+        .update(size, (value) => value + amount);
+    notifyListeners();
+  }
+
+  int quantityCounter({Product product, int colorsNumber}) {
+    int quantity = 0;
+    for (int i = 0; i < colorsNumber; i++) {
+      for (int j = 0;
+          j <
+              product.colorsAndQuantityAndSizes.entries
+                  .elementAt(i)
+                  .value
+                  .values
+                  .length;
+          j++) {
+        quantity += product.colorsAndQuantityAndSizes.entries
+            .elementAt(i)
+            .value
+            .values
+            .elementAt(j)
+            .toInt();
+      }
     }
+    return quantity;
   }
 
   void updateProduct(Product product, List<String> img64s) {
@@ -407,36 +382,4 @@ class ProductsProvider with ChangeNotifier {
   List<Product> premiumAllProducts() {
     return products;
   }
-}
-
-List quantityCounter(Product product, int colorsNumber) {
-  List<int> quantity = [];
-  for (int i = 0; i < colorsNumber; i++) {
-    for (int j = 0;
-        j <
-            product.colorsAndQuantityAndSizes.entries
-                .elementAt(i)
-                .value
-                .values
-                .length;
-        j++) {
-      if (j == 0)
-        quantity.insert(
-            i,
-            product.colorsAndQuantityAndSizes.entries
-                .elementAt(i)
-                .value
-                .values
-                .elementAt(j)
-                .toInt());
-      else
-        quantity[i] += product.colorsAndQuantityAndSizes.entries
-            .elementAt(i)
-            .value
-            .values
-            .elementAt(j)
-            .toInt();
-    }
-  }
-  return quantity;
 }

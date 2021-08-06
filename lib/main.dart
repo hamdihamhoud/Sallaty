@@ -5,6 +5,8 @@ import 'package:provider/provider.dart';
 
 import 'providers/products.dart';
 import 'providers/cart.dart';
+import 'providers/auth.dart';
+import 'providers/addresses.dart';
 import 'screens/home_screen.dart';
 import 'screens/watchlist_screen.dart';
 import 'screens/offers_screen.dart';
@@ -19,7 +21,11 @@ import 'screens/feedback.dart';
 import 'screens/add_product_screen.dart';
 import 'screens/filter_products_premium_screen.dart';
 import 'screens/analytics_premium_screen.dart';
-// import 'screens/auth_screen.dart';
+import 'screens/auth_screen.dart';
+import 'screens/adresses_screen.dart';
+import 'screens/settings_screen.dart';
+// import 'screens/auth_verification_screen.dart';
+import 'screens/splash_screen.dart';
 
 void main() {
   runApp(MyApp());
@@ -30,10 +36,13 @@ class MyApp extends StatelessWidget {
   Widget build(BuildContext context) {
     return MultiProvider(
       providers: [
+        ChangeNotifierProvider<AuthProvider>(create: (_) => AuthProvider()),
         ChangeNotifierProvider<Cart>(create: (_) => Cart()),
         ChangeNotifierProvider<ProductsProvider>(
             create: (_) => ProductsProvider()),
         ChangeNotifierProvider<Orders>(create: (_) => Orders()),
+        ChangeNotifierProvider<AddressesProvider>(
+            create: (_) => AddressesProvider()),
       ],
       child: MaterialApp(
         title: 'Sallaty',
@@ -68,7 +77,20 @@ class MyApp extends StatelessWidget {
             ),
           ),
         ),
-        home: AppBottomNavigationBarController(),
+        home:
+            // Consumer<AuthProvider>(
+            //   builder: (ctx, auth, _) => FutureBuilder(
+            //     future: auth.isAuth(),
+            //     builder: (ctx, snapshot) =>
+            //         snapshot.connectionState == ConnectionState.waiting
+            //             ? SplashScreen()
+            //             : snapshot.data == true
+            //                 ? AppBottomNavigationBarController()
+            //                 : AuthScreen(),
+            //   ),
+            // ),
+            AppBottomNavigationBarController(),
+        // VerificationScreen(),
         routes: {
           HomeScreen.routeName: (ctx) => HomeScreen(),
           WatchlistScreen.routeName: (ctx) => WatchlistScreen(),
@@ -86,7 +108,9 @@ class MyApp extends StatelessWidget {
               AppBottomNavigationBarController(),
           FilterProductsScreen.routeName: (ctx) => FilterProductsScreen(),
           AnalyticsScreen.routeName: (ctx) => AnalyticsScreen(),
-          // AuthScreen.routeName: (ctx) => AuthScreen(),
+          AuthScreen.routeName: (ctx) => AuthScreen(),
+          AddressesScreen.routeName: (ctx) => AddressesScreen(),
+          SettingsScreen.routeName: (ctx) => SettingsScreen(),
         },
       ),
     );

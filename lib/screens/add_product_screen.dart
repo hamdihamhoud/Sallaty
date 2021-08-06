@@ -303,6 +303,7 @@ class _AddProductScreenState extends State<AddProductScreen> {
   @override
   Widget build(BuildContext context) {
     final mediaQuery = MediaQuery.of(context);
+    FocusNode desc = FocusNode(canRequestFocus: false);
     return Scaffold(
         appBar: AppBar(
           title: Text(
@@ -558,6 +559,7 @@ class _AddProductScreenState extends State<AddProductScreen> {
                 ),
                 TextFormField(
                   initialValue: description,
+                  focusNode: desc,
                   decoration: InputDecoration(
                     border: OutlineInputBorder(),
                     labelText: 'Description',

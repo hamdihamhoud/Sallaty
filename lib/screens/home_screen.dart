@@ -1,4 +1,6 @@
+import 'package:ecart/models/category.dart';
 import 'package:ecart/models/product_details_screen_args.dart';
+import 'package:ecart/widgets/categories_item.dart';
 import 'package:flutter/material.dart';
 import '../widgets/home_suggestion_item.dart';
 import '../screens/product_details_screen.dart';
@@ -32,15 +34,25 @@ class _HomeScreenState extends State<HomeScreen> {
         ],
       ),
       drawer: DrawerScreen(),
-      body: ListView(
+      body: Column(
         children: [
-          // const CategoriesRow(),
-          const SizedBox(
-            height: 10,
+          Container(
+            height: 66,
+            child: ListView.builder(
+              scrollDirection: Axis.horizontal,
+              itemCount: categories.length,
+              itemBuilder: (context, index) => CategoriesItem(index),
+            ),
           ),
-          const HomeSuggestionItem('Most Recent'),
-          const HomeSuggestionItem('Highest Rated'),
-          const HomeSuggestionItem('Best Seller'),
+          Expanded(
+            child: ListView(
+              children: [
+                const HomeSuggestionItem('Most Recent'),
+                const HomeSuggestionItem('Highest Rated'),
+                const HomeSuggestionItem('Best Seller'),
+              ],
+            ),
+          ),
         ],
       ),
     );

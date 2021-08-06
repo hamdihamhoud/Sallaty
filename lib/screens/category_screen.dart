@@ -89,7 +89,7 @@ class CategoryScreen extends StatelessWidget {
                               height: 190,
                               child: ListView.builder(
                                   scrollDirection: Axis.horizontal,
-                                  itemCount: 3,
+                                  itemCount: 2,
                                   itemBuilder: (ctx, index) =>
                                       ChangeNotifierProvider.value(
                                           value: products[index],

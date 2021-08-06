@@ -4,23 +4,6 @@ showAlertDialog({
   BuildContext context,
   String content,
 }) {
-  Widget okButton = ElevatedButton(
-    child: Text(
-      "OK",
-      style: TextStyle(
-        color: Colors.white,
-        fontWeight: FontWeight.bold,
-      ),
-    ),
-    style: ElevatedButton.styleFrom(
-      shadowColor: Colors.transparent,
-      primary: Color(0xFF333333),
-      onPrimary: Color(0xFF828282),
-    ),
-    onPressed: () {
-      Navigator.of(context).pop();
-    },
-  );
   AlertDialog alert = AlertDialog(
     contentPadding: const EdgeInsets.all(0),
     content: Container(
