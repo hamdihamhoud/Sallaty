@@ -236,11 +236,11 @@ class AuthProvider with ChangeNotifier {
     );
     if (response.statusCode == 200 || response.statusCode == 201) return true;
     // final responseData = json.decode(response.body);
-    return false;
+    // return false;
     // if (responseData['error'] != null) {
     //   //Invalid session. Logout
-    //   await logout();
-    //   return false;
+      await logout();
+      return false;
     // } else {
     //   return true;
     // }

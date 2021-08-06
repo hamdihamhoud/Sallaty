@@ -25,6 +25,7 @@ dependencies:
     sdk: flutter
   cached_network_image: ^3.0.0
   carousel_slider: ^3.0.0
+  cool_alert: ^1.1.0
   cupertino_icons: ^1.0.2
   flutter_colorpicker: ^0.4.0
   flutter_rating_bar: ^4.0.0
@@ -36,7 +37,7 @@ dependencies:
   menu_button: ^1.4.2+1
   provider: ^5.0.0
   shared_preferences: ^2.0.6
-
+  
 dev_dependencies:
   flutter_test:
     sdk: flutter
@@ -56,6 +57,8 @@ flutter:
     - assets/images/no-cart-items.png
     - assets/images/gray-logo.png
     - assets/images/splash.png
+    - assets/images/empty_cart.png
+    - assets/images/no_address_found.png
 
   # An image asset can refer to one or more resolution-specific "variants", see
   # https://flutter.dev/assets-and-images/#resolution-aware.

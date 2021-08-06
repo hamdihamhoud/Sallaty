@@ -49,27 +49,63 @@ class _AddAddressFormState extends State<AddAddressForm> {
     _key.currentState.save();
     Navigator.of(context).pop();
     setState(() {
-      Provider.of<AddressesProvider>(context, listen: false).setAddress(address);
+      Provider.of<AddressesProvider>(context, listen: false)
+          .setAddress(address);
     });
   }
 
   @override
   Widget build(BuildContext context) {
+    final theme = Theme.of(context);
     return Form(
       key: _key,
       child: AlertDialog(
         actions: [
-          TextButton(
-              onPressed: () {
-                _save();
-              },
-              child: Text(
-                'Ok',
-                style: TextStyle(
-                  color: Theme.of(context).primaryColor,
-                  fontWeight: FontWeight.bold,
+          Padding(
+            padding: const EdgeInsets.only(
+              left: 10,
+              right: 10,
+            ),
+            child: Row(
+              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+              children: [
+                Container(
+                  width: MediaQuery.of(context).size.width * 0.25,
+                  child: TextButton(
+                      style: TextButton.styleFrom(
+                        backgroundColor: Color(0xFF828282),
+                      ),
+                      onPressed: () {
+                        Navigator.pop(context);
+                      },
+                      child: Text(
+                        'Cancel',
+                        style: TextStyle(
+                          color: Colors.white,
+                          fontWeight: FontWeight.bold,
+                        ),
+                      )),
                 ),
-              ))
+                Container(
+                  width: MediaQuery.of(context).size.width * 0.25,
+                  child: TextButton(
+                      style: TextButton.styleFrom(
+                        backgroundColor: theme.primaryColor,
+                      ),
+                      onPressed: () {
+                        _save();
+                      },
+                      child: Text(
+                        'Add',
+                        style: TextStyle(
+                          color: Colors.white,
+                          fontWeight: FontWeight.bold,
+                        ),
+                      )),
+                ),
+              ],
+            ),
+          )
         ],
         content: Column(
           mainAxisSize: MainAxisSize.min,

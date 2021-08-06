@@ -9,44 +9,46 @@ class TypesRow extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Container(
-      height: 140,
+      height: 66,
       child: ListView(
         scrollDirection: Axis.horizontal,
         children: types
-            .map((e) => InkWell(
-                  onTap: () {
-                    Navigator.of(context)
-                        .pushNamed(TypeScreen.routeName, arguments: e);
-                  },
+            .map((e) => Padding(
+                  padding: const EdgeInsets.only(
+                    top: 18,
+                    bottom: 18,
+                    left: 8,
+                    right: 8,
+                  ),
                   child: Container(
-                    margin: const EdgeInsets.all(12),
-                    child: Column(
-                      crossAxisAlignment: CrossAxisAlignment.center,
-                      children: [
-                        CircleAvatar(
-                          radius: 41,
-                          backgroundColor: Colors.black,
-                          child: CircleAvatar(
-                            backgroundColor: Colors.white,
-                            child: ClipOval(
-                              child: Padding(
-                                padding: const EdgeInsets.all(8.0),
-                                // child: Image.asset(
-                                //   e.imageAsset,
-                                //   fit: BoxFit.cover,
-                                // ),
-                              ),
-                            ),
-                            radius: 40,
+                    decoration: BoxDecoration(
+                      color: Theme.of(context).primaryColor,
+                      borderRadius: BorderRadius.all(
+                        Radius.circular(15),
+                      ),
+                    ),
+                    height: 20,
+                    child: InkWell(
+                      onTap: () {
+                        Navigator.of(context)
+                            .pushNamed(TypeScreen.routeName, arguments: e);
+                      },
+                      child: Padding(
+                        padding: const EdgeInsets.only(
+                          top: 5,
+                          bottom: 5,
+                          left: 15,
+                          right: 15,
+                        ),
+                        child: Text(
+                          e.title,
+                          style: TextStyle(
+                            color: Color(0xFF333333),
+                            fontSize: 16,
+                            fontWeight: FontWeight.bold,
                           ),
                         ),
-                        SizedBox(
-                          height: 5,
-                        ),
-                        Text(
-                          e.title,
-                        ),
-                      ],
+                      ),
                     ),
                   ),
                 ))

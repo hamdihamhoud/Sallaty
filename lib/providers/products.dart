@@ -9,7 +9,7 @@ import '../models/seller.dart';
 class ProductsProvider with ChangeNotifier {
   List<Product> _products = [
     Product(
-      id: 'p1',
+      id: 'p2',
       ownerId: 'o1',
       title: 'Adidas shoes',
       price: 30,
@@ -26,77 +26,11 @@ class ProductsProvider with ChangeNotifier {
       replacement: Period(type: TimeType.days, period: 3),
       returning: Period(type: TimeType.days, period: 3),
       colorsAndQuantityAndSizes: {
-        Color(0xFF333333): {
-          '49': 50,
-          '50': 100,
+        Color(0xFF352333): {
+          '0': 1,
         },
         Color(0xFF828282): {
-          '51': 100,
-          '52': 200,
-        },
-        Color(0xFF985424): {
-          '53': 300,
-          '54': 400,
-        },
-        Color(0xFF123549): {
-          '55': 500,
-          '56': 600,
-        },
-        Color(0xFF112249): {
-          '55': 500,
-          '56': 600,
-        },
-        Color(0xFF123549): {
-          '55': 500,
-          '56': 600,
-        },
-        Color(0xFF12119): {
-          '55': 500,
-          '56': 600,
-        },
-        Color(0xFF111549): {
-          '55': 500,
-          '56': 600,
-        },
-        Color(0xFF114549): {
-          '55': 500,
-          '56': 600,
-        },
-        Color(0xFF123129): {
-          '55': 500,
-          '56': 600,
-        },
-        Color(0xFF153549): {
-          '55': 500,
-          '56': 600,
-        },
-        Color(0xFF133549): {
-          '55': 500,
-          '56': 600,
-        },
-        Color(0xFF131549): {
-          '55': 500,
-          '56': 600,
-        },
-        Color(0xFF133559): {
-          '55': 500,
-          '56': 600,
-        },
-        Color(0xFF133449): {
-          '55': 500,
-          '56': 600,
-        },
-        Color(0xFF111349): {
-          '55': 500,
-          '56': 600,
-        },
-        Color(0xFF122249): {
-          '55': 500,
-          '56': 600,
-        },
-        Color(0xFF933340): {
-          '55': 500,
-          '56': 600,
+          '0': 10,
         },
       },
       specs: {
@@ -105,172 +39,47 @@ class ProductsProvider with ChangeNotifier {
         'other': 'running shoes',
       },
     ),
-    // Product(
-    //   id: 'p1',
-    //   ownerId: 'o1',
-    //   title: 'Adidas shoesdfssssssssssssssssssssssssssssssssssss',
-    //   price: 30,
-    //   imageUrls: [
-    //     'https://upload.wikimedia.org/wikipedia/commons/thumb/e/e8/Trousers%2C_dress_%28AM_1960.022-8%29.jpg/512px-Trousers%2C_dress_%28AM_1960.022-8%29.jpg',
-    //     'https://cdn.pixabay.com/photo/2016/10/02/22/17/red-t-shirt-1710578_1280.jpg',
-    //     'https://upload.wikimedia.org/wikipedia/commons/thumb/1/14/Cast-Iron-Pan.jpg/1024px-Cast-Iron-Pan.jpg',
-    //   ],
-    //   category: 'other',
-    //   type: 'other',
-    //   description:
-    //       'Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.',
-    //   specs: {
-    //     'color': 'blue',
-    //     'size': '42 + 43',
-    //     'other': 'running shoes',
-    //   },
-    //   discountPercentage: 20,
-    //   colorsAndQuantityAndSizes: {}
-    // ),
-    // Product(
-    //   id: 'p2',
-    //   ownerId: 'o2',
-    //   title: 'Nikenadmdaknjaldnaldjnladjndlajandldandaldanlkhjcldja',
-    //   price: 90,
-    //   quantity: 4,
-    //   imageUrls: [
-    //     'https://upload.wikimedia.org/wikipedia/commons/thumb/e/e8/Trousers%2C_dress_%28AM_1960.022-8%29.jpg/512px-Trousers%2C_dress_%28AM_1960.022-8%29.jpg',
-    //     'https://cdn.pixabay.com/photo/2016/10/02/22/17/red-t-shirt-1710578_1280.jpg',
-    //     'https://upload.wikimedia.org/wikipedia/commons/thumb/1/14/Cast-Iron-Pan.jpg/1024px-Cast-Iron-Pan.jpg',
-    //   ],
-    //   category: categories[1].title,
-    //   type: categories[1].types[1].title,
-    //   description:
-    //       'Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.',
-    //   specs: {
-    //     'color': 'Black',
-    //     'size': '42 + 43',
-    //     'other': 'running shoes',
-    //   },
-    //   hasDiscount: true,
-    //   discountPercentage: 50,
-    //   colors: [Colors.black, Colors.blue, Colors.red],
-    // ),
-    // Product(
-    //   id: 'p3',
-    //   ownerId: 'o3',
-    //   title: 'Didora',
-    //   price: 100,
-    //   quantity: 10,
-    //   imageUrls: [
-    //     'https://upload.wikimedia.org/wikipedia/commons/thumb/e/e8/Trousers%2C_dress_%28AM_1960.022-8%29.jpg/512px-Trousers%2C_dress_%28AM_1960.022-8%29.jpg',
-    //     'https://cdn.pixabay.com/photo/2016/10/02/22/17/red-t-shirt-1710578_1280.jpg',
-    //     'https://upload.wikimedia.org/wikipedia/commons/thumb/1/14/Cast-Iron-Pan.jpg/1024px-Cast-Iron-Pan.jpg',
-    //   ],
-    //   category: categories[1].title,
-    //   type: categories[1].types[1].title,
-    //   description:
-    //       'Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.',
-    //   specs: {
-    //     'color': 'Red',
-    //     'size': '42 + 43',
-    //     'other': 'running shoes',
-    //   },
-    //   hasDiscount: false,
-    //   discountPercentage: 0,
-    //   colors: [Colors.black, Colors.blue, Colors.red],
-    // ),
-    // Product(
-    //   id: 'p4',
-    //   ownerId: 'o3',
-    //   title: 'Adibas',
-    //   price: 120,
-    //   quantity: 50,
-    //   imageUrls: [
-    //     'https://upload.wikimedia.org/wikipedia/commons/thumb/e/e8/Trousers%2C_dress_%28AM_1960.022-8%29.jpg/512px-Trousers%2C_dress_%28AM_1960.022-8%29.jpg',
-    //     'https://cdn.pixabay.com/photo/2016/10/02/22/17/red-t-shirt-1710578_1280.jpg',
-    //     'https://upload.wikimedia.org/wikipedia/commons/thumb/1/14/Cast-Iron-Pan.jpg/1024px-Cast-Iron-Pan.jpg',
-    //   ],
-    //   category: categories[1].title,
-    //   type: categories[1].types[1].title,
-    //   description:
-    //       'Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.',
-    //   specs: {
-    //     'color': 'Red',
-    //     'size': '42 + 43',
-    //     'other': 'running shoes',
-    //   },
-    //   hasDiscount: true,
-    //   discountPercentage: 10,
-    //   colors: [Colors.black, Colors.blue, Colors.red],
-    // ),
-    // Product(
-    //   id: 'p5',
-    //   ownerId: 'o3',
-    //   title: 'Hamdi',
-    //   price: 40,
-    //   quantity: 15,
-    //   imageUrls: [
-    //     'https://upload.wikimedia.org/wikipedia/commons/thumb/e/e8/Trousers%2C_dress_%28AM_1960.022-8%29.jpg/512px-Trousers%2C_dress_%28AM_1960.022-8%29.jpg',
-    //     'https://cdn.pixabay.com/photo/2016/10/02/22/17/red-t-shirt-1710578_1280.jpg',
-    //     'https://upload.wikimedia.org/wikipedia/commons/thumb/1/14/Cast-Iron-Pan.jpg/1024px-Cast-Iron-Pan.jpg',
-    //   ],
-    //   category: categories[1].title,
-    //   type: categories[1].types[1].title,
-    //   description:
-    //       'Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.',
-    //   specs: {
-    //     'color': 'Red',
-    //     'size': '42 + 43',
-    //     'other': 'running shoes',
-    //   },
-    //   hasDiscount: false,
-    //   discountPercentage: 0,
-    //   colors: [Colors.black, Colors.blue, Colors.red],
-    // ),
-    // Product(
-    //   id: 'p6',
-    //   ownerId: 'o3',
-    //   title: 'Khalaf',
-    //   price: 300,
-    //   quantity: 10,
-    //   imageUrls: [
-    //     'https://upload.wikimedia.org/wikipedia/commons/thumb/e/e8/Trousers%2C_dress_%28AM_1960.022-8%29.jpg/512px-Trousers%2C_dress_%28AM_1960.022-8%29.jpg',
-    //     'https://cdn.pixabay.com/photo/2016/10/02/22/17/red-t-shirt-1710578_1280.jpg',
-    //     'https://upload.wikimedia.org/wikipedia/commons/thumb/1/14/Cast-Iron-Pan.jpg/1024px-Cast-Iron-Pan.jpg',
-    //   ],
-    //   category: categories[1].title,
-    //   type: categories[1].types[1].title,
-    //   description:
-    //       'Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.',
-    //   specs: {
-    //     'color': 'Red',
-    //     'size': '42 + 43',
-    //     'other': 'running shoes',
-    //   },
-    //   hasDiscount: true,
-    //   discountPercentage: 50,
-    //   colors: [Colors.black, Colors.blue, Colors.red],
-    // ),
-    // Product(
-    //   id: 'p7',
-    //   ownerId: 'o3',
-    //   title: 'Abo Abdo',
-    //   price: 2000,
-    //   quantity: 10,
-    //   imageUrls: [
-    //     'https://upload.wikimedia.org/wikipedia/commons/thumb/e/e8/Trousers%2C_dress_%28AM_1960.022-8%29.jpg/512px-Trousers%2C_dress_%28AM_1960.022-8%29.jpg',
-    //     'https://cdn.pixabay.com/photo/2016/10/02/22/17/red-t-shirt-1710578_1280.jpg',
-    //     'https://upload.wikimedia.org/wikipedia/commons/thumb/1/14/Cast-Iron-Pan.jpg/1024px-Cast-Iron-Pan.jpg',
-    //   ],
-    //   category: categories[1].title,
-    //   type: categories[1].types[1].title,
-    //   description:
-    //       'Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.',
-    //   specs: {
-    //     'color': 'Red',
-    //     'size': '42 + 43',
-    //     'other': 'running shoes',
-    //   },
-    //   hasDiscount: false,
-    //   discountPercentage: 0,
-    //   colors: [Colors.black, Colors.blue, Colors.red],
-    // ),
+    Product(
+      id: 'p1',
+      ownerId: 'o1',
+      title: 'Adidas',
+      price: 30,
+      imageUrls: [
+        'https://upload.wikimedia.org/wikipedia/commons/thumb/e/e8/Trousers%2C_dress_%28AM_1960.022-8%29.jpg/512px-Trousers%2C_dress_%28AM_1960.022-8%29.jpg',
+        'https://cdn.pixabay.com/photo/2016/10/02/22/17/red-t-shirt-1710578_1280.jpg',
+        'https://upload.wikimedia.org/wikipedia/commons/thumb/1/14/Cast-Iron-Pan.jpg/1024px-Cast-Iron-Pan.jpg',
+      ],
+      description:
+          'Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.',
+      category: 'Other',
+      type: 'Other',
+      warranty: Period(type: TimeType.days, period: 3),
+      replacement: Period(type: TimeType.days, period: 3),
+      returning: Period(type: TimeType.days, period: 3),
+      colorsAndQuantityAndSizes: {
+        Color(0xFF323143): {
+          '10': 2,
+          '20': 3,
+        },
+        Color(0xFF111349): {
+          '5': 4,
+          '7': 5,
+        },
+        Color(0xFF113433): {
+          '19': 6,
+          '2': 7,
+        },
+        Color(0xFF442365): {
+          '18': 8,
+          '2': 9,
+        },
+      },
+      specs: {
+        'color': 'blue',
+        'size': '42 + 43',
+        'other': 'running shoes',
+      },
+    ),
   ];
   String _token;
   String _userId;
@@ -297,7 +106,7 @@ class ProductsProvider with ChangeNotifier {
     final response = await http.get(url, headers: {
       'usertype': 'vendor',
       'Content-Type': 'application/json; charset=UTF-8',
-      'authorization': _token,
+      'authorization': 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJfaWQiOiI2MTA4MWYwZmYyMWE3NTAwMTUzYzUxMWQiLCJpYXQiOjE2Mjc5MjIxOTEsImV4cCI6MTY1OTQ3OTc5MX0.lOUWpQc0GgjMmE5E--gDNiUNFFdBA1IQrkijmDsTwhA',
     });
     print(response.body);
     return products;
@@ -354,29 +163,76 @@ class ProductsProvider with ChangeNotifier {
     );
   }
 
-  bool removeFromList(
-    String id,
-    int amount,
-  ) {
-    // if (_products.firstWhere((element) => element.id == id).quantity >=
-    //     amount) {
-    //   _products.firstWhere((element) => element.id == id).quantity -= amount;
-    //   notifyListeners();
-    //   return true;
-    // }
-    return false;
-  }
-
-  bool checkIfAvailable(String id) {
-    // if (_products.firstWhere((element) => element.id == id).quantity > 0)
-    //   return true;
-    // else
-    return false;
-  }
-
-  void addToList(String id, int amount) {
-    // _products.firstWhere((element) => element.id == id).quantity += amount;
+  void removeFromList(
+      {@required String id,
+      @required Color color,
+      @required int amount,
+      String size = '0'}) {
+    var productIndex = _products.indexWhere((element) => element.id == id);
+    _products[productIndex]
+        .colorsAndQuantityAndSizes
+        .entries
+        .firstWhere((element) => element.key == color)
+        .value
+        .update(size, (value) => value - amount);
     notifyListeners();
+  }
+
+  bool checkIfAvailable(
+      {@required String id,
+      @required Color color,
+      @required int amount,
+      String size = '0'}) {
+    var productIndex = _products.indexWhere((element) => element.id == id);
+    if (_products[productIndex]
+            .colorsAndQuantityAndSizes
+            .entries
+            .firstWhere((element) => element.key == color)
+            .value
+            .entries
+            .firstWhere((element) => element.key == size)
+            .value >=
+        amount) {
+      return true;
+    }
+    return false;
+  }
+
+  void addToList(
+      {@required String id,
+      @required Color color,
+      @required int amount,
+      String size = '0'}) {
+    var productIndex = _products.indexWhere((element) => element.id == id);
+    _products[productIndex]
+        .colorsAndQuantityAndSizes
+        .entries
+        .firstWhere((element) => element.key == color)
+        .value
+        .update(size, (value) => value + amount);
+    notifyListeners();
+  }
+
+  int quantityCounter({Product product, int colorsNumber}) {
+    int quantity = 0;
+    for (int i = 0; i < colorsNumber; i++) {
+      for (int j = 0;
+          j <
+              product.colorsAndQuantityAndSizes.entries
+                  .elementAt(i)
+                  .value
+                  .values
+                  .length;
+          j++) {
+        quantity += product.colorsAndQuantityAndSizes.entries
+            .elementAt(i)
+            .value
+            .values
+            .elementAt(j)
+            .toInt();
+      }
+    }
+    return quantity;
   }
 
   void updateProduct(Product product, List<String> img64s) {
