@@ -1,10 +1,7 @@
-import 'package:ecart/providers/addresses.dart';
 import 'package:ecart/providers/cart.dart';
-import 'package:ecart/screens/adresses_screen.dart';
 import 'package:ecart/widgets/add_new_address_button.dart';
 import 'package:ecart/widgets/address_viewer.dart';
 import 'package:flutter/material.dart';
-import 'package:provider/provider.dart';
 
 class CompletePurchase extends StatelessWidget {
   const CompletePurchase({
@@ -18,7 +15,6 @@ class CompletePurchase extends StatelessWidget {
     double total = cart.total + deliveryCharge;
     final mediaquery = MediaQuery.of(context);
     final theme = Theme.of(context);
-    final addressesProvidre = Provider.of<AddressesProvider>(context);
     return Container(
       height: 150,
       width: mediaquery.size.width,

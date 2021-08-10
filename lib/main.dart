@@ -1,8 +1,8 @@
 import 'package:ecart/providers/orders.dart';
+import 'package:ecart/screens/gallery_view.dart';
 import 'package:ecart/screens/main_screen.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
-
 import 'providers/products.dart';
 import 'providers/cart.dart';
 import 'providers/auth.dart';
@@ -16,6 +16,7 @@ import 'screens/category_screen.dart';
 import 'screens/product_details_screen.dart';
 import 'screens/catergories_screen.dart';
 import 'screens/type_screen.dart';
+import 'screens/product_suggestion_screen.dart';
 import 'screens/orders_history_screen.dart';
 import 'screens/feedback.dart';
 import 'screens/add_product_screen.dart';
@@ -24,7 +25,7 @@ import 'screens/analytics_premium_screen.dart';
 import 'screens/auth_screen.dart';
 import 'screens/adresses_screen.dart';
 import 'screens/settings_screen.dart';
-// import 'screens/auth_verification_screen.dart';
+import 'screens/auth_verification_screen.dart';
 import 'screens/splash_screen.dart';
 
 void main() {
@@ -37,12 +38,27 @@ class MyApp extends StatelessWidget {
     return MultiProvider(
       providers: [
         ChangeNotifierProvider<AuthProvider>(create: (_) => AuthProvider()),
+        // ChangeNotifierProvider<ProductsProvider>(
+        //     create: (_) => ProductsProvider()),
+        ChangeNotifierProxyProvider<AuthProvider, ProductsProvider>(
+          create: (_) => ProductsProvider(),
+          update: (ctx, auth, products) => products
+            ..setToken(auth.token)
+            ..setUserId(auth.id),
+        ),
+        ChangeNotifierProxyProvider<AuthProvider, Orders>(
+          create: (_) => Orders(),
+          update: (ctx, auth, orders) => orders
+            ..setToken(auth.token)
+            ..setUserId(auth.id),
+        ),
+        ChangeNotifierProxyProvider<AuthProvider, AddressesProvider>(
+          create: (_) => AddressesProvider(),
+          update: (ctx, auth, addressesProvider) => addressesProvider
+            ..setToken(auth.token)
+            ..setUserId(auth.id),
+        ),
         ChangeNotifierProvider<Cart>(create: (_) => Cart()),
-        ChangeNotifierProvider<ProductsProvider>(
-            create: (_) => ProductsProvider()),
-        ChangeNotifierProvider<Orders>(create: (_) => Orders()),
-        ChangeNotifierProvider<AddressesProvider>(
-            create: (_) => AddressesProvider()),
       ],
       child: MaterialApp(
         title: 'Sallaty',
@@ -77,19 +93,18 @@ class MyApp extends StatelessWidget {
             ),
           ),
         ),
-        home:
-            // Consumer<AuthProvider>(
-            //   builder: (ctx, auth, _) => FutureBuilder(
-            //     future: auth.isAuth(),
-            //     builder: (ctx, snapshot) =>
-            //         snapshot.connectionState == ConnectionState.waiting
-            //             ? SplashScreen()
-            //             : snapshot.data == true
-            //                 ? AppBottomNavigationBarController()
-            //                 : AuthScreen(),
-            //   ),
-            // ),
-            AppBottomNavigationBarController(),
+        home: Consumer<AuthProvider>(
+          builder: (ctx, auth, _) => FutureBuilder(
+            future: auth.isAuth(),
+            builder: (ctx, snapshot) =>
+                snapshot.connectionState == ConnectionState.waiting
+                    ? SplashScreen()
+                    : snapshot.data == true
+                        ? AppBottomNavigationBarController(0)
+                        : AuthScreen(),
+          ),
+        ),
+        // AppBottomNavigationBarController(),
         // VerificationScreen(),
         routes: {
           HomeScreen.routeName: (ctx) => HomeScreen(),
@@ -101,16 +116,19 @@ class MyApp extends StatelessWidget {
           ProductDetailsSceen.routeName: (ctx) => ProductDetailsSceen(),
           CategoriesScreen.routeName: (ctx) => CategoriesScreen(),
           TypeScreen.routeName: (ctx) => TypeScreen(),
+          ProductSuggestionScreen.routeName: (ctx) => ProductSuggestionScreen(),
           OrdersHistoryScreen.routeName: (ctx) => OrdersHistoryScreen(),
           FeedbackScreen.routeName: (ctx) => FeedbackScreen(),
           AddProductScreen.routeName: (ctx) => AddProductScreen(),
           AppBottomNavigationBarController.routeName: (ctx) =>
-              AppBottomNavigationBarController(),
+              AppBottomNavigationBarController(0),
           FilterProductsScreen.routeName: (ctx) => FilterProductsScreen(),
           AnalyticsScreen.routeName: (ctx) => AnalyticsScreen(),
           AuthScreen.routeName: (ctx) => AuthScreen(),
           AddressesScreen.routeName: (ctx) => AddressesScreen(),
           SettingsScreen.routeName: (ctx) => SettingsScreen(),
+          VerificationScreen.routeName: (ctx) => VerificationScreen(),
+          GalleryView.routeName: (ctx) => GalleryView(),
         },
       ),
     );

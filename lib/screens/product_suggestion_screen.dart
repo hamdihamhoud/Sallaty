@@ -1,22 +1,21 @@
-import 'package:ecart/models/category.dart';
-import 'package:ecart/models/product.dart';
-import 'package:ecart/providers/products.dart';
-import 'package:ecart/widgets/product_item.dart';
 import 'package:flutter/material.dart';
+import '../models/product.dart';
 import 'package:provider/provider.dart';
+import '../providers/products.dart';
+import '../widgets/product_item.dart';
 
-class TypeScreen extends StatelessWidget {
-  static const routeName = '/type';
+class ProductSuggestionScreen extends StatelessWidget {
+  static const routeName = '/product-suggestion';
 
   @override
   Widget build(BuildContext context) {
-    final Type type = ModalRoute.of(context).settings.arguments as Type;
+    final String type = ModalRoute.of(context).settings.arguments;
     List<Product> products = [];
 
     return Scaffold(
         appBar: AppBar(
           title: Text(
-            type.title,
+            type,
             style: TextStyle(fontWeight: FontWeight.bold),
           ),
           actions: [
@@ -28,8 +27,7 @@ class TypeScreen extends StatelessWidget {
           ],
         ),
         body: FutureBuilder(
-            future:
-                Provider.of<ProductsProvider>(context).fetchByType(type.title),
+            future: Provider.of<ProductsProvider>(context).fetchBy(type),
             builder: (ctx, snapshot) {
               if (snapshot.connectionState == ConnectionState.waiting)
                 return Center(child: CircularProgressIndicator());

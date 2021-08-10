@@ -7,6 +7,7 @@ import 'catergories_screen.dart';
 import 'feedback.dart';
 import 'adresses_screen.dart';
 import 'settings_screen.dart';
+import 'main_screen.dart';
 
 class DrawerScreen extends StatelessWidget {
   const DrawerScreen();
@@ -30,7 +31,8 @@ class DrawerScreen extends StatelessWidget {
                     leading: FaIcon(FontAwesomeIcons.store),
                     title: const Text('Store'),
                     onTap: () {
-                      Navigator.of(context).pushReplacementNamed('/');
+                      Navigator.of(context)
+                          .pushReplacementNamed(AppBottomNavigationBarController.routeName);
                     },
                   ),
                   const Divider(),
@@ -38,7 +40,8 @@ class DrawerScreen extends StatelessWidget {
                     leading: const Icon(Icons.category_outlined),
                     title: const Text('Categories'),
                     onTap: () {
-                      Navigator.of(context).pushNamed(CategoriesScreen.routeName);
+                      Navigator.of(context)
+                          .pushNamed(CategoriesScreen.routeName);
                     },
                   ),
                   const Divider(),
@@ -55,7 +58,8 @@ class DrawerScreen extends StatelessWidget {
                     leading: const Icon(Icons.location_on_rounded),
                     title: const Text('Adresses'),
                     onTap: () {
-                      Navigator.of(context).pushNamed(AddressesScreen.routeName);
+                      Navigator.of(context)
+                          .pushNamed(AddressesScreen.routeName);
                     },
                   ),
                   const Divider(),
@@ -99,8 +103,9 @@ class DrawerScreen extends StatelessWidget {
                       // Navigator.of(context).pop();
                       // Navigator.of(context).pushReplacementNamed('/');
 
-                      Provider.of<AuthProvider>(context, listen: false).logout();
-                      Navigator.of(context).pushReplacementNamed('/auth');
+                      Provider.of<AuthProvider>(context, listen: false)
+                          .logout();
+                      Navigator.of(context).pushReplacementNamed('/');
                     },
                   )
                 ],

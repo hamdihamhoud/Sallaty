@@ -9,9 +9,11 @@ import 'package:google_nav_bar/google_nav_bar.dart';
 
 class AppBottomNavigationBarController extends StatefulWidget {
   static const routeName = '/main';
+  final int index;
+  AppBottomNavigationBarController(this.index);
   @override
   _AppBottomNavigationBarControllerState createState() =>
-      _AppBottomNavigationBarControllerState();
+      _AppBottomNavigationBarControllerState(index);
 }
 
 class _AppBottomNavigationBarControllerState
@@ -33,9 +35,14 @@ class _AppBottomNavigationBarControllerState
       key: PageStorageKey('Page5'),
     ),
   ];
+  final int index;
+  int _selectedIndex = 0;
+
+  _AppBottomNavigationBarControllerState(this.index) {
+    _selectedIndex = index;
+  }
 
   final PageStorageBucket bucket = PageStorageBucket();
-  int _selectedIndex = 0;
   Widget _bottomNavigationBar(int selectedIndex) => Container(
         height: 60,
         width: MediaQuery.of(context).size.width,

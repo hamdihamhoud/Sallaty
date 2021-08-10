@@ -1,8 +1,5 @@
-import 'package:awesome_dialog/awesome_dialog.dart';
-import 'package:cool_alert/cool_alert.dart';
 import 'package:ecart/providers/addresses.dart';
 import 'package:ecart/providers/cart.dart';
-import 'package:ecart/screens/main_screen.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
@@ -52,14 +49,6 @@ class AddressesViewer extends StatelessWidget {
                                 onPressed: () {
                                   Navigator.pop(context);
                                   cartProvider.clearCart();
-                                  AwesomeDialog(
-                                    context: context,
-                                    dialogType: DialogType.SUCCES,
-                                    animType: AnimType.SCALE,
-                                    body: Text('adddddddd'),
-                                    closeIcon: Icon(Icons.error),
-                                    title: 'daaaaaaaeqqe',
-                                  )..show();
                                 },
                                 child: Text(
                                   'Select Address',

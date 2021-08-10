@@ -276,7 +276,12 @@ class _AddtoCartState extends State<AddtoCart> {
                                   _selectedColor.value.toString() +
                                   _selectedSize.toString(),
                               productId: widget.product.id,
-                              price: widget.product.price,
+                              price: widget.product.discountPercentage != 0
+                                  ? (widget.product.price -
+                                      widget.product.price *
+                                          widget.product.discountPercentage /
+                                          100)
+                                  : widget.product.price,
                               title: widget.product.title,
                               quantity: amount,
                               color: _selectedColor,

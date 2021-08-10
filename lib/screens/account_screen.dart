@@ -45,7 +45,7 @@ class AccountScreen extends StatelessWidget {
                     ),
                   )
                 : Container(
-                    height: 200,
+                    height: 300,
                     child: ListView.builder(
                       scrollDirection: Axis.horizontal,
                       itemCount: sellerProducts.length,

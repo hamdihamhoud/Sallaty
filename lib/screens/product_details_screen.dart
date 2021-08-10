@@ -1,5 +1,6 @@
 import 'package:ecart/providers/cart.dart';
-import 'package:ecart/screens/cart_screen.dart';
+import 'package:ecart/screens/gallery_view.dart';
+import 'package:ecart/screens/main_screen.dart';
 import 'package:ecart/widgets/add_to_cart.dart';
 import 'package:ecart/widgets/badge.dart';
 import 'package:ecart/widgets/favorite_icon.dart';
@@ -65,18 +66,29 @@ class _ProductDetailsSceenState extends State<ProductDetailsSceen> {
                     child: !isSeller
                         ? IconButton(
                             onPressed: () {
-                              Navigator.pushReplacementNamed(
-                                  context, CartScreen.routeName);
+                              Navigator.push(
+                                context,
+                                MaterialPageRoute(
+                                  builder: (context) =>
+                                      AppBottomNavigationBarController(2),
+                                ),
+                              );
                             },
-                            icon: Badge(
-                              child: Icon(
-                                Icons.shopping_cart,
-                                color: Color(0xFF3333333),
-                                size: 30,
-                              ),
-                              value: cart.itemCount.toStringAsFixed(0),
-                              color: theme.primaryColor,
-                            ),
+                            icon: cart.itemCount == 0
+                                ? Icon(
+                                    Icons.shopping_cart,
+                                    color: Color(0xFF3333333),
+                                    size: 30,
+                                  )
+                                : Badge(
+                                    child: Icon(
+                                      Icons.shopping_cart,
+                                      color: Color(0xFF3333333),
+                                      size: 30,
+                                    ),
+                                    value: cart.itemCount.toStringAsFixed(0),
+                                    color: theme.primaryColor,
+                                  ),
                           )
                         : IconButton(
                             icon: FaIcon(FontAwesomeIcons.edit),
@@ -105,7 +117,15 @@ class _ProductDetailsSceenState extends State<ProductDetailsSceen> {
                 flexibleSpace: Stack(
                   children: [
                     Positioned(
-                        child: CarouselWithIndicator(product.imageUrls),
+                        child: InkWell(
+                          child: CarouselWithIndicator(product.imageUrls),
+                          onTap: () {
+                            Navigator.of(context).pushNamed(
+                              GalleryView.routeName,
+                              arguments: product,
+                            );
+                          },
+                        ),
                         top: 0,
                         left: 0,
                         right: 0,
@@ -139,6 +159,30 @@ class _ProductDetailsSceenState extends State<ProductDetailsSceen> {
                       right: 25,
                       child: FavoriteIcon(product: product),
                     ),
+                    if (product.discountPercentage != 0)
+                      Positioned(
+                        bottom: 15,
+                        left: 25,
+                        child: Container(
+                          height: 30,
+                          width: mediaQuery.size.width * 0.2,
+                          decoration: BoxDecoration(
+                              borderRadius: BorderRadius.all(
+                                Radius.circular(10),
+                              ),
+                              color: Colors.greenAccent),
+                          child: Center(
+                            child: Text(
+                              "${product.discountPercentage.toStringAsFixed(0)} %",
+                              style: TextStyle(
+                                color: Colors.black54,
+                                fontWeight: FontWeight.bold,
+                                fontSize: 16,
+                              ),
+                            ),
+                          ),
+                        ),
+                      ),
                   ],
                 ),
               ),

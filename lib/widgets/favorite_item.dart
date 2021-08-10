@@ -1,25 +1,26 @@
-import 'package:flutter/material.dart';
 import 'package:cached_network_image/cached_network_image.dart';
-import 'package:provider/provider.dart';
+import 'package:ecart/models/product.dart';
+import 'package:ecart/models/product_details_screen_args.dart';
+import 'package:ecart/screens/product_details_screen.dart';
+import 'package:flutter/material.dart';
 import 'package:flutter_rating_bar/flutter_rating_bar.dart';
+import 'package:provider/provider.dart';
 
-import '../screens/product_details_screen.dart';
-
-import '../models/product.dart';
-import '../models/product_details_screen_args.dart';
-
-class ProductItem extends StatelessWidget {
+class FavoriteItem extends StatelessWidget {
   final bool isGridView;
   final bool isSeller;
-  ProductItem({
+  final int i;
+  FavoriteItem({
     this.isGridView = false,
     this.isSeller = false,
+    this.i,
   });
 
   @override
   Widget build(BuildContext context) {
     final product = Provider.of<Product>(context);
     final theme = Theme.of(context);
+    final mediaQuery = MediaQuery.of(context);
     return InkWell(
       onTap: () {
         Navigator.of(context).pushNamed(
@@ -45,8 +46,8 @@ class ProductItem extends StatelessWidget {
               alignment: Alignment.center,
               children: [
                 Container(
-                  height: 200,
-                  width: 150,
+                  height: mediaQuery.size.width * 0.6,
+                  width: mediaQuery.size.width * 0.5,
                   clipBehavior: Clip.hardEdge,
                   decoration: BoxDecoration(
                     borderRadius: BorderRadius.all(Radius.circular(15)),
@@ -58,8 +59,8 @@ class ProductItem extends StatelessWidget {
                       begin: FractionalOffset.topCenter,
                       end: FractionalOffset.bottomCenter,
                       colors: [
-                        Colors.black12,
-                        Colors.black45,
+                        Colors.red[50].withOpacity(0.1),
+                        Colors.redAccent[100].withOpacity(0.2),
                       ],
                       stops: [0.0, 1.0],
                     ),
@@ -128,18 +129,23 @@ class ProductItem extends StatelessWidget {
           ),
           Container(
             height: 80,
-            width: 150,
+            width: mediaQuery.size.width * 0.3,
             child: Column(
               children: [
-                Text(
-                  product.title,
-                  style: TextStyle(
-                    fontSize: 17,
-                    fontWeight: FontWeight.bold,
-                    color: Color(0xFF333333),
+                Padding(
+                  padding: const EdgeInsets.only(
+                    top: 5,
                   ),
-                  maxLines: 1,
-                  overflow: TextOverflow.ellipsis,
+                  child: Text(
+                    product.title,
+                    style: TextStyle(
+                      fontSize: 17,
+                      fontWeight: FontWeight.bold,
+                      color: Color(0xFF333333),
+                    ),
+                    maxLines: 1,
+                    overflow: TextOverflow.ellipsis,
+                  ),
                 ),
                 if (product.discountPercentage == 0)
                   Padding(
