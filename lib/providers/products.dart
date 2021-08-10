@@ -229,8 +229,13 @@ class ProductsProvider with ChangeNotifier {
   }
 
   List<Product> getOffers() {
-    //fetch by discount
-    return products;
+    List<Product> offers = [];
+    for (int i = 0; i < products.length; i++) {
+      if (products[i].discountPercentage > 0) {
+        offers.add(products[i]);
+      }
+    }
+    return offers;
   }
 
   Future<List<Product>> fetchBy(String fetchMechanism) async {

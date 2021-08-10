@@ -11,7 +11,6 @@ class ProductSuggestionScreen extends StatelessWidget {
   Widget build(BuildContext context) {
     final String type = ModalRoute.of(context).settings.arguments;
     List<Product> products = [];
-
     return Scaffold(
         appBar: AppBar(
           title: Text(
@@ -38,6 +37,7 @@ class ProductSuggestionScreen extends StatelessWidget {
                   crossAxisCount: 2,
                   mainAxisSpacing: 10,
                   crossAxisSpacing: 10,
+                  mainAxisExtent: 290,
                 ),
                 itemBuilder: (ctx, i) => ChangeNotifierProvider.value(
                   value: products[i],

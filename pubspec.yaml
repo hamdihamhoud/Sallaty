@@ -59,7 +59,9 @@ flutter:
     - assets/images/empty_cart.png
     - assets/images/no_address_found.png
     - assets/images/empty_favoraite_screen.png
-
+    - assets/images/empty_offers_screen.png
+    - assets/images/order_success.png
+    
   # An image asset can refer to one or more resolution-specific "variants", see
   # https://flutter.dev/assets-and-images/#resolution-aware.
   # For details regarding adding assets from package dependencies, see
