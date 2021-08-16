@@ -107,11 +107,10 @@ class _AddProductScreenState extends State<AddProductScreen> {
   }
 
   @override
-  void didChangeDependencies() {
+  void didChangeDependencies() async {
     if (_init) {
-      final id = ModalRoute.of(context).settings.arguments as String;
-      if (id != null) {
-        product = Provider.of<ProductsProvider>(context).findId(id);
+      final product = ModalRoute.of(context).settings.arguments as Product;
+      if (product != null) {
         title = product.title;
         price = product.price;
         description = product.description;
@@ -338,7 +337,6 @@ class _AddProductScreenState extends State<AddProductScreen> {
   @override
   Widget build(BuildContext context) {
     final mediaQuery = MediaQuery.of(context);
-    FocusNode desc = FocusNode(canRequestFocus: false);
     return Scaffold(
         appBar: AppBar(
           title: Text(
@@ -380,7 +378,6 @@ class _AddProductScreenState extends State<AddProductScreen> {
                 TextFormField(
                   initialValue: price != null ? price.toString() : null,
                   decoration: const InputDecoration(labelText: 'Price'),
-                  textInputAction: TextInputAction.next,
                   keyboardType: TextInputType.number,
                   validator: (value) {
                     value.trim();
@@ -596,7 +593,6 @@ class _AddProductScreenState extends State<AddProductScreen> {
                 ),
                 TextFormField(
                   initialValue: description,
-                  focusNode: desc,
                   decoration: InputDecoration(
                     border: OutlineInputBorder(),
                     labelText: 'Description',

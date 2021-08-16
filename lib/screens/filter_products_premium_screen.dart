@@ -28,31 +28,37 @@ class FilterProductsScreen extends StatelessWidget {
     else
       title = 'Sold';
 
-    List<Product> products;
-    if (filterType == FilterType.all_products)
-      products = Provider.of<ProductsProvider>(context).premiumAllProducts();
+    List<Product> products = [];
 
     return Scaffold(
         appBar: AppBar(
           title: Text(title),
         ),
         body: filterType == FilterType.all_products
-            ? GridView.builder(
-                itemCount: products.length,
-                padding: const EdgeInsets.all(10),
-                gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
-                  crossAxisCount: 2,
-                  mainAxisSpacing: 10,
-                  crossAxisSpacing: 10,
-                ),
-                itemBuilder: (ctx, i) => ChangeNotifierProvider.value(
-                  value: products[i],
-                  child: ProductItem(
-                    isGridView: true,
-                    isSeller: true,
-                  ),
-                ),
-              )
+            ? FutureBuilder(
+                future:
+                    Provider.of<ProductsProvider>(context).premiumAllProducts(),
+                builder: (ctx, snapshot) {
+                  if (snapshot.connectionState == ConnectionState.waiting)
+                    return Center(child: CircularProgressIndicator());
+                  products = snapshot.data;
+                  return GridView.builder(
+                    itemCount: products.length,
+                    padding: const EdgeInsets.all(10),
+                    gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
+                      crossAxisCount: 2,
+                      mainAxisSpacing: 10,
+                      crossAxisSpacing: 10,
+                    ),
+                    itemBuilder: (ctx, i) => ChangeNotifierProvider.value(
+                      value: products[i],
+                      child: ProductItem(
+                        isGridView: true,
+                        isSeller: true,
+                      ),
+                    ),
+                  );
+                })
             : Container());
   }
 }

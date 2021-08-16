@@ -21,7 +21,6 @@ class ProductsProvider with ChangeNotifier {
       description:
           'Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.',
       category: 'Other',
-      type: 'Other',
       warranty: Period(type: TimeType.days, period: 3),
       replacement: Period(type: TimeType.days, period: 3),
       returning: Period(type: TimeType.days, period: 3),
@@ -52,7 +51,6 @@ class ProductsProvider with ChangeNotifier {
       description:
           'Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.',
       category: 'Other',
-      type: 'Other',
       warranty: Period(type: TimeType.days, period: 3),
       replacement: Period(type: TimeType.days, period: 3),
       returning: Period(type: TimeType.days, period: 3),
@@ -94,28 +92,91 @@ class ProductsProvider with ChangeNotifier {
 
   List<Product> get products => [..._products];
 
-  Product findId(String id) {
-    return products.firstWhere((element) => element.id == id);
+  Future<Product> findId(String id) async {
+    // fetch by id
+    return products.first;
   }
 
   Future<List<Product>> fetchByCategory(String category) async {
     final url =
         Uri.parse("https://hamdi1234.herokuapp.com/product?category=$category");
-        print(url);
-    print(_token);
     final response = await http.get(url, headers: {
       'usertype': 'vendor',
       'Content-Type': 'application/json; charset=UTF-8',
-      'authorization': 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJfaWQiOiI2MTA4MWYwZmYyMWE3NTAwMTUzYzUxMWQiLCJpYXQiOjE2Mjc5MjIxOTEsImV4cCI6MTY1OTQ3OTc5MX0.lOUWpQc0GgjMmE5E--gDNiUNFFdBA1IQrkijmDsTwhA',
+      'authorization': _token,
     });
-    print(response.body);
     return products;
-    //_products.where((element) => element.category == category).toList();
   }
 
   Future<List<Product>> fetchByType(String type) async {
-    return products;
-    // _products.where((element) => element.type == type).toList();
+    final url = Uri.parse(
+        "https://hamdi1234.herokuapp.com/getProductByType?type=$type");
+    final response = await http.get(url, headers: {
+      'usertype': 'vendor',
+      'Content-Type': 'application/json; charset=UTF-8',
+      'authorization': _token,
+    });
+    final responseData = json.decode(response.body) as List;
+    List<Product> typeProducts = [];
+    if (response.statusCode == 200) {
+      responseData.forEach((element) {
+        final responseColorsAndQuantityAndSizes =
+            element['colorsAndQuantityAndSizes'] as List;
+        Map<Color, Map<String, int>> colorsAndQuantityAndSizes = {};
+        responseColorsAndQuantityAndSizes.forEach((secondElement) {
+          colorsAndQuantityAndSizes.putIfAbsent(Color(secondElement['color']),
+              () {
+            final responseSizesAndQuantity =
+                secondElement['sizesAndQuantity'] as List;
+            Map<String, int> sizesAndQuantity = {};
+            responseSizesAndQuantity.forEach((thirdElement) {
+              sizesAndQuantity.putIfAbsent(
+                  thirdElement['size'], () => thirdElement['quantity']);
+            });
+            return sizesAndQuantity;
+          });
+        });
+        // final responseSpecs = element['specs'] as List;
+        // Map<String,String> specs;
+        // responseSpecs.forEach((element) {
+        //   specs.putIfAbsent(element, () => null)
+        // });
+        // print(json.decode(element['specs']));
+        // print(double.parse(element['price']));
+        final responseSpecs = element['specs'] as Map;
+        Map<String, String> specs = {};
+        responseSpecs.forEach((key, value) {
+          specs.putIfAbsent(key, () => value);
+        });
+        final responseImages = element['images'] as List;
+        List<String> images = [];
+        responseImages.forEach((element) {
+          images.add(element);
+        });
+        final product = Product(
+          id: element['_id'],
+          title: element['name'],
+          price: double.parse(element['price'].toString()),
+          colorsAndQuantityAndSizes: colorsAndQuantityAndSizes,
+          warranty: Period(type: TimeType.months, period: 0),
+          returning: Period(type: TimeType.months, period: 0),
+          replacement: Period(type: TimeType.months, period: 0),
+          category: element['category'],
+          type: element['type'],
+          description: element['discription'],
+          discountPercentage: double.parse(element['discount'].toString()),
+          specs: specs,
+          imageUrls: images,
+          ownerId: element['owner'],
+        );
+        typeProducts.add(product);
+      });
+    } else {
+      throw HttpException(response.body);
+    }
+    _products = typeProducts;
+    notifyListeners();
+    return typeProducts;
   }
 
   List<Product> getFavorites() {
@@ -129,6 +190,24 @@ class ProductsProvider with ChangeNotifier {
   }
 
   Future<List<Product>> fetchBy(String fetchMechanism) async {
+    Uri url;
+    if (fetchMechanism == 'Most Recent') {
+      url = Uri.parse('');
+      return [];
+    } else if (fetchMechanism == 'Highest Rated') {
+      url = Uri.parse('https://hamdi1234.herokuapp.com/productrate');
+    } else if (fetchMechanism == 'Best Seller') {
+      url = Uri.parse('https://hamdi1234.herokuapp.com/bestsalles');
+    }
+    final response = await http.get(
+      url,
+      headers: {
+        'usertype': 'vendor',
+        'Content-Type': 'application/json; charset=UTF-8',
+        'authorization': _token,
+      },
+    );
+    print(response.body);
     return products;
   }
 
@@ -337,41 +416,38 @@ class ProductsProvider with ChangeNotifier {
       return;
     }
 
-    product = Product(
-      id: '1',
-      title: product.title,
-      price: product.price,
-      colorsAndQuantityAndSizes: product.colorsAndQuantityAndSizes,
-      warranty: product.warranty,
-      returning: product.returning,
-      replacement: product.replacement,
-      category: product.category,
-      type: product.type,
-      description: product.description,
-      discountPercentage: product.discountPercentage,
-      specs: product.specs,
-      imageUrls: [
-        'https://upload.wikimedia.org/wikipedia/commons/thumb/e/e8/Trousers%2C_dress_%28AM_1960.022-8%29.jpg/512px-Trousers%2C_dress_%28AM_1960.022-8%29.jpg',
-        'https://cdn.pixabay.com/photo/2016/10/02/22/17/red-t-shirt-1710578_1280.jpg',
-        'https://upload.wikimedia.org/wikipedia/commons/thumb/1/14/Cast-Iron-Pan.jpg/1024px-Cast-Iron-Pan.jpg',
-      ],
-      ownerId: 'h1',
-    );
+    // product = Product(
+    //   id: '1',
+    //   title: product.title,
+    //   price: product.price,
+    //   colorsAndQuantityAndSizes: product.colorsAndQuantityAndSizes,
+    //   warranty: product.warranty,
+    //   returning: product.returning,
+    //   replacement: product.replacement,
+    //   category: product.category,
+    //   type: product.type,
+    //   description: product.description,
+    //   discountPercentage: product.discountPercentage,
+    //   specs: product.specs,
+    //   imageUrls: [
+    //     'https://upload.wikimedia.org/wikipedia/commons/thumb/e/e8/Trousers%2C_dress_%28AM_1960.022-8%29.jpg/512px-Trousers%2C_dress_%28AM_1960.022-8%29.jpg',
+    //     'https://cdn.pixabay.com/photo/2016/10/02/22/17/red-t-shirt-1710578_1280.jpg',
+    //     'https://upload.wikimedia.org/wikipedia/commons/thumb/1/14/Cast-Iron-Pan.jpg/1024px-Cast-Iron-Pan.jpg',
+    //   ],
+    //   ownerId: 'h1',
+    // );
     // _products.add(product);
     // notifyListeners();
-
     final url = Uri.parse("https://hamdi1234.herokuapp.com/product");
     var response = await http.post(
       url,
       headers: {
         'usertype': 'vendor',
         'Content-Type': 'application/json; charset=UTF-8',
-        'authorization': // TOKEN
-            "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJfaWQiOiI2MTA4MTE0MDAyMjAxZTAwMTVkYWYwNDkiLCJpYXQiOjE2Mjc5MTg2NTYsImV4cCI6MTY1OTQ3NjI1Nn0.08iCb0dRonZX2Dj3xYbqHnbYT-ygESZ1fRQ0GJCEkK0",
+        'authorization': _token,
       },
       body: json.encode(
         {
-          'owner': "6108114002201e0015daf049", // USER_ID !!!
           'images': img64s,
           'name': product.title,
           'price': product.price,
@@ -408,14 +484,9 @@ class ProductsProvider with ChangeNotifier {
     );
     if (response.statusCode == 200 || response.statusCode == 201) {
       var responseData = json.decode(response.body);
-      print(response.headers);
-      print(responseData);
-      // name = responseData['name'];
-      // number = responseData['number'];
-      // email = responseData['email'];
-      // _token = response.headers['authorization'];
-      // isSeller = responseData['role'] == 'normal' ? false : true;
-      // saveToken();
+      //////
+      ///
+      ///
       notifyListeners();
     } else {
       print('Request failed with status: ${response.statusCode}.');
@@ -423,12 +494,16 @@ class ProductsProvider with ChangeNotifier {
       print(responseData);
       throw HttpException(responseData);
     }
-    // log(
-
-    // );
   }
 
-  List<Product> premiumAllProducts() {
+  Future<List<Product>> premiumAllProducts() async {
+    final url =
+        Uri.parse("https://hamdi1234.herokuapp.com/productowner/$_userId");
+    final response = await http.get(url, headers: {
+      'usertype': 'vendor',
+      'Content-Type': 'application/json; charset=UTF-8',
+      'authorization': _token,
+    });
     return products;
   }
 }

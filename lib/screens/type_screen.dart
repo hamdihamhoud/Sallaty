@@ -29,7 +29,7 @@ class TypeScreen extends StatelessWidget {
         ),
         body: FutureBuilder(
             future:
-                Provider.of<ProductsProvider>(context).fetchByType(type.title),
+                Provider.of<ProductsProvider>(context,listen: false).fetchByType(type.title),
             builder: (ctx, snapshot) {
               if (snapshot.connectionState == ConnectionState.waiting)
                 return Center(child: CircularProgressIndicator());

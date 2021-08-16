@@ -50,12 +50,8 @@ class AuthProvider with ChangeNotifier {
         "password": userPassword,
       }),
     );
-    print(response.statusCode);
-    print(response.body);
     if (response.statusCode == 200 || response.statusCode == 201) {
       var responseData = json.decode(response.body);
-      print(responseData);
-
       name = username;
       number = usernumber;
       email = useremail;
@@ -89,7 +85,7 @@ class AuthProvider with ChangeNotifier {
     );
     if (response.statusCode == 200 || response.statusCode == 201) {
       var responseData = json.decode(response.body);
-      print(response.headers);
+      print(response.body);
       name = responseData['name'];
       number = responseData['number'];
       email = responseData['email'];
@@ -149,7 +145,6 @@ class AuthProvider with ChangeNotifier {
 
     final responseData = json.decode(response.body);
     if (response.statusCode == 200 || response.statusCode == 201) {
-      print(response.headers);
       id = responseData['_id'];
       name = responseData['name'];
       number = responseData['number'];
@@ -179,8 +174,8 @@ class AuthProvider with ChangeNotifier {
     );
     final responseData = json.decode(response.body);
     if (response.statusCode == 200 || response.statusCode == 201) {
-      // print(responseData);
       id = responseData['_id'];
+      print(response.body);
       name = responseData['name'];
       number = responseData['number'];
       _token = response.headers['authorization'];
@@ -239,8 +234,8 @@ class AuthProvider with ChangeNotifier {
     // return false;
     // if (responseData['error'] != null) {
     //   //Invalid session. Logout
-      await logout();
-      return false;
+    await logout();
+    return false;
     // } else {
     //   return true;
     // }
