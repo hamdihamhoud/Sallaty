@@ -1,8 +1,8 @@
 import 'package:ecart/providers/orders.dart';
+import 'package:ecart/screens/gallery_view.dart';
 import 'package:ecart/screens/main_screen.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
-
 import 'providers/products.dart';
 import 'providers/cart.dart';
 import 'providers/auth.dart';
@@ -100,7 +100,7 @@ class MyApp extends StatelessWidget {
                 snapshot.connectionState == ConnectionState.waiting
                     ? SplashScreen()
                     : snapshot.data == true
-                        ? AppBottomNavigationBarController()
+                        ? AppBottomNavigationBarController(0)
                         : AuthScreen(),
           ),
         ),
@@ -121,13 +121,14 @@ class MyApp extends StatelessWidget {
           FeedbackScreen.routeName: (ctx) => FeedbackScreen(),
           AddProductScreen.routeName: (ctx) => AddProductScreen(),
           AppBottomNavigationBarController.routeName: (ctx) =>
-              AppBottomNavigationBarController(),
+              AppBottomNavigationBarController(0),
           FilterProductsScreen.routeName: (ctx) => FilterProductsScreen(),
           AnalyticsScreen.routeName: (ctx) => AnalyticsScreen(),
           AuthScreen.routeName: (ctx) => AuthScreen(),
           AddressesScreen.routeName: (ctx) => AddressesScreen(),
           SettingsScreen.routeName: (ctx) => SettingsScreen(),
           VerificationScreen.routeName: (ctx) => VerificationScreen(),
+          GalleryView.routeName: (ctx) => GalleryView(),
         },
       ),
     );

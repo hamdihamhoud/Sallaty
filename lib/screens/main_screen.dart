@@ -1,3 +1,4 @@
+
 import 'package:ecart/screens/account_screen.dart';
 import 'package:ecart/screens/cart_screen.dart';
 import 'package:ecart/screens/drawer_screen.dart';
@@ -9,13 +10,16 @@ import 'package:google_nav_bar/google_nav_bar.dart';
 
 class AppBottomNavigationBarController extends StatefulWidget {
   static const routeName = '/main';
+  final int index;
+  AppBottomNavigationBarController(this.index);
   @override
   _AppBottomNavigationBarControllerState createState() =>
-      _AppBottomNavigationBarControllerState();
+      _AppBottomNavigationBarControllerState(index);
 }
 
 class _AppBottomNavigationBarControllerState
     extends State<AppBottomNavigationBarController> {
+
   final List<Widget> pages = [
     HomeScreen(
       key: PageStorageKey('Page1'),
@@ -33,9 +37,14 @@ class _AppBottomNavigationBarControllerState
       key: PageStorageKey('Page5'),
     ),
   ];
+  final int index;
+  int _selectedIndex = 0;
+
+  _AppBottomNavigationBarControllerState(this.index) {
+    _selectedIndex = index;
+  }
 
   final PageStorageBucket bucket = PageStorageBucket();
-  int _selectedIndex = 0;
   Widget _bottomNavigationBar(int selectedIndex) => Container(
         height: 60,
         width: MediaQuery.of(context).size.width,
@@ -98,10 +107,10 @@ class _AppBottomNavigationBarControllerState
                   icon: Icons.local_offer_outlined,
                   text: 'Offers',
                 ),
-                GButton(
-                  icon: Icons.account_circle_rounded,
-                  text: 'Account',
-                ),
+                  GButton(
+                    icon: Icons.account_circle_rounded,
+                    text: 'Account',
+                  ),
               ]),
         ),
       );

@@ -70,6 +70,7 @@ class _AddAddressFormState extends State<AddAddressForm> {
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
               children: [
                 Container(
+                  margin: const EdgeInsets.symmetric(horizontal: 8),
                   width: MediaQuery.of(context).size.width * 0.25,
                   child: TextButton(
                       style: TextButton.styleFrom(

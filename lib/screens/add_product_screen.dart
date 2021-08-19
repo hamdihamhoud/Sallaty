@@ -1,7 +1,5 @@
 import 'dart:io';
-
 import 'package:cached_network_image/cached_network_image.dart';
-import 'package:ecart/widgets/alert_dialog.dart';
 import 'package:ecart/widgets/badge.dart';
 import 'package:flutter/material.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
@@ -214,8 +212,7 @@ class _AddProductScreenState extends State<AddProductScreen> {
       var errorMessage = 'Adding failed failed';
       _showErrorDialog(errorMessage);
     } catch (error) {
-      const errorMessage =
-          'Could not add product. Please try again later.';
+      const errorMessage = 'Could not add product. Please try again later.';
       _showErrorDialog(errorMessage);
     }
     setState(() {
@@ -746,23 +743,30 @@ class _AddProductScreenState extends State<AddProductScreen> {
                   ...specs.entries
                       .map((e) => Container(
                             margin: const EdgeInsets.symmetric(horizontal: 14),
-                            height: 35,
+                            // height: 35,
                             alignment: Alignment.centerLeft,
                             child: Row(
                               children: [
-                                Text(
-                                  '${e.key}: ',
-                                  textAlign: TextAlign.center,
-                                  style: TextStyle(
-                                      fontWeight: FontWeight.bold,
-                                      fontSize: 18),
+                                Container(
+                                  constraints: BoxConstraints(maxWidth: mediaQuery.size.width * 0.35),
+                                  child: Text(
+                                    '${e.key}: ',
+                                    textAlign: TextAlign.center,
+                                    style: TextStyle(
+                                        fontWeight: FontWeight.bold,
+                                        fontSize: 18),
+                                  ),
                                 ),
-                                Text(
-                                  e.value,
-                                  textAlign: TextAlign.center,
-                                  style: TextStyle(
-                                      fontWeight: FontWeight.w500,
-                                      fontSize: 18),
+                                Container(
+                                   constraints: BoxConstraints(maxWidth: mediaQuery.size.width * 0.35),
+                                  child: Text(
+                                    e.value,
+                                    overflow: TextOverflow.fade,
+                                    textAlign: TextAlign.center,
+                                    style: TextStyle(
+                                        fontWeight: FontWeight.w500,
+                                        fontSize: 18),
+                                  ),
                                 ),
                                 Spacer(),
                                 IconButton(

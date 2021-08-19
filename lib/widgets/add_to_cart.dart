@@ -194,15 +194,11 @@ class _AddtoCartState extends State<AddtoCart> {
                         ),
                         child: QuantityIcon(
                             amount: amount,
-                            maxAmount: widget
-                                .product.colorsAndQuantityAndSizes.entries
-                                .firstWhere(
-                                    (element) => element.key == _selectedColor)
-                                .value
-                                .entries
-                                .firstWhere(
-                                    (element) => element.key == _selectedSize)
-                                .value,
+                            maxAmount: productProvider.getProductMaxAmount(
+                              widget.product.id,
+                              _selectedColor,
+                              _selectedSize,
+                            ),
                             setter: setAmount),
                       )
                     : Padding(
@@ -276,7 +272,12 @@ class _AddtoCartState extends State<AddtoCart> {
                                   _selectedColor.value.toString() +
                                   _selectedSize.toString(),
                               productId: widget.product.id,
-                              price: widget.product.price,
+                              price: widget.product.discountPercentage != 0
+                                  ? (widget.product.price -
+                                      widget.product.price *
+                                          widget.product.discountPercentage /
+                                          100)
+                                  : widget.product.price,
                               title: widget.product.title,
                               quantity: amount,
                               color: _selectedColor,

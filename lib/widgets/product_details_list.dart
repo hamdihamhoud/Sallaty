@@ -99,7 +99,7 @@ class ProductDetailsList extends StatelessWidget {
                                 left: 5,
                               ),
                               child: Text(
-                                '${(product.price - product.price * product.discountPercentage / 100)} S.P',
+                                '${(product.price - product.price * product.discountPercentage / 100).toStringAsFixed(0)} S.P',
                                 style: TextStyle(
                                   color: theme.primaryColor,
                                   fontSize: 20,
@@ -192,6 +192,7 @@ class ProductDetailsList extends StatelessWidget {
                 style: TextStyle(
                   color: Color(0xFF333333),
                   fontSize: 20,
+                  fontWeight: FontWeight.bold,
                 ),
               ),
             ),
@@ -218,6 +219,7 @@ class ProductDetailsList extends StatelessWidget {
                       style: TextStyle(
                         color: Color(0xFF333333),
                         fontSize: 20,
+                        fontWeight: FontWeight.bold,
                       ),
                     ),
                   )
@@ -230,23 +232,32 @@ class ProductDetailsList extends StatelessWidget {
               if (product.specs.length != 0)
                 return Padding(
                   padding: const EdgeInsets.only(
-                    bottom: 7,
+                    bottom: 10,
                   ),
                   child: Row(
                     mainAxisAlignment: MainAxisAlignment.start,
                     children: [
-                      Text(
-                        "$e:  ",
-                        style: TextStyle(
-                          color: Color(0xFF333333),
-                          fontSize: 16,
+                      Container(
+                        width: mediaQuery.size.width * 0.3,
+                        child: Text(
+                          "$e:  ",
+                          overflow: TextOverflow.fade,
+                          style: TextStyle(
+                            color: Color(0xFF828282),
+                            fontSize: 16,
+                            fontWeight: FontWeight.bold,
+                          ),
                         ),
                       ),
-                      Text(
-                        product.specs[e],
-                        style: TextStyle(
-                          color: Color(0xFF828282),
-                          fontSize: 16,
+                      Container(
+                        width: mediaQuery.size.width * 0.6,
+                        child: Text(
+                          product.specs[e],
+                          overflow: TextOverflow.fade,
+                          style: TextStyle(
+                            color: Color(0xFF828282),
+                            fontSize: 16,
+                          ),
                         ),
                       ),
                     ],
@@ -264,6 +275,7 @@ class ProductDetailsList extends StatelessWidget {
                       style: TextStyle(
                         color: Color(0xFF333333),
                         fontSize: 20,
+                        fontWeight: FontWeight.bold,
                       ),
                     ),
                   )
@@ -276,6 +288,7 @@ class ProductDetailsList extends StatelessWidget {
                       style: TextStyle(
                         color: Color(0xFF333333),
                         fontSize: 20,
+                        fontWeight: FontWeight.bold,
                       ),
                     ),
                   ),
@@ -290,29 +303,43 @@ class ProductDetailsList extends StatelessWidget {
                     child: Text(
                       'Return',
                       style: TextStyle(
-                        color: Color(0xFF333333),
+                        color: Color(0xFF828282),
                         fontSize: 16,
+                        fontWeight: FontWeight.bold,
                       ),
                     ),
                   ),
                   Container(
                     child: product.returning.period != 0
-                        ? Text(
-                            '${product.returning.period} ' +
+                        ? Row(
+                            children: [
+                              Text(
+                                '${product.returning.period} ',
+                                style: TextStyle(
+                                  color: Colors.redAccent,
+                                  fontSize: 19,
+                                  fontWeight: FontWeight.bold,
+                                ),
+                              ),
+                              Text(
                                 product.returning.type
                                     .toString()
                                     .split('.')
                                     .last,
-                            style: TextStyle(
-                              color: Color(0xFF828282),
-                              fontSize: 16,
-                            ),
+                                style: TextStyle(
+                                  color: Color(0xFF828282),
+                                  fontSize: 16,
+                                  fontWeight: FontWeight.bold,
+                                ),
+                              ),
+                            ],
                           )
                         : Text(
                             'X',
                             style: TextStyle(
-                              color: Color(0xFF828282),
-                              fontSize: 16,
+                              color: Colors.redAccent,
+                              fontSize: 19,
+                              fontWeight: FontWeight.bold,
                             ),
                           ),
                   ),
@@ -321,7 +348,7 @@ class ProductDetailsList extends StatelessWidget {
             ),
             Padding(
               padding: const EdgeInsets.only(
-                bottom: 7,
+                bottom: 10,
               ),
               child: Row(
                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
@@ -330,35 +357,141 @@ class ProductDetailsList extends StatelessWidget {
                     child: Text(
                       'Replace',
                       style: TextStyle(
-                        color: Color(0xFF333333),
+                        color: Color(0xFF828282),
                         fontSize: 16,
+                        fontWeight: FontWeight.bold,
                       ),
                     ),
                   ),
                   Container(
                     child: product.replacement.period != 0
-                        ? Text(
-                            '${product.replacement.period} ' +
+                        ? Row(
+                            children: [
+                              Text(
+                                '${product.replacement.period} ',
+                                style: TextStyle(
+                                  color: Colors.redAccent,
+                                  fontSize: 19,
+                                  fontWeight: FontWeight.bold,
+                                ),
+                              ),
+                              Text(
                                 product.replacement.type
                                     .toString()
                                     .split('.')
                                     .last,
-                            style: TextStyle(
-                              color: Color(0xFF828282),
-                              fontSize: 16,
-                            ),
+                                style: TextStyle(
+                                  color: Color(0xFF828282),
+                                  fontSize: 16,
+                                  fontWeight: FontWeight.bold,
+                                ),
+                              ),
+                            ],
                           )
                         : Text(
                             'X',
                             style: TextStyle(
-                              color: Color(0xFF828282),
-                              fontSize: 16,
+                              color: Colors.redAccent,
+                              fontSize: 19,
+                              fontWeight: FontWeight.bold,
                             ),
                           ),
                   ),
                 ],
               ),
             ),
+            Padding(
+              padding: const EdgeInsets.only(
+                bottom: 10,
+              ),
+              child: Text(
+                'Warranty',
+                style: TextStyle(
+                  color: Color(0xFF333333),
+                  fontSize: 20,
+                  fontWeight: FontWeight.bold,
+                ),
+              ),
+            ),
+            Padding(
+                padding: const EdgeInsets.only(
+                  bottom: 10,
+                  right: 30,
+                  left: 30,
+                ),
+                child: Container(
+                  height: 40,
+                  decoration: BoxDecoration(
+                      color: product.warranty.period != 0
+                          ? Colors.green
+                          : Colors.redAccent,
+                      borderRadius: BorderRadius.all(
+                        Radius.circular(15),
+                      )),
+                  child: product.warranty.period != 0
+                      ? Row(
+                          mainAxisAlignment: MainAxisAlignment.center,
+                          children: [
+                            Text(
+                              '${product.warranty.period}',
+                              style: TextStyle(
+                                color: Colors.white,
+                                fontSize: 20,
+                                fontWeight: FontWeight.bold,
+                              ),
+                            ),
+                            Padding(
+                              padding: const EdgeInsets.only(
+                                left: 5,
+                              ),
+                              child: Text(
+                                product.warranty.type
+                                    .toString()
+                                    .split('.')
+                                    .last,
+                                style: TextStyle(
+                                  color: Colors.white,
+                                  fontSize: 16,
+                                  fontWeight: FontWeight.bold,
+                                ),
+                              ),
+                            ),
+                            Padding(
+                              padding: const EdgeInsets.only(
+                                left: 5,
+                              ),
+                              child: Icon(
+                                Icons.verified_rounded,
+                                color: Colors.white,
+                                size: 20,
+                              ),
+                            ),
+                          ],
+                        )
+                      : Row(
+                          mainAxisAlignment: MainAxisAlignment.center,
+                          children: [
+                            Text(
+                              "No Warranty",
+                              style: TextStyle(
+                                color: Colors.white,
+                                fontSize: 20,
+                                fontWeight: FontWeight.bold,
+                              ),
+                            ),
+                            Padding(
+                              padding: const EdgeInsets.only(
+                                left: 5,
+                              ),
+                              child: Icon(
+                                Icons.warning_rounded,
+                                color: Colors.white,
+                                size: 20,
+                              ),
+                            ),
+                          ],
+                        ),
+                )),
             SizedBox(
               height: 85,
               width: mediaQuery.size.width,

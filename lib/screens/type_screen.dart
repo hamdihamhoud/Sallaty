@@ -40,6 +40,7 @@ class TypeScreen extends StatelessWidget {
                   crossAxisCount: 2,
                   mainAxisSpacing: 10,
                   crossAxisSpacing: 10,
+                  mainAxisExtent: 290,
                 ),
                 itemBuilder: (ctx, i) => ChangeNotifierProvider.value(
                   value: products[i],

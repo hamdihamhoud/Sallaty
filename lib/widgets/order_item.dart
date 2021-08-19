@@ -6,7 +6,7 @@ import 'package:provider/provider.dart';
 import '../providers/products.dart';
 
 class OrderItem extends StatefulWidget {
-  final oi.OrderItem order;
+  final oi.Order order;
   OrderItem(this.order);
 
   @override

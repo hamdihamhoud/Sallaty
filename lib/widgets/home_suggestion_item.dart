@@ -46,21 +46,21 @@ class HomeSuggestionItem extends StatelessWidget {
             ),
           ),
           Container(
-            height: 190,
+            height: 290,
             child: FutureBuilder(
                 future: Provider.of<ProductsProvider>(context).fetchBy(type),
                 builder: (ctx, snapshot) {
                   if (snapshot.connectionState == ConnectionState.waiting)
                     return Center(child: CircularProgressIndicator());
                   products = snapshot.data;
-                  return ListView.builder(
+                  return products.isNotEmpty ? ListView.builder(
                     scrollDirection: Axis.horizontal,
                     itemCount: products.length,
                     itemBuilder: (ctx, index) => ChangeNotifierProvider.value(
                       value: products[index],
                       child: ProductItem(),
                     ),
-                  );
+                  ) : Center(child: Text('no data'),);
                 }),
           ),
         ],

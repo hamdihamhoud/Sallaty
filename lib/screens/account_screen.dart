@@ -1,4 +1,5 @@
 import 'package:cached_network_image/cached_network_image.dart';
+import 'package:ecart/providers/auth.dart';
 import 'package:ecart/screens/analytics_premium_screen.dart';
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
@@ -19,7 +20,7 @@ class AccountScreen extends StatelessWidget {
   AccountScreen({Key key}) : super(key: key);
   @override
   Widget build(BuildContext context) {
-    bool isPremium = true; //false;
+    bool isPremium = Provider.of<AuthProvider>(context, listen: false).isSeller;
     List<CartItem> sellerOrders = [];
     void _refresh() {
       sellerOrders = Provider.of<Orders>(context).fetchSellerOreders();
@@ -45,7 +46,7 @@ class AccountScreen extends StatelessWidget {
                     ),
                   )
                 : Container(
-                    height: 200,
+                    height: 300,
                     child: ListView.builder(
                       scrollDirection: Axis.horizontal,
                       itemCount: sellerProducts.length,
@@ -102,7 +103,22 @@ class AccountScreen extends StatelessWidget {
         ],
       ),
       drawer: DrawerScreen(),
-      body: isPremium ? premiumBody() : Container(),
+      body: isPremium
+          ? premiumBody()
+          : Padding(
+            padding: const EdgeInsets.all(14),
+            child: Center(
+              child: Text(
+                  'Go premium to get all features and start adding your own products',
+                  style: TextStyle(
+                    fontSize: 20,
+                    fontWeight: FontWeight.w500,
+                    
+                  ),
+                  
+                ),
+            ),
+          ),
       // bottomNavigationBar: BottomBar(4, context),
     );
   }

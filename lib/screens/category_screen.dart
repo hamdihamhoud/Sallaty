@@ -99,7 +99,7 @@ class CategoryScreen extends StatelessWidget {
                                 ),
                               ),
                               Container(
-                                  height: 190,
+                                  height: 290,
                                   child: FutureBuilder(
                                     future: Provider.of<ProductsProvider>(
                                             context,
