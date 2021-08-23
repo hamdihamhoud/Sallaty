@@ -136,6 +136,7 @@ class Orders with ChangeNotifier {
        final url =
         Uri.parse('https://hamdi1234.herokuapp.com/ordersByBuyer/$_userId');
     final response = await http.get(url, headers: {
+      
       'usertype': 'vendor',
       'Content-Type': 'application/json; charset=UTF-8',
       'authorization': _token,
