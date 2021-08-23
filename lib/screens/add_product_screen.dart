@@ -207,7 +207,7 @@ class _AddProductScreenState extends State<AddProductScreen> {
         product,
         images,
       );
-      Navigator.of(context).pop();
+      Navigator.of(context).pushNamed('/');
     } on HttpException catch (_) {
       var errorMessage = 'Adding failed failed';
       _showErrorDialog(errorMessage);

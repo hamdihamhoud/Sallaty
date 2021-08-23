@@ -22,55 +22,71 @@ class AccountScreen extends StatelessWidget {
   Widget build(BuildContext context) {
     bool isPremium = Provider.of<AuthProvider>(context, listen: false).isSeller;
     List<CartItem> sellerOrders = [];
-    void _refresh() {
-      sellerOrders = Provider.of<Orders>(context).fetchSellerOreders();
+    Future<void> _refresh() async {
+      sellerOrders = await Provider.of<Orders>(context).fetchSellerOreders();
     }
 
     Widget premiumBody() {
-      _refresh();
+      List<Product> sellerProducts = [];
       return ListView(
         children: [
           SellerFilteringRow(),
           RecentlyAdded(),
-          Consumer<ProductsProvider>(builder: (ctx, products, _) {
-            final List<Product> sellerProducts =
-                products.fetchBySellerRecents();
-            return sellerProducts.isEmpty
-                ? Container(
+          FutureBuilder(
+              future:
+                  Provider.of<ProductsProvider>(context).premiumAllProducts(),
+              builder: (ctx, snapshot) {
+                if (snapshot.connectionState == ConnectionState.waiting)
+                  return Container(
                     height: 100,
                     child: Center(
-                      child: Text(
-                        'No products yet start adding now',
-                        style: TextStyle(fontWeight: FontWeight.w500),
-                      ),
-                    ),
-                  )
-                : Container(
-                    height: 300,
-                    child: ListView.builder(
-                      scrollDirection: Axis.horizontal,
-                      itemCount: sellerProducts.length,
-                      itemBuilder: (ctx, i) {
-                        return ChangeNotifierProvider.value(
-                          value: sellerProducts[i],
-                          child: ProductItem(
-                            isSeller: true,
-                          ),
-                        );
-                      },
+                      child: CircularProgressIndicator(),
                     ),
                   );
-          }),
+                sellerProducts = snapshot.data;
+                return sellerProducts == null || sellerProducts.length == 0
+                    ? Container(
+                        height: 100,
+                        child: Center(
+                          child: Text(
+                            'No products yet start adding now',
+                            style: TextStyle(fontWeight: FontWeight.w500),
+                          ),
+                        ),
+                      )
+                    : Container(
+                        height: 300,
+                        child: ListView.builder(
+                          scrollDirection: Axis.horizontal,
+                          itemCount: sellerProducts.length,
+                          itemBuilder: (ctx, i) {
+                            return ChangeNotifierProvider.value(
+                              value: sellerProducts[i],
+                              child: ProductItem(
+                                isSeller: true,
+                              ),
+                            );
+                          },
+                        ),
+                      );
+              }),
           RecentSoldItems(),
-          sellerOrders.length == 0
-              ? Center(
-                  child: Text('No Orders Yet'),
-                )
-              : Column(
-                  children: [
-                    ...sellerOrders.map((e) => SellerItemTile(e)).toList()
-                  ],
-                ),
+          FutureBuilder(
+              future: _refresh(),
+              builder: (ctx, snapshot) {
+                if (snapshot.connectionState == ConnectionState.waiting)
+                  return Center(child: CircularProgressIndicator());
+                sellerOrders = snapshot.data;
+                return sellerOrders == null || sellerOrders.length == 0
+                    ? Center(
+                        child: Text('No Orders Yet'),
+                      )
+                    : Column(
+                        children: [
+                          ...sellerOrders.map((e) => SellerItemTile(e)).toList()
+                        ],
+                      );
+              })
         ],
       );
     }
@@ -106,19 +122,17 @@ class AccountScreen extends StatelessWidget {
       body: isPremium
           ? premiumBody()
           : Padding(
-            padding: const EdgeInsets.all(14),
-            child: Center(
-              child: Text(
+              padding: const EdgeInsets.all(14),
+              child: Center(
+                child: Text(
                   'Go premium to get all features and start adding your own products',
                   style: TextStyle(
                     fontSize: 20,
                     fontWeight: FontWeight.w500,
-                    
                   ),
-                  
                 ),
+              ),
             ),
-          ),
       // bottomNavigationBar: BottomBar(4, context),
     );
   }
@@ -234,7 +248,9 @@ class SellerItemTile extends StatelessWidget {
                   height: 2,
                 ),
                 Text(
-                  DateFormat.yMd().add_jm().format(DateTime.now()),
+                  DateFormat.yMd()
+                      .add_jm()
+                      .format(DateTime.now()), // Fetch dates from backend
                   style: TextStyle(color: Colors.black54),
                 ),
               ],

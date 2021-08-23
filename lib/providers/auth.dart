@@ -180,6 +180,8 @@ class AuthProvider with ChangeNotifier {
       number = responseData['number'];
       _token = response.headers['authorization'];
       isSeller = responseData['role'] == 'normal' ? false : true;
+      print(token);
+      print(name);
       saveToken();
       notifyListeners();
     } else
@@ -219,6 +221,7 @@ class AuthProvider with ChangeNotifier {
   }
 
   Future<bool> validToken() async {
+    print(token);
     final url =
         Uri.parse('https://hamdi1234.herokuapp.com/users/checkAccessiblity');
     final response = await http.post(
@@ -251,5 +254,24 @@ class AuthProvider with ChangeNotifier {
     pref.clear();
     notifyListeners();
     // http logout
+  }
+
+  Future<void> sendFeedback(String feedback) async {
+    final url = Uri.parse('https://hamdi1234.herokuapp.com/feedback/$id');
+    final response = await http.post(
+      url,
+      headers: {
+        'usertype': 'vendor',
+        'Content-Type': 'application/json; charset=UTF-8',
+        'authorization': _token,
+      },
+      body: json.encode({"feedback": feedback}),
+    );
+    if (response.statusCode == 200 || response.statusCode == 201) {
+      return;
+    } else {
+      print(response.body);
+      throw 'somthing went wrong please try again later';
+    }
   }
 }

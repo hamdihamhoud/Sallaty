@@ -1,6 +1,7 @@
 import 'package:ecart/models/period.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:http/http.dart' as http;
 
 class Product with ChangeNotifier {
   final String id;
@@ -35,33 +36,63 @@ class Product with ChangeNotifier {
     this.replacement,
     this.returning,
     this.discountPercentage = 0,
-    this.isFavorite = false,
+    this.isFavorite = true,
     this.colorsAndQuantityAndSizes,
   });
 
-  //     void _setFavValue(bool newValue) {
-  //   isFavorite = newValue;
-  //   notifyListeners();
-  // }
+  void _setFavValue(bool newValue) {
+    isFavorite = newValue;
+    notifyListeners();
+  }
 
   Future<void> toggleFav(
-      // String token,
-      // String userId,
-      ) async {
-    // final oldStatus = isFavorite;
+    String token,
+    String userId,
+  ) async {
+    final oldStatus = isFavorite;
     isFavorite = !isFavorite;
     notifyListeners();
-    // final url = 'https://shop-app-flutter-course-6285f-default-rtdb.firebaseio.com/userFavorites/$userId/$id.json?auth=$token';
-    // try {
-    //   final response = await http.put(
-    //     url,
-    //     body: json.encode(isFavorite),
-    //   );
-    //   if (response.statusCode >= 400) {
-    //     _setFavValue(oldStatus);
-    //   }
-    // } catch (error) {
-    //   _setFavValue(oldStatus);
-    // }
+    if (isFavorite) {
+      final url = Uri.parse(
+          'https://hamdi1234.herokuapp.com/addToWishlist?product=$id');
+      try {
+        final response = await http.post(
+          url,
+          headers: {
+            'usertype': 'vendor',
+            'Content-Type': 'application/json; charset=UTF-8',
+            'authorization': token,
+          },
+        );
+        if (response.statusCode != 200 && response.statusCode != 201) {
+          _setFavValue(oldStatus);
+        } 
+      } catch (error) {
+        print(error);
+        _setFavValue(oldStatus);
+      }
+    } else {
+        final url = Uri.parse(
+          'https://hamdi1234.herokuapp.com/deletFromWishlist?product=$id');
+          print(url);
+      try {
+        final response = await http.delete(
+          url,
+          headers: {
+            'usertype': 'vendor',
+            'Content-Type': 'application/json; charset=UTF-8',
+            'authorization': token,
+          },
+        );
+        if (response.statusCode == 200 || response.statusCode == 201) {
+          print('deleted');
+          _setFavValue(oldStatus);
+        }
+      } catch (error) {
+        print('not deleted');
+        print(error);
+        _setFavValue(oldStatus);
+      }
+    }
   }
 }

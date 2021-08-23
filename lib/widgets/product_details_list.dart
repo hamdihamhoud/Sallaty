@@ -14,6 +14,7 @@ class ProductDetailsList extends StatelessWidget {
     @required this.theme,
     @required this.colorsNumber,
     @required this.hasSize,
+    @required this.ownerName,
     @required this.mediaQuery,
   }) : super(key: key);
 
@@ -22,6 +23,7 @@ class ProductDetailsList extends StatelessWidget {
   final ThemeData theme;
   final int colorsNumber;
   final bool hasSize;
+  final String ownerName;
   final MediaQueryData mediaQuery;
 
   @override
@@ -60,7 +62,7 @@ class ProductDetailsList extends StatelessWidget {
                         bottom: 10,
                       ),
                       child: Text(
-                        productProvider.findSeller().name,
+                        ownerName,
                         style: TextStyle(
                           color: Color(0xFF828282),
                           fontSize: 20,
@@ -238,7 +240,9 @@ class ProductDetailsList extends StatelessWidget {
                     mainAxisAlignment: MainAxisAlignment.start,
                     children: [
                       Container(
-                        width: mediaQuery.size.width * 0.3,
+                        constraints: BoxConstraints(
+                          maxWidth: mediaQuery.size.width * 0.3,
+                        ),
                         child: Text(
                           "$e:  ",
                           overflow: TextOverflow.fade,
@@ -250,7 +254,9 @@ class ProductDetailsList extends StatelessWidget {
                         ),
                       ),
                       Container(
-                        width: mediaQuery.size.width * 0.6,
+                        constraints: BoxConstraints(
+                          maxWidth: mediaQuery.size.width * 0.5,
+                        ),
                         child: Text(
                           product.specs[e],
                           overflow: TextOverflow.fade,

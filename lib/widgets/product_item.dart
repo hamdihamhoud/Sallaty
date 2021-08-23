@@ -1,3 +1,4 @@
+import 'package:ecart/providers/auth.dart';
 import 'package:flutter/material.dart';
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:provider/provider.dart';
@@ -20,6 +21,8 @@ class ProductItem extends StatelessWidget {
   Widget build(BuildContext context) {
     final product = Provider.of<Product>(context);
     final theme = Theme.of(context);
+    final authProvider = Provider.of<AuthProvider>(context);
+
     return InkWell(
       onTap: () {
         Navigator.of(context).pushNamed(
@@ -114,9 +117,9 @@ class ProductItem extends StatelessWidget {
                                 : Icon(Icons.favorite_border_rounded),
                             onPressed: () {
                               pr.toggleFav(
-                                  // token,
-                                  // userId,
-                                  );
+                                authProvider.token,
+                                authProvider.id,
+                              );
                             },
                           ),
                         ),

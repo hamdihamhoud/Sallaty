@@ -1,5 +1,7 @@
 import 'package:ecart/models/product.dart';
+import 'package:ecart/providers/auth.dart';
 import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
 
 class FavoriteIcon extends StatefulWidget {
   const FavoriteIcon({
@@ -16,6 +18,7 @@ class FavoriteIcon extends StatefulWidget {
 class _FavoriteIconState extends State<FavoriteIcon> {
   @override
   Widget build(BuildContext context) {
+    final authProvider = Provider.of<AuthProvider>(context);
     return Container(
       decoration: BoxDecoration(
           color: Colors.redAccent,
@@ -30,7 +33,10 @@ class _FavoriteIconState extends State<FavoriteIcon> {
               : Icon(Icons.favorite_border_rounded),
           onPressed: () {
             setState(() {
-              widget.product.toggleFav();
+              widget.product.toggleFav(
+                authProvider.token,
+                authProvider.id,
+              );
             });
           },
         ),

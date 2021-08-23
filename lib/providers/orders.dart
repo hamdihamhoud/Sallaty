@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 
 import 'cart.dart';
 import 'dart:convert';
+import 'package:http/http.dart' as http;
 
 class Order {
   final String id;
@@ -131,74 +132,21 @@ class Orders with ChangeNotifier {
     notifyListeners();
   }
 
-  List<CartItem> fetchSellerOreders() {
-    return [
-      // CartItem(
-      //   id: 'p1',
-      //   quantity: 5,
-      //   title: 'nike',
-      //   price: 30000,
-      //   imageUrl:
-      //       'https://cdn.pixabay.com/photo/2016/10/02/22/17/red-t-shirt-1710578_1280.jpg',
-      //   status: Status.Shiped,
-      // ),
-      // CartItem(
-      //   id: 'p1',
-      //   quantity: 5,
-      //   title: 'nike',
-      //   price: 30000,
-      //   imageUrl:
-      //       'https://upload.wikimedia.org/wikipedia/commons/thumb/e/e8/Trousers%2C_dress_%28AM_1960.022-8%29.jpg/512px-Trousers%2C_dress_%28AM_1960.022-8%29.jpg',
-      //   status: Status.Delivered,
-      // ),
-      // CartItem(
-      //   id: 'p1',
-      //   quantity: 5,
-      //   title: 'nike',
-      //   price: 30000,
-      //   imageUrl:
-      //       'https://cdn.pixabay.com/photo/2016/10/02/22/17/red-t-shirt-1710578_1280.jpg',
-      // ),
-      // CartItem(
-      //   id: 'p1',
-      //   quantity: 5,
-      //   title: 'nike',
-      //   price: 30000,
-      //   imageUrl:
-      //       'https://cdn.pixabay.com/photo/2016/10/02/22/17/red-t-shirt-1710578_1280.jpg',
-      // ),
-      // CartItem(
-      //   id: 'p1',
-      //   quantity: 5,
-      //   title: 'nike',
-      //   price: 30000,
-      //   imageUrl:
-      //       'https://cdn.pixabay.com/photo/2016/10/02/22/17/red-t-shirt-1710578_1280.jpg',
-      // ),
-      // CartItem(
-      //   id: 'p1',
-      //   quantity: 5,
-      //   title: 'nike',
-      //   price: 30000,
-      //   imageUrl:
-      //       'https://cdn.pixabay.com/photo/2016/10/02/22/17/red-t-shirt-1710578_1280.jpg',
-      // ),
-      // CartItem(
-      //   id: 'p1',
-      //   quantity: 5,
-      //   title: 'nike',
-      //   price: 30000,
-      //   imageUrl:
-      //       'https://cdn.pixabay.com/photo/2016/10/02/22/17/red-t-shirt-1710578_1280.jpg',
-      // ),
-      // CartItem(
-      //   id: 'p1',
-      //   quantity: 5,
-      //   title: 'nike',
-      //   price: 30000,
-      //   imageUrl:
-      //       'https://cdn.pixabay.com/photo/2016/10/02/22/17/red-t-shirt-1710578_1280.jpg',
-      // ),
-    ];
+  Future<List<CartItem>> fetchSellerOreders() async {
+       final url =
+        Uri.parse('https://hamdi1234.herokuapp.com/ordersByBuyer/$_userId');
+    final response = await http.get(url, headers: {
+      'usertype': 'vendor',
+      'Content-Type': 'application/json; charset=UTF-8',
+      'authorization': _token,
+    });
+    print(response.statusCode);
+    if (response.statusCode == 200 || response.statusCode == 201) {
+      final responseData = json.decode(response.body);
+      print(responseData);
+    } else {
+      throw response.body;
+    }
+    return [];
   }
 }

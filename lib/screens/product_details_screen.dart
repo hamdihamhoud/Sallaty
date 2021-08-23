@@ -30,6 +30,7 @@ class _ProductDetailsSceenState extends State<ProductDetailsSceen> {
   int colorsNumber;
   ThemeData theme;
   bool hasSize;
+  String ownerName;
 
   int quantity;
   @override
@@ -56,7 +57,7 @@ class _ProductDetailsSceenState extends State<ProductDetailsSceen> {
           : true;
       quantity = productProvider.quantityCounter(
           colorsNumber: colorsNumber, product: product);
-
+      ownerName = await productProvider.findSellerName(product.ownerId);
       setState(() {
         _init = false;
       });
@@ -140,6 +141,7 @@ class _ProductDetailsSceenState extends State<ProductDetailsSceen> {
                         ),
                         flexibleSpace: Stack(
                           children: [
+                        
                             Positioned(
                                 child: InkWell(
                                   child:
@@ -179,6 +181,31 @@ class _ProductDetailsSceenState extends State<ProductDetailsSceen> {
                               left: 0,
                               right: 0,
                             ),
+                            if(product.discountPercentage!=0)
+                            Positioned(
+                          bottom: 15,
+                          left: 25,
+                          child: Container(
+                            height: 30,
+                            width: mediaQuery.size.width * 0.2,
+                            decoration: BoxDecoration(
+                                borderRadius: BorderRadius.all(
+                                  Radius.circular(10),
+                                ),
+                                color: Colors.greenAccent),
+                            child: Center(
+                              child: Text(
+                                "${product.discountPercentage.toStringAsFixed(0)} %",
+                                style: TextStyle(
+                                  color: Colors.black54,
+                                  fontWeight: FontWeight.bold,
+                                  fontSize: 16,
+                                ),
+                              ),
+                            ),
+                          ),
+                        ),
+                            if(!isSeller)
                             Positioned(
                               bottom: 5,
                               right: 25,
@@ -198,35 +225,12 @@ class _ProductDetailsSceenState extends State<ProductDetailsSceen> {
                                   theme: theme,
                                   colorsNumber: colorsNumber,
                                   hasSize: hasSize,
+                                  ownerName: ownerName,
                                   mediaQuery: mediaQuery);
                             }
                           },
                         ),
-                      ),
-                      // if (product.discountPercentage != 0)
-                      //   Positioned(
-                      //     bottom: 15,
-                      //     left: 25,
-                      //     child: Container(
-                      //       height: 30,
-                      //       width: mediaQuery.size.width * 0.2,
-                      //       decoration: BoxDecoration(
-                      //           borderRadius: BorderRadius.all(
-                      //             Radius.circular(10),
-                      //           ),
-                      //           color: Colors.greenAccent),
-                      //       child: Center(
-                      //         child: Text(
-                      //           "${product.discountPercentage.toStringAsFixed(0)} %",
-                      //           style: TextStyle(
-                      //             color: Colors.black54,
-                      //             fontWeight: FontWeight.bold,
-                      //             fontSize: 16,
-                      //           ),
-                      //         ),
-                      //       ),
-                      //     ),
-                      //   ),
+                      ),  
                     ],
                   ),
                   if (!isSeller)

@@ -1,4 +1,6 @@
 import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
+import '../providers/auth.dart';
 
 class FeedbackScreen extends StatelessWidget {
   static const routeName = '/feedback';
@@ -54,13 +56,40 @@ class FeedbackScreen extends StatelessWidget {
               content:
                   Text('your name and number will be sent with your message'),
               actions: [
-                TextButton(onPressed: () {
-                  Navigator.of(context).pop();
-                }, child: Text('Cancel')),
-                TextButton(onPressed: () {
-                  controller.text = '';
-                  Navigator.of(context).pop();
-                }, child: Text('Okay'))
+                TextButton(
+                    onPressed: () {
+                      Navigator.of(context).pop();
+                    },
+                    child: Text('Cancel')),
+                TextButton(
+                    onPressed: () {
+                      Provider.of<AuthProvider>(context,listen: false)
+                          .sendFeedback(controller.text);
+                      controller.text = '';
+                      Navigator.of(context).pop();
+                      ScaffoldMessenger.of(context).showSnackBar(
+                        SnackBar(
+                          content: Text(
+                            'Thank you for your help we appreciate your ideas',
+                            style: TextStyle(
+                              fontSize: 18,
+                            ),
+                          ),
+                          backgroundColor: Theme.of(context).primaryColor,
+                          duration: Duration(
+                            milliseconds: 1500,
+                          ),
+                          // behavior: SnackBarBehavior.fixed,
+                          shape: RoundedRectangleBorder(
+                            borderRadius: BorderRadius.only(
+                              topRight: Radius.circular(20),
+                              topLeft: Radius.circular(20),
+                            ),
+                          ),
+                        ),
+                      );
+                    },
+                    child: Text('Okay'))
               ],
             ));
   }

@@ -1,4 +1,5 @@
 import 'package:ecart/models/category.dart';
+import 'package:ecart/models/product.dart';
 import 'package:ecart/models/product_details_screen_args.dart';
 import 'package:ecart/widgets/categories_item.dart';
 import 'package:flutter/material.dart';
@@ -82,40 +83,61 @@ class SearchItem extends SearchDelegate<SearchItem> {
 
   @override
   Widget buildResults(BuildContext context) {
-    var products =
-        Provider.of<ProductsProvider>(context, listen: false).search(query);
-    return Container(
-      margin: const EdgeInsets.symmetric(vertical: 8),
-      child: GridView.builder(
-        gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
-          childAspectRatio: 3 / 2,
-          crossAxisCount: 2,
-          crossAxisSpacing: 8,
-          mainAxisSpacing: 8,
-        ),
-        itemCount: products.length,
-        itemBuilder: (ctx, i) => ChangeNotifierProvider.value(
-          value: products[i],
-          child: ProductItem(
-            isGridView: true,
-          ),
-        ),
-      ),
-    );
+    List<Product> products = [];
+    return FutureBuilder(
+        future:
+            Provider.of<ProductsProvider>(context).search(query),
+        builder: (ctx, snapshot) {
+          if (snapshot.connectionState == ConnectionState.waiting)
+            return Center(child: CircularProgressIndicator());
+          products = snapshot.data;
+          return products == null || products.length == 0
+              ? Center(child: Text('no matching product'))
+              : Container(
+                  margin: const EdgeInsets.symmetric(vertical: 8),
+                  child: GridView.builder(
+                    gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
+                      childAspectRatio: 3 / 2,
+                      crossAxisCount: 2,
+                      crossAxisSpacing: 8,
+                      mainAxisSpacing: 8,
+                      mainAxisExtent: 290,
+                    ),
+                    itemCount: products.length,
+                    itemBuilder: (ctx, i) => ChangeNotifierProvider.value(
+                      value: products[i],
+                      child: ProductItem(
+                        isGridView: true,
+                      ),
+                    ),
+                  ),
+                );
+        });
   }
 
   @override
   Widget buildSuggestions(BuildContext context) {
-    var suggestions =
-        Provider.of<ProductsProvider>(context, listen: false).search(query);
-    return ListView.builder(
-        itemCount: suggestions.length,
-        itemBuilder: (ctx, i) => ListTile(
-              title: Text(suggestions[i].title),
-              onTap: () {
-                Navigator.of(context).pushNamed(ProductDetailsSceen.routeName,
-                    arguments: ProducDetailsScreenArgs(id: suggestions[i].id));
-              },
-            ));
+    List<Product> suggestions = [];
+    return FutureBuilder(
+        future:
+            Provider.of<ProductsProvider>(context, listen: false).search(query),
+        builder: (ctx, snapshot) {
+          if (snapshot.connectionState == ConnectionState.waiting)
+            return Center(child: CircularProgressIndicator());
+          suggestions = snapshot.data;
+          return suggestions == null || suggestions.length == 0
+              ? Center(child: Text('no matching product'))
+              : ListView.builder(
+                  itemCount: suggestions.length,
+                  itemBuilder: (ctx, i) => ListTile(
+                        title: Text(suggestions[i].title),
+                        onTap: () {
+                          Navigator.of(context).pushNamed(
+                              ProductDetailsSceen.routeName,
+                              arguments: ProducDetailsScreenArgs(
+                                  id: suggestions[i].id));
+                        },
+                      ));
+        });
   }
 }

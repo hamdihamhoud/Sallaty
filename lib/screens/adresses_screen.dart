@@ -7,30 +7,38 @@ class AddressesScreen extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final addressesProvider = Provider.of<AddressesProvider>(context);
+    List<String> addresses = [];
     return Scaffold(
-      appBar: AppBar(
-        title: Text('Addresses'),
-        actions: [
-          IconButton(
-            icon: Icon(Icons.add_location_alt_outlined),
-            onPressed: () {
-              showDialog(
-                context: context,
-                builder: (ctx) => AddAddressForm(),
-              );
-            },
-          ),
-        ],
-      ),
-      body: ListView.builder(
-        itemCount: addressesProvider.addresses.length,
-        itemBuilder: (ctx, index) => Container(
-          child: ListTile(
-            title: Text(addressesProvider.addresses[index]),
-          ),
+        appBar: AppBar(
+          title: Text('Addresses'),
+          actions: [
+            IconButton(
+              icon: Icon(Icons.add_location_alt_outlined),
+              onPressed: () {
+                showDialog(
+                  context: context,
+                  builder: (ctx) => AddAddressForm(),
+                );
+              },
+            ),
+          ],
         ),
-      ),
-    );
+        body: FutureBuilder(
+            future: addressesProvider.addresses,
+            builder: (ctx, snapshot) {
+              if (snapshot.connectionState == ConnectionState.waiting)
+                return Center(child: CircularProgressIndicator());
+              addresses = snapshot.data;
+              print(addresses);
+              return addresses != null ? ListView.builder(
+                itemCount: addresses.length,
+                itemBuilder: (ctx, index) => Container(
+                  child: ListTile(
+                    title: Text(addresses[index]),
+                  ),
+                ),
+              ) : Center(child: Text('No addresses yet start adding one'));
+            }));
   }
 }
 
@@ -44,14 +52,12 @@ class _AddAddressFormState extends State<AddAddressForm> {
 
   String address;
 
-  void _save() {
+  Future<void> _save() async {
     if (!_key.currentState.validate()) return;
     _key.currentState.save();
     Navigator.of(context).pop();
-    setState(() {
-      Provider.of<AddressesProvider>(context, listen: false)
-          .setAddress(address);
-    });
+    await Provider.of<AddressesProvider>(context,listen: false)
+        .setAddress(address);
   }
 
   @override

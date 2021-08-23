@@ -1,6 +1,7 @@
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:ecart/models/product.dart';
 import 'package:ecart/models/product_details_screen_args.dart';
+import 'package:ecart/providers/auth.dart';
 import 'package:ecart/screens/product_details_screen.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_rating_bar/flutter_rating_bar.dart';
@@ -21,6 +22,7 @@ class OfferItem extends StatelessWidget {
     final product = Provider.of<Product>(context);
     final theme = Theme.of(context);
     final mediaQuery = MediaQuery.of(context);
+    final authProvider = Provider.of<AuthProvider>(context);
     return InkWell(
       onTap: () {
         Navigator.of(context).pushNamed(
@@ -138,9 +140,9 @@ class OfferItem extends StatelessWidget {
                                 : Icon(Icons.favorite_border_rounded),
                             onPressed: () {
                               pr.toggleFav(
-                                  // token,
-                                  // userId,
-                                  );
+                                authProvider.token,
+                                authProvider.id,
+                              );
                             },
                           ),
                         ),
