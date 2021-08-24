@@ -36,7 +36,7 @@ class Product with ChangeNotifier {
     this.replacement,
     this.returning,
     this.discountPercentage = 0,
-    this.isFavorite = true,
+    this.isFavorite = false,
     this.colorsAndQuantityAndSizes,
   });
 

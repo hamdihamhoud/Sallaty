@@ -37,7 +37,7 @@ class FilterProductsScreen extends StatelessWidget {
         body: filterType == FilterType.all_products
             ? FutureBuilder(
                 future:
-                    Provider.of<ProductsProvider>(context).premiumAllProducts(),
+                    Provider.of<ProductsProvider>(context,listen: false).premiumAllProducts(),
                 builder: (ctx, snapshot) {
                   if (snapshot.connectionState == ConnectionState.waiting)
                     return Center(child: CircularProgressIndicator());

@@ -40,7 +40,7 @@ class _ProductDetailsSceenState extends State<ProductDetailsSceen> {
           ModalRoute.of(context).settings.arguments as ProducDetailsScreenArgs;
       final String productId = args.id;
       isSeller = args.isSeller;
-      productProvider = Provider.of<ProductsProvider>(context);
+      productProvider = Provider.of<ProductsProvider>(context,listen: false);
       cart = Provider.of<Cart>(context);
       mediaQuery = MediaQuery.of(context);
       theme = Theme.of(context);

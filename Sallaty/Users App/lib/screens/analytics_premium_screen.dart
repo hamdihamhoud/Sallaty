@@ -1,4 +1,6 @@
+import 'package:ecart/providers/products.dart';
 import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
 
 class AnalyticsScreen extends StatefulWidget {
   static const routeName = '/analytics';
@@ -10,8 +12,13 @@ class AnalyticsScreen extends StatefulWidget {
 class _AnalyticsScreenState extends State<AnalyticsScreen> {
   var period = 'This Month';
   var earningsPeriod = 'This Month';
+  var highestRatedProduct = '';
+  var totalEarnings = '';
+  var totalSoldItems = '';
   @override
   Widget build(BuildContext context) {
+    final productProvider =
+        Provider.of<ProductsProvider>(context, listen: false);
     return Scaffold(
       appBar: AppBar(
         title: Text('Analytics & Earnings'),
@@ -78,14 +85,22 @@ class _AnalyticsScreenState extends State<AnalyticsScreen> {
                           color: Colors.white,
                         ),
                       ),
-                      Text(
-                        '16300',
-                        style: TextStyle(
-                          fontSize: 18,
-                          fontWeight: FontWeight.w500,
-                          color: Colors.white70,
-                        ),
-                      ),
+                      FutureBuilder(
+                          future:
+                              productProvider.getPremiumTotalItemsSold(period),
+                          builder: (ctx, snapshot) {
+                            if (snapshot.connectionState ==
+                                ConnectionState.waiting) return Container();
+                            totalSoldItems = snapshot.data;
+                            return Text(
+                              totalSoldItems,
+                              style: TextStyle(
+                                fontSize: 18,
+                                fontWeight: FontWeight.w500,
+                                color: Colors.white70,
+                              ),
+                            );
+                          })
                     ],
                   ),
                 ],
@@ -93,34 +108,44 @@ class _AnalyticsScreenState extends State<AnalyticsScreen> {
             ),
             Container(
               margin: const EdgeInsets.symmetric(vertical: 10),
-              height: 80,
+              constraints: BoxConstraints(minHeight: 80),
               padding: const EdgeInsets.all(14),
               decoration: BoxDecoration(
                   color: Colors.amber, borderRadius: BorderRadius.circular(20)),
               clipBehavior: Clip.hardEdge,
               child: Row(
                 children: [
-                  Column(
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    mainAxisAlignment: MainAxisAlignment.spaceAround,
-                    children: [
-                      Text(
-                        'Highest Rated Product',
-                        style: TextStyle(
-                          fontSize: 18,
-                          fontWeight: FontWeight.w500,
+                  Expanded(
+                    child: Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      mainAxisAlignment: MainAxisAlignment.spaceAround,
+                      children: [
+                        Text(
+                          'Highest Rated Product',
+                          style: TextStyle(
+                            fontSize: 18,
+                            fontWeight: FontWeight.w500,
+                          ),
                         ),
-                      ),
-                      Text(
-                        'Hamdi Shirt Hamdalon',
-                        style: TextStyle(
-                          fontSize: 18,
-                          fontWeight: FontWeight.w500,
-                          fontStyle: FontStyle.italic,
-                          color: Colors.black54,
-                        ),
-                      ),
-                    ],
+                        FutureBuilder(
+                            future: productProvider
+                                .getPremiumHighestRatedProductName(),
+                            builder: (ctx, snapshot) {
+                              if (snapshot.connectionState ==
+                                  ConnectionState.waiting) return Container();
+                              highestRatedProduct = snapshot.data;
+                              return Text(
+                                highestRatedProduct,
+                                style: TextStyle(
+                                  fontSize: 18,
+                                  fontWeight: FontWeight.w500,
+                                  fontStyle: FontStyle.italic,
+                                  color: Colors.black54,
+                                ),
+                              );
+                            }),
+                      ],
+                    ),
                   ),
                 ],
               ),
@@ -161,25 +186,31 @@ class _AnalyticsScreenState extends State<AnalyticsScreen> {
               ],
             ),
             Container(
-              height: 80,
-              width: double.infinity,
-              decoration: BoxDecoration(
-                color: Theme.of(context).accentColor,
-                borderRadius: BorderRadius.circular(
-                  20,
+                constraints: BoxConstraints(minHeight: 80),
+                width: double.infinity,
+                decoration: BoxDecoration(
+                  color: Theme.of(context).accentColor,
+                  borderRadius: BorderRadius.circular(
+                    20,
+                  ),
                 ),
-              ),
-              alignment: Alignment.center,
-              child: Text(
-                '1650000 SYP',
-                style: TextStyle(
-                  color: Color(0xFF333333),
-                  fontWeight: FontWeight.w600,
-                  fontSize: 25,
-                ),
-                
-              ),
-            ),
+                alignment: Alignment.center,
+                child: FutureBuilder(
+                    future:
+                        productProvider.getPremiumTotalEarnings(earningsPeriod),
+                    builder: (ctx, snapshot) {
+                      if (snapshot.connectionState == ConnectionState.waiting)
+                        return Container();
+                      totalEarnings = snapshot.data;
+                      return Text(
+                        totalEarnings,
+                        style: TextStyle(
+                          color: Color(0xFF333333),
+                          fontWeight: FontWeight.w600,
+                          fontSize: 25,
+                        ),
+                      );
+                    })),
           ],
         ),
       ),

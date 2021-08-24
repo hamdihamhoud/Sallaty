@@ -21,7 +21,7 @@ class DrawerScreen extends StatelessWidget {
         child: Column(
           children: [
             AppBar(
-              title: Text('ecart'),
+              title: Text('Sallaty'),
               automaticallyImplyLeading: false,
             ),
             Expanded(

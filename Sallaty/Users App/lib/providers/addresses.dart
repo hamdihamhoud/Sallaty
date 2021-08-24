@@ -6,6 +6,7 @@ import 'package:http/http.dart' as http;
 class AddressesProvider with ChangeNotifier {
   String _token;
   String _userId;
+  final mainUrl = 'https://hamdi1234.herokuapp.com';
 
   void setToken(String token) {
     _token = token;
@@ -15,10 +16,10 @@ class AddressesProvider with ChangeNotifier {
     _userId = id;
   }
 
-  List<String> _addresses = [];
+  // List<String> _addresses = [];
 
   Future<List<String>> get addresses async {
-    final url = Uri.parse('https://hamdi1234.herokuapp.com/getAddresses');
+    final url = Uri.parse('$mainUrl/getAddresses');
     final response = await http.get(
       url,
       headers: {
@@ -41,7 +42,7 @@ class AddressesProvider with ChangeNotifier {
 
   Future<void> setAddress(String address) async {
     final url = Uri.parse(
-        'https://hamdi1234.herokuapp.com/addAddress?address=$address');
+        '$mainUrl/addAddress?address=$address');
     final response = await http.post(
       url,
       headers: {
@@ -49,11 +50,7 @@ class AddressesProvider with ChangeNotifier {
         'Content-Type': 'application/json; charset=UTF-8',
         'authorization': _token,
       },
-      // body: json.encode({
-      //   'address': address,
-      // }),
     );
-    print(response.body);
     if (response.statusCode == 200 || response.statusCode == 201) {
       notifyListeners();
     } else {

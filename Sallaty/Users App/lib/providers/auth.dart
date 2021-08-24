@@ -16,6 +16,7 @@ class AuthProvider with ChangeNotifier {
   // List<String> wishListIds = [];
   // List<String> ordersIds = [];
   String _token;
+  final mainUrl = 'https://hamdi1234.herokuapp.com';
 
   Future<bool> isAuth() async {
     if (token == null) {
@@ -35,7 +36,7 @@ class AuthProvider with ChangeNotifier {
     String useremail,
     String userPassword,
   ) async {
-    final url = Uri.parse("https://hamdi1234.herokuapp.com/users");
+    final url = Uri.parse("$mainUrl/users");
 
     var response = await http.post(
       url,
@@ -68,7 +69,7 @@ class AuthProvider with ChangeNotifier {
   }
 
   Future<void> codeConfirming(String code) async {
-    final url = Uri.parse("https://hamdi1234.herokuapp.com/confirmation");
+    final url = Uri.parse("$mainUrl/confirmation");
     var response = await http.post(
       url,
       headers: {
@@ -103,7 +104,7 @@ class AuthProvider with ChangeNotifier {
   }
 
   Future<String> generateCode() async {
-    final url = Uri.parse("https://hamdi1234.herokuapp.com/Generate");
+    final url = Uri.parse("$mainUrl/Generate");
 
     var response = await http.post(
       url,
@@ -132,7 +133,7 @@ class AuthProvider with ChangeNotifier {
     String password,
   ) async {
     final url =
-        Uri.parse('https://hamdi1234.herokuapp.com/users/loginbynumber');
+        Uri.parse('$mainUrl/users/loginbynumber');
     final response = await http.post(url,
         headers: {
           'usertype': 'vendor',
@@ -160,7 +161,7 @@ class AuthProvider with ChangeNotifier {
     String useremail,
     String password,
   ) async {
-    final url = Uri.parse('https://hamdi1234.herokuapp.com/users/login');
+    final url = Uri.parse('$mainUrl/users/login');
     final response = await http.post(
       url,
       headers: {
@@ -223,7 +224,7 @@ class AuthProvider with ChangeNotifier {
   Future<bool> validToken() async {
     print(token);
     final url =
-        Uri.parse('https://hamdi1234.herokuapp.com/users/checkAccessiblity');
+        Uri.parse('$mainUrl/users/checkAccessiblity');
     final response = await http.post(
       url,
       headers: {
@@ -257,7 +258,7 @@ class AuthProvider with ChangeNotifier {
   }
 
   Future<void> sendFeedback(String feedback) async {
-    final url = Uri.parse('https://hamdi1234.herokuapp.com/feedback/$id');
+    final url = Uri.parse('$mainUrl/feedback/$id');
     final response = await http.post(
       url,
       headers: {

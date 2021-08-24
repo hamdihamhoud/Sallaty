@@ -4,12 +4,12 @@ import 'dart:io';
 import 'package:ecart/models/period.dart';
 import 'package:flutter/material.dart';
 import '../models/product.dart';
-import '../models/seller.dart';
 
 class ProductsProvider with ChangeNotifier {
   List<Product> _products = [];
   String _token;
   String _userId;
+  final mainUrl = 'https://hamdi1234.herokuapp.com';
 
   void setToken(String token) {
     _token = token;
@@ -28,7 +28,7 @@ class ProductsProvider with ChangeNotifier {
 
   Future<Product> findId(String id) async {
     // fetch by id
-    final url = Uri.parse('https://hamdi1234.herokuapp.com/product/$id');
+    final url = Uri.parse('$mainUrl/product/$id');
     final response = await http.get(url, headers: {
       'usertype': 'vendor',
       'Content-Type': 'application/json; charset=UTF-8',
@@ -84,7 +84,7 @@ class ProductsProvider with ChangeNotifier {
 
   Future<List<Product>> fetchByCategory(String category) async {
     final url =
-        Uri.parse("https://hamdi1234.herokuapp.com/product?category=$category");
+        Uri.parse("$mainUrl/product?category=$category");
     final response = await http.get(url, headers: {
       'usertype': 'vendor',
       'Content-Type': 'application/json; charset=UTF-8',
@@ -148,7 +148,7 @@ class ProductsProvider with ChangeNotifier {
 
   Future<List<Product>> fetchByType(String type) async {
     final url = Uri.parse(
-        "https://hamdi1234.herokuapp.com/getProductByType?type=$type");
+        "$mainUrl/getProductByType?type=$type");
     final response = await http.get(url, headers: {
       'usertype': 'vendor',
       'Content-Type': 'application/json; charset=UTF-8',
@@ -212,15 +212,60 @@ class ProductsProvider with ChangeNotifier {
 
   Future<List<Product>> getFavorites() async {
     List<Product> favorites = [];
-    final url = Uri.parse('https://hamdi1234.herokuapp.com/getWishlist');
+    final url = Uri.parse('$mainUrl/getWishlist');
     final response = await http.get(url, headers: {
       'usertype': 'vendor',
       'Content-Type': 'application/json; charset=UTF-8',
       'authorization': _token,
     });
-    print(response.statusCode);
     if (response.statusCode == 200 || response.statusCode == 201) {
-      print(json.decode(response.body));
+      final responseData = json.decode(response.body) as List;
+      responseData.forEach((element) {
+        final responseColorsAndQuantityAndSizes =
+            element['colorsAndQuantityAndSizes'] as List;
+        Map<Color, Map<String, int>> colorsAndQuantityAndSizes = {};
+        responseColorsAndQuantityAndSizes.forEach((secondElement) {
+          colorsAndQuantityAndSizes.putIfAbsent(Color(secondElement['color']),
+              () {
+            final responseSizesAndQuantity =
+                secondElement['sizesAndQuantity'] as List;
+            Map<String, int> sizesAndQuantity = {};
+            responseSizesAndQuantity.forEach((thirdElement) {
+              sizesAndQuantity.putIfAbsent(
+                  thirdElement['size'], () => thirdElement['quantity']);
+            });
+            return sizesAndQuantity;
+          });
+        });
+        final responseSpecs = element['specs'] as Map;
+        Map<String, String> specs = {};
+        responseSpecs.forEach((key, value) {
+          specs.putIfAbsent(key, () => value);
+        });
+        final responseImages = element['images'] as List;
+        List<String> images = [];
+        responseImages.forEach((element) {
+          images.add(element);
+        });
+        final product = Product(
+          id: element['_id'],
+          title: element['name'],
+          price: double.parse(element['price'].toString()),
+          colorsAndQuantityAndSizes: colorsAndQuantityAndSizes,
+          warranty: Period(type: TimeType.months, period: 0),
+          returning: Period(type: TimeType.months, period: 0),
+          replacement: Period(type: TimeType.months, period: 0),
+          category: element['category'],
+          type: element['type'],
+          description: element['discription'],
+          discountPercentage: double.parse(element['discount'].toString()),
+          specs: specs,
+          imageUrls: images,
+          ownerId: element['owner'],
+        );
+        addProductToList(product);
+        favorites.add(product);
+      });
     } else {
       throw response.body;
     }
@@ -228,76 +273,77 @@ class ProductsProvider with ChangeNotifier {
   }
 
   Future<List<Product>> getOffers() async {
-    // final url = Uri.parse("https://hamdi1234.herokuapp.com/offers");
-    // final response = await http.get(url, headers: {
-    //   'usertype': 'vendor',
-    //   'Content-Type': 'application/json; charset=UTF-8',
-    //   'authorization': _token,
-    // });
-    // final responseData = json.decode(response.body) as List;
-    // List<Product> offers = [];
-    // if (response.statusCode == 200) {
-    //   responseData.forEach((element) {
-    //     final responseColorsAndQuantityAndSizes =
-    //         element['colorsAndQuantityAndSizes'] as List;
-    //     Map<Color, Map<String, int>> colorsAndQuantityAndSizes = {};
-    //     responseColorsAndQuantityAndSizes.forEach((secondElement) {
-    //       colorsAndQuantityAndSizes.putIfAbsent(Color(secondElement['color']),
-    //           () {
-    //         final responseSizesAndQuantity =
-    //             secondElement['sizesAndQuantity'] as List;
-    //         Map<String, int> sizesAndQuantity = {};
-    //         responseSizesAndQuantity.forEach((thirdElement) {
-    //           sizesAndQuantity.putIfAbsent(
-    //               thirdElement['size'], () => thirdElement['quantity']);
-    //         });
-    //         return sizesAndQuantity;
-    //       });
-    //     });
-    //     final responseSpecs = element['specs'] as Map;
-    //     Map<String, String> specs = {};
-    //     responseSpecs.forEach((key, value) {
-    //       specs.putIfAbsent(key, () => value);
-    //     });
-    //     final responseImages = element['images'] as List;
-    //     List<String> images = [];
-    //     responseImages.forEach((element) {
-    //       images.add(element);
-    //     });
-    //     final product = Product(
-    //       id: element['_id'],
-    //       title: element['name'],
-    //       price: double.parse(element['price'].toString()),
-    //       colorsAndQuantityAndSizes: colorsAndQuantityAndSizes,
-    //       warranty: Period(type: TimeType.months, period: 0),
-    //       returning: Period(type: TimeType.months, period: 0),
-    //       replacement: Period(type: TimeType.months, period: 0),
-    //       category: element['category'],
-    //       type: element['type'],
-    //       description: element['discription'],
-    //       discountPercentage: double.parse(element['discount'].toString()),
-    //       specs: specs,
-    //       imageUrls: images,
-    //       ownerId: element['owner'],
-    //     );
-    //     addProductToList(product);
-    //     offers.add(product);
-    //   });
-    // } else {
-    //   throw HttpException(response.body);
-    // }
-    // notifyListeners();
-    return [];//offers;
+    final url = Uri.parse("$mainUrl/offers");
+    final response = await http.get(url, headers: {
+      'usertype': 'vendor',
+      'Content-Type': 'application/json; charset=UTF-8',
+      'authorization': _token,
+    });
+    final responseData = json.decode(response.body) as List;
+    List<Product> offers = [];
+    if (response.statusCode == 200) {
+      responseData.forEach((element) {
+        final responseColorsAndQuantityAndSizes =
+            element['colorsAndQuantityAndSizes'] as List;
+        Map<Color, Map<String, int>> colorsAndQuantityAndSizes = {};
+        responseColorsAndQuantityAndSizes.forEach((secondElement) {
+          colorsAndQuantityAndSizes.putIfAbsent(Color(secondElement['color']),
+              () {
+            final responseSizesAndQuantity =
+                secondElement['sizesAndQuantity'] as List;
+            Map<String, int> sizesAndQuantity = {};
+            responseSizesAndQuantity.forEach((thirdElement) {
+              sizesAndQuantity.putIfAbsent(
+                  thirdElement['size'], () => thirdElement['quantity']);
+            });
+            return sizesAndQuantity;
+          });
+        });
+        final responseSpecs = element['specs'] as Map;
+        Map<String, String> specs = {};
+        responseSpecs.forEach((key, value) {
+          specs.putIfAbsent(key, () => value);
+        });
+        final responseImages = element['images'] as List;
+        List<String> images = [];
+        responseImages.forEach((element) {
+          images.add(element);
+        });
+        final product = Product(
+          id: element['_id'],
+          title: element['name'],
+          price: double.parse(element['price'].toString()),
+          colorsAndQuantityAndSizes: colorsAndQuantityAndSizes,
+          warranty: Period(type: TimeType.months, period: 0),
+          returning: Period(type: TimeType.months, period: 0),
+          replacement: Period(type: TimeType.months, period: 0),
+          category: element['category'],
+          type: element['type'],
+          description: element['discription'],
+          discountPercentage: double.parse(element['discount'].toString()),
+          specs: specs,
+          imageUrls: images,
+          ownerId: element['owner'],
+        );
+        addProductToList(product);
+        offers.add(product);
+      });
+    } else {
+      throw HttpException(response.body);
+    }
+    notifyListeners();
+
+    return offers;
   }
 
   Future<List<Product>> fetchBy(String fetchMechanism) async {
     Uri url;
     if (fetchMechanism == 'Most Recent') {
-      url = Uri.parse('https://hamdi1234.herokuapp.com/recent');
+      url = Uri.parse('$mainUrl/recent');
     } else if (fetchMechanism == 'Highest Rated') {
-      url = Uri.parse('https://hamdi1234.herokuapp.com/productrate');
+      url = Uri.parse('$mainUrl/productrate');
     } else if (fetchMechanism == 'Best Seller') {
-      url = Uri.parse('https://hamdi1234.herokuapp.com/bestsalles');
+      url = Uri.parse('$mainUrl/bestsalles');
     }
     final response = await http.get(
       url,
@@ -365,23 +411,20 @@ class ProductsProvider with ChangeNotifier {
 
   Future<List<Product>> search(String query) async {
     query = query.toLowerCase();
-    final url = Uri.parse('https://hamdi1234.herokuapp.com/search');
-    final response = await http.post(
-      url,
+    final url = Uri.parse('$mainUrl/search');
+    final response = await http.post(url,
         headers: {
-        'usertype': 'vendor',
-        'Content-Type': 'application/json; charset=UTF-8',
-        'authorization': _token,
-      },
-      body: json.encode({
-        'search' : query,
-
-      })
-    );
+          'usertype': 'vendor',
+          'Content-Type': 'application/json; charset=UTF-8',
+          'authorization': _token,
+        },
+        body: json.encode({
+          'search': query,
+        }));
     final responseData = json.decode(response.body) as List;
     List<Product> searchProducts = [];
     if (response.statusCode == 200 || response.statusCode == 201) {
-       responseData.forEach((element) {
+      responseData.forEach((element) {
         final responseColorsAndQuantityAndSizes =
             element['colorsAndQuantityAndSizes'] as List;
         Map<Color, Map<String, int>> colorsAndQuantityAndSizes = {};
@@ -427,14 +470,10 @@ class ProductsProvider with ChangeNotifier {
         addProductToList(product);
         searchProducts.add(product);
       });
-    }else{
+    } else {
       throw response.body;
     }
-        return searchProducts;
-  }
-
-  List<Product> fetchBySellerRecents() {
-    return products;
+    return searchProducts;
   }
 
   void updateRating(String id, double rating) {
@@ -445,7 +484,7 @@ class ProductsProvider with ChangeNotifier {
 
   Future<String> findSellerName(String sellerId) async {
     final url =
-        Uri.parse('https://hamdi1234.herokuapp.com/ownerinformation/$sellerId');
+        Uri.parse('$mainUrl/ownerinformation/$sellerId');
     final response = await http.get(url, headers: {
       'usertype': 'vendor',
       'Content-Type': 'application/json; charset=UTF-8',
@@ -549,7 +588,7 @@ class ProductsProvider with ChangeNotifier {
 
   Future<void> updateProduct(Product product, List<String> img64s) async {
     final url =
-        Uri.parse("https://hamdi1234.herokuapp.com/product/${product.id}");
+        Uri.parse("$mainUrl/product/${product.id}");
     var response = await http.post(
       url,
       headers: {
@@ -629,7 +668,7 @@ class ProductsProvider with ChangeNotifier {
       updateProduct(product, img64s);
       return;
     }
-    final url = Uri.parse("https://hamdi1234.herokuapp.com/product");
+    final url = Uri.parse("$mainUrl/product");
     var response = await http.post(
       url,
       headers: {
@@ -686,7 +725,7 @@ class ProductsProvider with ChangeNotifier {
 
   Future<List<Product>> premiumAllProducts() async {
     final url =
-        Uri.parse("https://hamdi1234.herokuapp.com/productowner/$_userId");
+        Uri.parse("$mainUrl/productowner/$_userId");
     final response = await http.get(url, headers: {
       'usertype': 'vendor',
       'Content-Type': 'application/json; charset=UTF-8',
@@ -745,5 +784,73 @@ class ProductsProvider with ChangeNotifier {
     }
     // notifyListeners();
     return typeProducts;
+  }
+
+  Future<String> getPremiumHighestRatedProductName() async {
+    String productName = '';
+    final url =
+        Uri.parse('$mainUrl/highestrated/$_userId');
+    final response = await http.get(url, headers: {
+      'usertype': 'vendor',
+      'Content-Type': 'application/json; charset=UTF-8',
+      'authorization': _token,
+    });
+    if (response.statusCode == 200 || response.statusCode == 201) {
+      final responseData = json.decode(response.body) as List;
+      if (responseData.first['name'] != null)
+        productName = responseData.first['name'];
+    } else {
+      throw response.body;
+    }
+    return productName;
+  }
+
+  Future<String> getPremiumTotalEarnings(String period) async {
+    String totalEarnings = '';
+    Uri url;
+    if (period == 'This Month') {
+      url = Uri.parse('$mainUrl/monthearnings/$_userId');
+    } else if (period == 'Last Month') {
+      url = Uri.parse('$mainUrl/lastearnings/$_userId');
+    } else {
+      url = Uri.parse('$mainUrl/yearearnings/$_userId');
+    }
+    final response = await http.get(url, headers: {
+      'usertype': 'vendor',
+      'Content-Type': 'application/json; charset=UTF-8',
+      'authorization': _token,
+    });
+    if (response.statusCode == 200 || response.statusCode == 201) {
+      final responseData = json.decode(response.body);
+      totalEarnings = responseData['earnings'].toString();
+    } else {
+      throw response.body;
+    }
+    return totalEarnings;
+  }
+
+  Future<String> getPremiumTotalItemsSold(String period) async {
+    String totalEarnings = '';
+    Uri url;
+    if (period == 'This Month') {
+      url =
+          Uri.parse('$mainUrl/monthsolditems/$_userId');
+    } else if (period == 'Last Month') {
+      url = Uri.parse('$mainUrl/lastsolditems/$_userId');
+    } else {
+      url = Uri.parse('$mainUrl/yearsolditems/$_userId');
+    }
+    final response = await http.get(url, headers: {
+      'usertype': 'vendor',
+      'Content-Type': 'application/json; charset=UTF-8',
+      'authorization': _token,
+    });
+    if (response.statusCode == 200 || response.statusCode == 201) {
+      final responseData = json.decode(response.body);
+      totalEarnings = responseData['solditems'].toString();
+    } else {
+      throw response.body;
+    }
+    return totalEarnings;
   }
 }

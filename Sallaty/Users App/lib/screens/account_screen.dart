@@ -22,8 +22,9 @@ class AccountScreen extends StatelessWidget {
   Widget build(BuildContext context) {
     bool isPremium = Provider.of<AuthProvider>(context, listen: false).isSeller;
     List<CartItem> sellerOrders = [];
-    Future<void> _refresh() async {
+    Future<List<CartItem>> _refresh() async {
       sellerOrders = await Provider.of<Orders>(context).fetchSellerOreders();
+      return sellerOrders;
     }
 
     Widget premiumBody() {

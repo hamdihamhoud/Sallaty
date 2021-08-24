@@ -19,7 +19,7 @@ class OffersScreen extends StatelessWidget {
       ),
       drawer: DrawerScreen(),
       body: FutureBuilder(
-          future: Provider.of<ProductsProvider>(context).getOffers(),
+          future: Provider.of<ProductsProvider>(context,listen: false).getOffers(),
           builder: (ctx, snapshot) {
             if (snapshot.connectionState == ConnectionState.waiting)
               return Center(child: CircularProgressIndicator());

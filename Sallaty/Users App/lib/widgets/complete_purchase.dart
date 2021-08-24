@@ -1,7 +1,9 @@
 import 'package:ecart/providers/cart.dart';
+import 'package:ecart/providers/orders.dart';
 import 'package:ecart/widgets/add_new_address_button.dart';
 import 'package:ecart/widgets/address_viewer.dart';
 import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
 
 class CompletePurchase extends StatelessWidget {
   const CompletePurchase({
@@ -11,7 +13,8 @@ class CompletePurchase extends StatelessWidget {
   final Cart cart;
   @override
   Widget build(BuildContext context) {
-    double deliveryCharge = 2000; // temp
+    int deliveryCharge = 2000; // temp
+    final ordersProvider = Provider.of<Orders>(context);
     double total = cart.total + deliveryCharge;
     final mediaquery = MediaQuery.of(context);
     final theme = Theme.of(context);
@@ -46,13 +49,26 @@ class CompletePurchase extends StatelessWidget {
                     fontSize: 19,
                   ),
                 ),
-                Text(
-                  '${deliveryCharge.toStringAsFixed(0)} SP',
-                  style: TextStyle(
-                    color: Colors.white,
-                    fontSize: 19,
-                  ),
-                ),
+                FutureBuilder(
+                    future: ordersProvider.getOrderDeliveryCharge(),
+                    builder: (ctx, snapshot) {
+                      if (snapshot.connectionState == ConnectionState.waiting)
+                        return Text(
+                          'Loading...',
+                          style: TextStyle(
+                            color: Colors.white,
+                            fontSize: 19,
+                          ),
+                        );
+                      deliveryCharge = snapshot.data;
+                      return Text(
+                        '${deliveryCharge.toStringAsFixed(0)} SP',
+                        style: TextStyle(
+                          color: Colors.white,
+                          fontSize: 19,
+                        ),
+                      );
+                    })
               ],
             ),
             Row(
@@ -114,7 +130,7 @@ class CompletePurchase extends StatelessWidget {
                             child: Column(
                               mainAxisAlignment: MainAxisAlignment.spaceBetween,
                               children: [
-                                AddressesViewer(total : total),
+                                AddressesViewer(total: total),
                                 NewAddressButton(),
                               ],
                             ),
