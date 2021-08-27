@@ -23,7 +23,7 @@ class AccountScreen extends StatelessWidget {
     bool isPremium = Provider.of<AuthProvider>(context, listen: false).isSeller;
     List<CartItem> sellerOrders = [];
     Future<List<CartItem>> _refresh() async {
-      sellerOrders = await Provider.of<Orders>(context).fetchSellerOreders();
+      sellerOrders = await Provider.of<Orders>(context).fetchSellerOrders();
       return sellerOrders;
     }
 

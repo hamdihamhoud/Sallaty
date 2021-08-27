@@ -1,3 +1,5 @@
+import 'package:ecart/providers/cart.dart';
+import 'package:ecart/providers/products.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
@@ -31,8 +33,8 @@ class DrawerScreen extends StatelessWidget {
                     leading: FaIcon(FontAwesomeIcons.store),
                     title: const Text('Store'),
                     onTap: () {
-                      Navigator.of(context)
-                          .pushReplacementNamed(AppBottomNavigationBarController.routeName);
+                      Navigator.of(context).pushReplacementNamed(
+                          AppBottomNavigationBarController.routeName);
                     },
                   ),
                   const Divider(),
@@ -100,9 +102,8 @@ class DrawerScreen extends StatelessWidget {
                     leading: const Icon(Icons.exit_to_app_rounded),
                     title: const Text('Logout'),
                     onTap: () {
-                      // Navigator.of(context).pop();
-                      // Navigator.of(context).pushReplacementNamed('/');
-
+                      Provider.of<Cart>(context,listen: false).clearCart();
+                      Provider.of<ProductsProvider>(context,listen: false).clearProducts();
                       Provider.of<AuthProvider>(context, listen: false)
                           .logout();
                       Navigator.of(context).pushReplacementNamed('/');

@@ -64,9 +64,11 @@ class Product with ChangeNotifier {
             'authorization': token,
           },
         );
-        if (response.statusCode != 200 && response.statusCode != 201) {
-          _setFavValue(oldStatus);
-        } 
+        if (response.statusCode == 200 || response.statusCode == 201) {
+        return;
+        } else{
+        _setFavValue(oldStatus);
+        }
       } catch (error) {
         print(error);
         _setFavValue(oldStatus);

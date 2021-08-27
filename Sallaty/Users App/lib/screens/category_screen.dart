@@ -25,9 +25,9 @@ class CategoryScreen extends StatelessWidget {
             style: TextStyle(fontWeight: FontWeight.bold),
           ),
           actions: [
-            if (category.types.length == 0)
-              IconButton(
-                  icon: Icon(Icons.filter_alt_rounded), onPressed: () {}),
+            // if (category.types.length == 0)
+            //   IconButton(
+            //       icon: Icon(Icons.filter_alt_rounded), onPressed: () {}),
             IconButton(
               icon: Icon(Icons.search),
               onPressed: () {},
@@ -112,7 +112,7 @@ class CategoryScreen extends StatelessWidget {
                                             child: CircularProgressIndicator());
                                       List<Product> typeProducts = [];
                                         typeProducts = snapshot.data;
-                                      return typeProducts.length == 0
+                                      return typeProducts == null || typeProducts.length == 0
                                           ? Center(
                                               child: Text('No products yet'),
                                             )

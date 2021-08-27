@@ -6,10 +6,10 @@ import 'package:flutter/material.dart';
 import '../models/product.dart';
 
 class ProductsProvider with ChangeNotifier {
+  final mainUrl = 'https://hamdi1234.herokuapp.com';
   List<Product> _products = [];
   String _token;
   String _userId;
-  final mainUrl = 'https://hamdi1234.herokuapp.com';
 
   void setToken(String token) {
     _token = token;
@@ -34,7 +34,8 @@ class ProductsProvider with ChangeNotifier {
       'Content-Type': 'application/json; charset=UTF-8',
       'authorization': _token,
     });
-    final responseData = json.decode(response.body);
+    final responseJson = json.decode(response.body);
+    final responseData = responseJson['product'];
     if (response.statusCode == 200) {
       final responseColorsAndQuantityAndSizes =
           responseData['colorsAndQuantityAndSizes'] as List;
@@ -61,13 +62,41 @@ class ProductsProvider with ChangeNotifier {
         images.add(element);
       });
       final product = Product(
+          isFavorite: responseJson['isAdded'],
         id: responseData['_id'],
         title: responseData['name'],
         price: double.parse(responseData['price'].toString()),
         colorsAndQuantityAndSizes: colorsAndQuantityAndSizes,
-        warranty: Period(type: TimeType.years, period: 2),
-        returning: Period(type: TimeType.weeks, period: 2),
-        replacement: Period(type: TimeType.weeks, period: 3),
+        warranty: Period(
+          type: responseData['warrantyType'] == 'days'
+              ? TimeType.days
+              : responseData['warrantyType'] == 'months'
+                  ? TimeType.months
+                  : responseData['warrantyType'] == 'weeks'
+                      ? TimeType.weeks
+                      : TimeType.years,
+          period: responseData['warranty_period'],
+        ),
+        returning: Period(
+          type: responseData['returningType'] == 'days'
+              ? TimeType.days
+              : responseData['returningType'] == 'months'
+                  ? TimeType.months
+                  : responseData['returningType'] == 'weeks'
+                      ? TimeType.weeks
+                      : TimeType.years,
+          period: responseData['returning_period'],
+        ),
+        replacement: Period(
+          type: responseData['replacementType'] == 'days'
+              ? TimeType.days
+              : responseData['replacementType'] == 'months'
+                  ? TimeType.months
+                  : responseData['replacementType'] == 'weeks'
+                      ? TimeType.weeks
+                      : TimeType.years,
+          period: responseData['replacing_period'],
+        ),
         category: responseData['category'],
         type: responseData['type'],
         description: responseData['discription'],
@@ -83,8 +112,7 @@ class ProductsProvider with ChangeNotifier {
   }
 
   Future<List<Product>> fetchByCategory(String category) async {
-    final url =
-        Uri.parse("$mainUrl/product?category=$category");
+    final url = Uri.parse("$mainUrl/product?category=$category");
     final response = await http.get(url, headers: {
       'usertype': 'vendor',
       'Content-Type': 'application/json; charset=UTF-8',
@@ -94,6 +122,8 @@ class ProductsProvider with ChangeNotifier {
     List<Product> typeProducts = [];
     if (response.statusCode == 200) {
       responseData.forEach((element) {
+        final isFav = element['isAdded'] as bool;
+        element = element['product'];
         final responseColorsAndQuantityAndSizes =
             element['colorsAndQuantityAndSizes'] as List;
         Map<Color, Map<String, int>> colorsAndQuantityAndSizes = {};
@@ -121,13 +151,41 @@ class ProductsProvider with ChangeNotifier {
           images.add(element);
         });
         final product = Product(
+          isFavorite: isFav,
           id: element['_id'],
           title: element['name'],
           price: double.parse(element['price'].toString()),
           colorsAndQuantityAndSizes: colorsAndQuantityAndSizes,
-          warranty: Period(type: TimeType.months, period: 0),
-          returning: Period(type: TimeType.months, period: 0),
-          replacement: Period(type: TimeType.months, period: 0),
+          warranty: Period(
+            type: element['warrantyType'] == 'days'
+                ? TimeType.days
+                : element['warrantyType'] == 'months'
+                    ? TimeType.months
+                    : element['warrantyType'] == 'weeks'
+                        ? TimeType.weeks
+                        : TimeType.years,
+            period: element['warranty_period'],
+          ),
+          returning: Period(
+            type: element['returningType'] == 'days'
+                ? TimeType.days
+                : element['returningType'] == 'months'
+                    ? TimeType.months
+                    : element['returningType'] == 'weeks'
+                        ? TimeType.weeks
+                        : TimeType.years,
+            period: element['returning_period'],
+          ),
+          replacement: Period(
+            type: element['replacementType'] == 'days'
+                ? TimeType.days
+                : element['replacementType'] == 'months'
+                    ? TimeType.months
+                    : element['replacementType'] == 'weeks'
+                        ? TimeType.weeks
+                        : TimeType.years,
+            period: element['replacing_period'],
+          ),
           category: element['category'],
           type: element['type'],
           description: element['discription'],
@@ -147,8 +205,7 @@ class ProductsProvider with ChangeNotifier {
   }
 
   Future<List<Product>> fetchByType(String type) async {
-    final url = Uri.parse(
-        "$mainUrl/getProductByType?type=$type");
+    final url = Uri.parse("$mainUrl/getProductByType?type=$type");
     final response = await http.get(url, headers: {
       'usertype': 'vendor',
       'Content-Type': 'application/json; charset=UTF-8',
@@ -158,6 +215,9 @@ class ProductsProvider with ChangeNotifier {
     List<Product> typeProducts = [];
     if (response.statusCode == 200) {
       responseData.forEach((element) {
+        final isFav = element['isAdded'] as bool;
+        print(isFav);
+        element = element['product'];
         final responseColorsAndQuantityAndSizes =
             element['colorsAndQuantityAndSizes'] as List;
         Map<Color, Map<String, int>> colorsAndQuantityAndSizes = {};
@@ -185,13 +245,41 @@ class ProductsProvider with ChangeNotifier {
           images.add(element);
         });
         final product = Product(
+          isFavorite: isFav,
           id: element['_id'],
           title: element['name'],
           price: double.parse(element['price'].toString()),
           colorsAndQuantityAndSizes: colorsAndQuantityAndSizes,
-          warranty: Period(type: TimeType.months, period: 0),
-          returning: Period(type: TimeType.months, period: 0),
-          replacement: Period(type: TimeType.months, period: 0),
+          warranty: Period(
+            type: element['warrantyType'] == 'days'
+                ? TimeType.days
+                : element['warrantyType'] == 'months'
+                    ? TimeType.months
+                    : element['warrantyType'] == 'weeks'
+                        ? TimeType.weeks
+                        : TimeType.years,
+            period: element['warranty_period'],
+          ),
+          returning: Period(
+            type: element['returningType'] == 'days'
+                ? TimeType.days
+                : element['returningType'] == 'months'
+                    ? TimeType.months
+                    : element['returningType'] == 'weeks'
+                        ? TimeType.weeks
+                        : TimeType.years,
+            period: element['returning_period'],
+          ),
+          replacement: Period(
+            type: element['replacementType'] == 'days'
+                ? TimeType.days
+                : element['replacementType'] == 'months'
+                    ? TimeType.months
+                    : element['replacementType'] == 'weeks'
+                        ? TimeType.weeks
+                        : TimeType.years,
+            period: element['replacing_period'],
+          ),
           category: element['category'],
           type: element['type'],
           description: element['discription'],
@@ -248,13 +336,41 @@ class ProductsProvider with ChangeNotifier {
           images.add(element);
         });
         final product = Product(
+          isFavorite: true,
           id: element['_id'],
           title: element['name'],
           price: double.parse(element['price'].toString()),
           colorsAndQuantityAndSizes: colorsAndQuantityAndSizes,
-          warranty: Period(type: TimeType.months, period: 0),
-          returning: Period(type: TimeType.months, period: 0),
-          replacement: Period(type: TimeType.months, period: 0),
+          warranty: Period(
+            type: element['warrantyType'] == 'days'
+                ? TimeType.days
+                : element['warrantyType'] == 'months'
+                    ? TimeType.months
+                    : element['warrantyType'] == 'weeks'
+                        ? TimeType.weeks
+                        : TimeType.years,
+            period: element['warranty_period'],
+          ),
+          returning: Period(
+            type: element['returningType'] == 'days'
+                ? TimeType.days
+                : element['returningType'] == 'months'
+                    ? TimeType.months
+                    : element['returningType'] == 'weeks'
+                        ? TimeType.weeks
+                        : TimeType.years,
+            period: element['returning_period'],
+          ),
+          replacement: Period(
+            type: element['replacementType'] == 'days'
+                ? TimeType.days
+                : element['replacementType'] == 'months'
+                    ? TimeType.months
+                    : element['replacementType'] == 'weeks'
+                        ? TimeType.weeks
+                        : TimeType.years,
+            period: element['replacing_period'],
+          ),
           category: element['category'],
           type: element['type'],
           description: element['discription'],
@@ -283,6 +399,8 @@ class ProductsProvider with ChangeNotifier {
     List<Product> offers = [];
     if (response.statusCode == 200) {
       responseData.forEach((element) {
+        final isFav = element['isAdded'] as bool;
+        element = element['product'];
         final responseColorsAndQuantityAndSizes =
             element['colorsAndQuantityAndSizes'] as List;
         Map<Color, Map<String, int>> colorsAndQuantityAndSizes = {};
@@ -310,13 +428,41 @@ class ProductsProvider with ChangeNotifier {
           images.add(element);
         });
         final product = Product(
+          isFavorite: isFav,
           id: element['_id'],
           title: element['name'],
           price: double.parse(element['price'].toString()),
           colorsAndQuantityAndSizes: colorsAndQuantityAndSizes,
-          warranty: Period(type: TimeType.months, period: 0),
-          returning: Period(type: TimeType.months, period: 0),
-          replacement: Period(type: TimeType.months, period: 0),
+          warranty: Period(
+            type: element['warrantyType'] == 'days'
+                ? TimeType.days
+                : element['warrantyType'] == 'months'
+                    ? TimeType.months
+                    : element['warrantyType'] == 'weeks'
+                        ? TimeType.weeks
+                        : TimeType.years,
+            period: element['warranty_period'],
+          ),
+          returning: Period(
+            type: element['returningType'] == 'days'
+                ? TimeType.days
+                : element['returningType'] == 'months'
+                    ? TimeType.months
+                    : element['returningType'] == 'weeks'
+                        ? TimeType.weeks
+                        : TimeType.years,
+            period: element['returning_period'],
+          ),
+          replacement: Period(
+            type: element['replacementType'] == 'days'
+                ? TimeType.days
+                : element['replacementType'] == 'months'
+                    ? TimeType.months
+                    : element['replacementType'] == 'weeks'
+                        ? TimeType.weeks
+                        : TimeType.years,
+            period: element['replacing_period'],
+          ),
           category: element['category'],
           type: element['type'],
           description: element['discription'],
@@ -357,6 +503,8 @@ class ProductsProvider with ChangeNotifier {
     List<Product> typeProducts = [];
     if (response.statusCode == 200) {
       responseData.forEach((element) {
+        final isFav = element['isAdded'] as bool;
+        element = element['product'];
         final responseColorsAndQuantityAndSizes =
             element['colorsAndQuantityAndSizes'] as List;
         Map<Color, Map<String, int>> colorsAndQuantityAndSizes = {};
@@ -384,13 +532,41 @@ class ProductsProvider with ChangeNotifier {
           images.add(element);
         });
         final product = Product(
+          isFavorite: isFav,
           id: element['_id'],
           title: element['name'],
           price: double.parse(element['price'].toString()),
           colorsAndQuantityAndSizes: colorsAndQuantityAndSizes,
-          warranty: Period(type: TimeType.months, period: 0),
-          returning: Period(type: TimeType.months, period: 0),
-          replacement: Period(type: TimeType.months, period: 0),
+          warranty: Period(
+            type: element['warrantyType'] == 'days'
+                ? TimeType.days
+                : element['warrantyType'] == 'months'
+                    ? TimeType.months
+                    : element['warrantyType'] == 'weeks'
+                        ? TimeType.weeks
+                        : TimeType.years,
+            period: element['warranty_period'],
+          ),
+          returning: Period(
+            type: element['returningType'] == 'days'
+                ? TimeType.days
+                : element['returningType'] == 'months'
+                    ? TimeType.months
+                    : element['returningType'] == 'weeks'
+                        ? TimeType.weeks
+                        : TimeType.years,
+            period: element['returning_period'],
+          ),
+          replacement: Period(
+            type: element['replacementType'] == 'days'
+                ? TimeType.days
+                : element['replacementType'] == 'months'
+                    ? TimeType.months
+                    : element['replacementType'] == 'weeks'
+                        ? TimeType.weeks
+                        : TimeType.years,
+            period: element['replacing_period'],
+          ),
           category: element['category'],
           type: element['type'],
           description: element['discription'],
@@ -425,6 +601,8 @@ class ProductsProvider with ChangeNotifier {
     List<Product> searchProducts = [];
     if (response.statusCode == 200 || response.statusCode == 201) {
       responseData.forEach((element) {
+        final isFav = element['isAdded'] as bool;
+        element = element['product'];
         final responseColorsAndQuantityAndSizes =
             element['colorsAndQuantityAndSizes'] as List;
         Map<Color, Map<String, int>> colorsAndQuantityAndSizes = {};
@@ -452,13 +630,41 @@ class ProductsProvider with ChangeNotifier {
           images.add(element);
         });
         final product = Product(
+          isFavorite: isFav,
           id: element['_id'],
           title: element['name'],
           price: double.parse(element['price'].toString()),
           colorsAndQuantityAndSizes: colorsAndQuantityAndSizes,
-          warranty: Period(type: TimeType.months, period: 0),
-          returning: Period(type: TimeType.months, period: 0),
-          replacement: Period(type: TimeType.months, period: 0),
+          warranty: Period(
+            type: element['warrantyType'] == 'days'
+                ? TimeType.days
+                : element['warrantyType'] == 'months'
+                    ? TimeType.months
+                    : element['warrantyType'] == 'weeks'
+                        ? TimeType.weeks
+                        : TimeType.years,
+            period: element['warranty_period'],
+          ),
+          returning: Period(
+            type: element['returningType'] == 'days'
+                ? TimeType.days
+                : element['returningType'] == 'months'
+                    ? TimeType.months
+                    : element['returningType'] == 'weeks'
+                        ? TimeType.weeks
+                        : TimeType.years,
+            period: element['returning_period'],
+          ),
+          replacement: Period(
+            type: element['replacementType'] == 'days'
+                ? TimeType.days
+                : element['replacementType'] == 'months'
+                    ? TimeType.months
+                    : element['replacementType'] == 'weeks'
+                        ? TimeType.weeks
+                        : TimeType.years,
+            period: element['replacing_period'],
+          ),
           category: element['category'],
           type: element['type'],
           description: element['discription'],
@@ -476,15 +682,22 @@ class ProductsProvider with ChangeNotifier {
     return searchProducts;
   }
 
-  void updateRating(String id, double rating) {
-    int i = _products.indexWhere((element) => element.id == id);
-    _products[i].rating = (_products[i].rating + rating) / 2;
+  Future<void> updateRating(String id, double rating) async {
+    final url = Uri.parse('$mainUrl/rate/$id');
+    final response = await http.post(url,
+        headers: {
+          'usertype': 'vendor',
+          'Content-Type': 'application/json; charset=UTF-8',
+          'authorization': _token,
+        },
+        body: json.encode({
+          "rate": rating,
+        }));
     notifyListeners();
   }
 
   Future<String> findSellerName(String sellerId) async {
-    final url =
-        Uri.parse('$mainUrl/ownerinformation/$sellerId');
+    final url = Uri.parse('$mainUrl/ownerinformation/$sellerId');
     final response = await http.get(url, headers: {
       'usertype': 'vendor',
       'Content-Type': 'application/json; charset=UTF-8',
@@ -587,8 +800,7 @@ class ProductsProvider with ChangeNotifier {
   }
 
   Future<void> updateProduct(Product product, List<String> img64s) async {
-    final url =
-        Uri.parse("$mainUrl/product/${product.id}");
+    final url = Uri.parse("$mainUrl/product/${product.id}");
     var response = await http.post(
       url,
       headers: {
@@ -724,8 +936,7 @@ class ProductsProvider with ChangeNotifier {
   }
 
   Future<List<Product>> premiumAllProducts() async {
-    final url =
-        Uri.parse("$mainUrl/productowner/$_userId");
+    final url = Uri.parse("$mainUrl/productowner/$_userId");
     final response = await http.get(url, headers: {
       'usertype': 'vendor',
       'Content-Type': 'application/json; charset=UTF-8',
@@ -766,9 +977,36 @@ class ProductsProvider with ChangeNotifier {
           title: element['name'],
           price: double.parse(element['price'].toString()),
           colorsAndQuantityAndSizes: colorsAndQuantityAndSizes,
-          warranty: Period(type: TimeType.months, period: 0),
-          returning: Period(type: TimeType.months, period: 0),
-          replacement: Period(type: TimeType.months, period: 0),
+          warranty: Period(
+            type: element['warrantyType'] == 'days'
+                ? TimeType.days
+                : element['warrantyType'] == 'months'
+                    ? TimeType.months
+                    : element['warrantyType'] == 'weeks'
+                        ? TimeType.weeks
+                        : TimeType.years,
+            period: element['warranty_period'],
+          ),
+          returning: Period(
+            type: element['returningType'] == 'days'
+                ? TimeType.days
+                : element['returningType'] == 'months'
+                    ? TimeType.months
+                    : element['returningType'] == 'weeks'
+                        ? TimeType.weeks
+                        : TimeType.years,
+            period: element['returning_period'],
+          ),
+          replacement: Period(
+            type: element['replacementType'] == 'days'
+                ? TimeType.days
+                : element['replacementType'] == 'months'
+                    ? TimeType.months
+                    : element['replacementType'] == 'weeks'
+                        ? TimeType.weeks
+                        : TimeType.years,
+            period: element['replacing_period'],
+          ),
           category: element['category'],
           type: element['type'],
           description: element['discription'],
@@ -788,8 +1026,7 @@ class ProductsProvider with ChangeNotifier {
 
   Future<String> getPremiumHighestRatedProductName() async {
     String productName = '';
-    final url =
-        Uri.parse('$mainUrl/highestrated/$_userId');
+    final url = Uri.parse('$mainUrl/highestrated/$_userId');
     final response = await http.get(url, headers: {
       'usertype': 'vendor',
       'Content-Type': 'application/json; charset=UTF-8',
@@ -833,24 +1070,32 @@ class ProductsProvider with ChangeNotifier {
     String totalEarnings = '';
     Uri url;
     if (period == 'This Month') {
-      url =
-          Uri.parse('$mainUrl/monthsolditems/$_userId');
+      url = Uri.parse('$mainUrl/monthsolditems/$_userId');
     } else if (period == 'Last Month') {
       url = Uri.parse('$mainUrl/lastsolditems/$_userId');
     } else {
       url = Uri.parse('$mainUrl/yearsolditems/$_userId');
     }
-    final response = await http.get(url, headers: {
-      'usertype': 'vendor',
-      'Content-Type': 'application/json; charset=UTF-8',
-      'authorization': _token,
-    });
+    final response = await http.get(
+      url,
+      headers: {
+        'usertype': 'vendor',
+        'Content-Type': 'application/json; charset=UTF-8',
+        'authorization': _token,
+      },
+    );
     if (response.statusCode == 200 || response.statusCode == 201) {
       final responseData = json.decode(response.body);
       totalEarnings = responseData['solditems'].toString();
+      print(response.body);
     } else {
       throw response.body;
     }
     return totalEarnings;
+  }
+
+  void clearProducts() {
+    _products.clear();
+    notifyListeners();
   }
 }

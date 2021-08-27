@@ -58,36 +58,105 @@ class AddressesViewer extends StatelessWidget {
                                         child: Container(
                                           width: mediaquery.size.width,
                                           child: TextButton(
-                                            onPressed: () {
-                                              Provider.of<Orders>(context,
-                                                      listen: false)
-                                                  .addOrder(
-                                                cartProvider.items.values
-                                                    .toList(),
-                                                total,
-                                                addresses[index],
-                                              );
-                                              Navigator.pop(context);
-                                              cartProvider.clearCart();
-                                              showDialog(
-                                                context: context,
-                                                builder: (context) {
-                                                  return AlertDialog(
-                                                    content: Container(
-                                                      height: 110,
-                                                      child: Column(
-                                                        children: [
-                                                          Padding(
-                                                            padding:
-                                                                const EdgeInsets
-                                                                    .only(
-                                                              bottom: 10,
+                                            onPressed: () async {
+                                              try {
+                                              await  Provider.of<Orders>(context,
+                                                        listen: false)
+                                                    .addOrder(
+                                                  cartProvider.items.values
+                                                      .toList(),
+                                                  total,
+                                                  addresses[index],
+                                                );
+                                                Navigator.pop(context);
+                                                cartProvider.clearCart();
+                                                showDialog(
+                                                  context: context,
+                                                  builder: (context) {
+                                                    return AlertDialog(
+                                                      content: Container(
+                                                        height: 110,
+                                                        child: Column(
+                                                          children: [
+                                                            Padding(
+                                                              padding:
+                                                                  const EdgeInsets
+                                                                      .only(
+                                                                bottom: 10,
+                                                              ),
+                                                              child: Text(
+                                                                "Order Received",
+                                                                style:
+                                                                    TextStyle(
+                                                                  color: theme
+                                                                      .primaryColor,
+                                                                  fontSize: 21,
+                                                                  fontWeight:
+                                                                      FontWeight
+                                                                          .bold,
+                                                                ),
+                                                              ),
                                                             ),
-                                                            child: Text(
-                                                              "Order Received",
+                                                            Padding(
+                                                              padding:
+                                                                  const EdgeInsets
+                                                                      .only(
+                                                                bottom: 5,
+                                                              ),
+                                                              child: Text(
+                                                                "Our customer service will contact you in 48 hours",
+                                                                style:
+                                                                    TextStyle(
+                                                                  color: Color(
+                                                                      0xFF828282),
+                                                                  fontSize: 16,
+                                                                  fontWeight:
+                                                                      FontWeight
+                                                                          .bold,
+                                                                ),
+                                                                textAlign:
+                                                                    TextAlign
+                                                                        .center,
+                                                              ),
+                                                            ),
+                                                            Text(
+                                                              "You can always track your orders in the \"Orders History\" section in your drawer",
                                                               style: TextStyle(
-                                                                color: theme
-                                                                    .primaryColor,
+                                                                color: Color(
+                                                                    0xFF828282),
+                                                                fontSize: 12,
+                                                              ),
+                                                              textAlign:
+                                                                  TextAlign
+                                                                      .center,
+                                                            ),
+                                                          ],
+                                                        ),
+                                                      ),
+                                                      contentPadding:
+                                                          const EdgeInsets.only(
+                                                        left: 20,
+                                                        right: 20,
+                                                      ),
+                                                      actions: [
+                                                        Container(
+                                                          width: mediaquery
+                                                              .size.width,
+                                                          child: TextButton(
+                                                            style: TextButton
+                                                                .styleFrom(
+                                                              backgroundColor: theme
+                                                                  .primaryColor,
+                                                            ),
+                                                            onPressed: () {
+                                                              Navigator.pop(
+                                                                  context);
+                                                            },
+                                                            child: Text(
+                                                              'OK',
+                                                              style: TextStyle(
+                                                                color: Colors
+                                                                    .white,
                                                                 fontSize: 21,
                                                                 fontWeight:
                                                                     FontWeight
@@ -95,88 +164,43 @@ class AddressesViewer extends StatelessWidget {
                                                               ),
                                                             ),
                                                           ),
-                                                          Padding(
-                                                            padding:
-                                                                const EdgeInsets
-                                                                    .only(
-                                                              bottom: 5,
-                                                            ),
-                                                            child: Text(
-                                                              "Our customer service will contact you in 48 hours",
-                                                              style: TextStyle(
-                                                                color: Color(
-                                                                    0xFF828282),
-                                                                fontSize: 16,
-                                                                fontWeight:
-                                                                    FontWeight
-                                                                        .bold,
-                                                              ),
-                                                              textAlign:
-                                                                  TextAlign
-                                                                      .center,
-                                                            ),
-                                                          ),
-                                                          Text(
-                                                            "You can always track your orders in the \"Orders History\" section in your drawer",
-                                                            style: TextStyle(
-                                                              color: Color(
-                                                                  0xFF828282),
-                                                              fontSize: 12,
-                                                            ),
-                                                            textAlign: TextAlign
-                                                                .center,
-                                                          ),
-                                                        ],
-                                                      ),
-                                                    ),
-                                                    contentPadding:
-                                                        const EdgeInsets.only(
-                                                      left: 20,
-                                                      right: 20,
-                                                    ),
-                                                    actions: [
-                                                      Container(
-                                                        width: mediaquery
-                                                            .size.width,
-                                                        child: TextButton(
-                                                          style: TextButton
-                                                              .styleFrom(
-                                                            backgroundColor: theme
-                                                                .primaryColor,
-                                                          ),
-                                                          onPressed: () {
-                                                            Navigator.pop(
-                                                                context);
-                                                          },
-                                                          child: Text(
-                                                            'OK',
-                                                            style: TextStyle(
-                                                              color:
-                                                                  Colors.white,
-                                                              fontSize: 21,
-                                                              fontWeight:
-                                                                  FontWeight
-                                                                      .bold,
-                                                            ),
+                                                        )
+                                                      ],
+                                                      title: ClipRect(
+                                                        clipBehavior:
+                                                            Clip.hardEdge,
+                                                        child: Container(
+                                                          width: 50,
+                                                          height: 100,
+                                                          child: Image.asset(
+                                                            'assets/images/order_success.png',
+                                                            fit: BoxFit
+                                                                .fitHeight,
                                                           ),
                                                         ),
-                                                      )
-                                                    ],
-                                                    title: ClipRect(
-                                                      clipBehavior:
-                                                          Clip.hardEdge,
-                                                      child: Container(
-                                                        width: 50,
-                                                        height: 100,
-                                                        child: Image.asset(
-                                                          'assets/images/order_success.png',
-                                                          fit: BoxFit.fitHeight,
-                                                        ),
                                                       ),
-                                                    ),
-                                                  );
-                                                },
-                                              );
+                                                    );
+                                                  },
+                                                );
+                                              } catch (error) {
+                                                showDialog(
+                                                    context: context,
+                                                    builder: (ctx) =>
+                                                        AlertDialog(
+                                                          content: Text(
+                                                              'An error occured please try again later'),
+                                                          actions: [
+                                                            TextButton(
+                                                              onPressed: () {
+                                                                Navigator.of(
+                                                                        context)
+                                                                    .pop();
+                                                              },
+                                                              child: Text('Ok'),
+                                                            )
+                                                          ],
+                                                        ));
+                                              }
                                             },
                                             child: Text(
                                               'Select Address',

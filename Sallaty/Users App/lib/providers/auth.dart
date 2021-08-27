@@ -1,5 +1,4 @@
 import 'dart:convert';
-
 import 'package:flutter/foundation.dart';
 import '../models/http_exception.dart';
 import 'package:http/http.dart' as http;
@@ -87,6 +86,7 @@ class AuthProvider with ChangeNotifier {
     if (response.statusCode == 200 || response.statusCode == 201) {
       var responseData = json.decode(response.body);
       print(response.body);
+      id = responseData['_id'];
       name = responseData['name'];
       number = responseData['number'];
       email = responseData['email'];
@@ -96,9 +96,9 @@ class AuthProvider with ChangeNotifier {
       notifyListeners();
     } else {
       print('Request failed with status: ${response.statusCode}.');
-      var responseData = json.decode(response.body);
-      print(responseData);
-      throw HttpException(responseData);
+      // var responseData = json.decode(response.body);
+      // print(responseData);
+      throw HttpException(response.body);
     }
     password = '';
   }
@@ -151,6 +151,7 @@ class AuthProvider with ChangeNotifier {
       number = responseData['number'];
       _token = response.headers['authorization'];
       isSeller = responseData['role'] == 'normal' ? false : true;
+      
       saveToken();
       notifyListeners();
     } else
@@ -176,13 +177,10 @@ class AuthProvider with ChangeNotifier {
     final responseData = json.decode(response.body);
     if (response.statusCode == 200 || response.statusCode == 201) {
       id = responseData['_id'];
-      print(response.body);
       name = responseData['name'];
       number = responseData['number'];
       _token = response.headers['authorization'];
       isSeller = responseData['role'] == 'normal' ? false : true;
-      print(token);
-      print(name);
       saveToken();
       notifyListeners();
     } else
@@ -222,7 +220,6 @@ class AuthProvider with ChangeNotifier {
   }
 
   Future<bool> validToken() async {
-    print(token);
     final url =
         Uri.parse('$mainUrl/users/checkAccessiblity');
     final response = await http.post(
@@ -233,16 +230,12 @@ class AuthProvider with ChangeNotifier {
       },
       body: json.encode({"token": token}),
     );
-    if (response.statusCode == 200 || response.statusCode == 201) return true;
-    // final responseData = json.decode(response.body);
-    // return false;
-    // if (responseData['error'] != null) {
-    //   //Invalid session. Logout
+    if (response.statusCode == 200 || response.statusCode == 201){
+              print('done');
+
+       return true;}
     await logout();
     return false;
-    // } else {
-    //   return true;
-    // }
   }
 
   Future<void> logout() async {
@@ -254,7 +247,6 @@ class AuthProvider with ChangeNotifier {
     final pref = await SharedPreferences.getInstance();
     pref.clear();
     notifyListeners();
-    // http logout
   }
 
   Future<void> sendFeedback(String feedback) async {

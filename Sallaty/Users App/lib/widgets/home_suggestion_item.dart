@@ -53,7 +53,7 @@ class HomeSuggestionItem extends StatelessWidget {
                   if (snapshot.connectionState == ConnectionState.waiting)
                     return Center(child: CircularProgressIndicator());
                   products = snapshot.data;
-                  return products.isNotEmpty ? ListView.builder(
+                  return products != null ? ListView.builder(
                     scrollDirection: Axis.horizontal,
                     itemCount: products.length,
                     itemBuilder: (ctx, index) => ChangeNotifierProvider.value(

@@ -1,3 +1,4 @@
+import 'package:ecart/providers/cart.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_rating_bar/flutter_rating_bar.dart';
 import '../providers/orders.dart' as oi;
@@ -70,11 +71,12 @@ class _OrderItemState extends State<OrderItem> {
                           ),
                         ),
                         Text(
-                          '${widget.order.products[i].quantity} x  \$${widget.order.amount}',
+                          '${widget.order.products[i].quantity} x  \$${widget.order.products[i].price}',
                           style: TextStyle(fontSize: 18),
                         ),
                       ],
                     ),
+                    if(widget.order.products[i].status == Status.Delivered)
                     Column(
                       mainAxisAlignment: MainAxisAlignment.spaceBetween,
                       children: [
