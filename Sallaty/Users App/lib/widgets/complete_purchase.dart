@@ -7,17 +7,46 @@ import 'package:ecart/widgets/alert_dialog.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
-class CompletePurchase extends StatelessWidget {
+class CompletePurchase extends StatefulWidget {
   const CompletePurchase({
     Key key,
     @required this.cart,
   }) : super(key: key);
   final Cart cart;
+
+  @override
+  _CompletePurchaseState createState() => _CompletePurchaseState();
+}
+
+class _CompletePurchaseState extends State<CompletePurchase> {
+  int deliveryCharge = 0;
+  double coponDiscount = 0;
+  bool init = true;
+  double total;
+
+  @override
+  void didChangeDependencies() async {
+    super.didChangeDependencies();
+    if (init) {
+      deliveryCharge =
+          await Provider.of<Orders>(context).getOrderDeliveryCharge();
+      total = widget.cart.total + deliveryCharge;
+      setState(() {
+        init = false;
+      });
+    }
+  }
+
+  void setCoponDiscount(double val) {
+    coponDiscount = val;
+    total = total - deliveryCharge;
+    total = total - total * (coponDiscount / 100) + deliveryCharge;
+    setState(() {});
+  }
+
   @override
   Widget build(BuildContext context) {
-    int deliveryCharge = 2000; // temp
     final ordersProvider = Provider.of<Orders>(context);
-    double total = cart.total + deliveryCharge;
     final mediaquery = MediaQuery.of(context);
     final theme = Theme.of(context);
     return Container(
@@ -40,13 +69,14 @@ class CompletePurchase extends StatelessWidget {
           crossAxisAlignment: CrossAxisAlignment.start,
           mainAxisAlignment: MainAxisAlignment.spaceBetween,
           children: [
+            if(coponDiscount == 0 && !init)
             Container(
               width: mediaquery.size.width,
               child: TextButton(
                 onPressed: () {
                   showDialog(
                     context: context,
-                    builder: (context) => AddCoponForm(),
+                    builder: (context) => AddCoponForm(setCoponDiscount),
                   );
                 },
                 child: Text(
@@ -73,26 +103,21 @@ class CompletePurchase extends StatelessWidget {
                     ),
                   ),
                 ),
-                FutureBuilder(
-                    future: ordersProvider.getOrderDeliveryCharge(),
-                    builder: (ctx, snapshot) {
-                      if (snapshot.connectionState == ConnectionState.waiting)
-                        return Text(
-                          'Loading...',
-                          style: TextStyle(
-                            color: Colors.white,
-                            fontSize: 19,
-                          ),
-                        );
-                      deliveryCharge = snapshot.data;
-                      return Text(
+                init
+                    ? Text(
+                        'Loading...',
+                        style: TextStyle(
+                          color: Colors.white,
+                          fontSize: 19,
+                        ),
+                      )
+                    : Text(
                         '${deliveryCharge.toStringAsFixed(0)} SP',
                         style: TextStyle(
                           color: Colors.white,
                           fontSize: 19,
                         ),
-                      );
-                    })
+                      ),
               ],
             ),
             Padding(
@@ -112,7 +137,7 @@ class CompletePurchase extends StatelessWidget {
                   ),
                   Container(
                     child: Text(
-                      '${total.toStringAsFixed(0)} SP',
+                      init ? '...' : '${total.toStringAsFixed(0)} SP',
                       overflow: TextOverflow.ellipsis,
                       style: TextStyle(
                         color: Color(0xFF333333),

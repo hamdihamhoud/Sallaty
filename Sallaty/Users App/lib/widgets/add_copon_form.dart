@@ -1,6 +1,10 @@
+import 'package:ecart/providers/orders.dart';
 import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
 
 class AddCoponForm extends StatefulWidget {
+  Function setCoponDiscount;
+  AddCoponForm(this.setCoponDiscount);
   @override
   _AddCoponFormState createState() => _AddCoponFormState();
 }
@@ -11,7 +15,9 @@ class _AddCoponFormState extends State<AddCoponForm> {
   Future<void> _save() async {
     if (!_key.currentState.validate()) return;
     _key.currentState.save();
+    final discount = await Provider.of<Orders>(context,listen: false).checkCopon(code);
     Navigator.of(context).pop();
+    widget.setCoponDiscount(discount);
   }
 
   @override

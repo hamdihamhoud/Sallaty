@@ -216,7 +216,6 @@ class ProductsProvider with ChangeNotifier {
     if (response.statusCode == 200) {
       responseData.forEach((element) {
         final isFav = element['isAdded'] as bool;
-        print(isFav);
         element = element['product'];
         final responseColorsAndQuantityAndSizes =
             element['colorsAndQuantityAndSizes'] as List;
@@ -1087,7 +1086,6 @@ class ProductsProvider with ChangeNotifier {
     if (response.statusCode == 200 || response.statusCode == 201) {
       final responseData = json.decode(response.body);
       totalEarnings = responseData['solditems'].toString();
-      print(response.body);
     } else {
       throw response.body;
     }

@@ -19,6 +19,7 @@ class CartItem {
   final Color color;
   final String size;
   final Status status;
+  final DateTime date;
 
   CartItem({
     @required this.id,
@@ -30,6 +31,7 @@ class CartItem {
     @required this.color,
     this.size = '0',
     this.status = Status.Ordered,
+    this.date,
   });
 }
 

@@ -9,10 +9,11 @@ import 'products.dart';
 
 class Order {
   final String id;
-  final int amount;
+  final double amount;
   final List<CartItem> products;
   final DateTime dateTime;
   final String address;
+  final double coponDiscount;
 
   Order({
     this.id,
@@ -20,6 +21,7 @@ class Order {
     @required this.products,
     this.dateTime,
     @required this.address,
+    @required this.coponDiscount,
   });
 }
 
@@ -28,18 +30,6 @@ class Orders with ChangeNotifier {
   // List<Order> _orders = [];
   String _token;
   String _userId;
-
-  Future<int> checkCopon(String code) async {
-    final url = Uri.parse('$mainUrl/$code');
-    final response = await http.get(url, headers: {
-      'usertype': 'vendor',
-      'Content-Type': 'application/json; charset=UTF-8',
-      'authorization': _token,
-    });
-    final responseJson = json.decode(response.body);
-    // final responseData = responseJson[];
-    if (response.statusCode == 200) {}
-  }
 
   void setToken(String token) {
     _token = token;
@@ -133,10 +123,27 @@ class Orders with ChangeNotifier {
     }
   }
 
+  Future<double> checkCopon(String code) async {
+    final url = Uri.parse('$mainUrl/checkcobon');
+    final response = await http.post(url,
+        headers: {
+          'usertype': 'vendor',
+          'Content-Type': 'application/json; charset=UTF-8',
+          'authorization': _token,
+        },
+        body: json.encode({
+          'code': code,
+        }));
+    final responseData = json.decode(response.body);
+    if (response.statusCode == 200 || response.statusCode == 201) {
+      return double.parse(responseData['discount'].toString());
+    } else
+      throw response.body;
+  }
+
   Future<List<Order>> get orders async {
     List<Order> responseOrders = [];
     final url = Uri.parse('$mainUrl/ordersByBuyer/$_userId');
-    print(url);
     final response = await http.get(
       url,
       headers: {
@@ -145,56 +152,43 @@ class Orders with ChangeNotifier {
         'authorization': _token,
       },
     );
+    final responseData = json.decode(response.body) as List;
     if (response.statusCode == 200 || response.statusCode == 201) {
-      final responseData = json.decode(response.body) as List;
       for (var i = 0; i < responseData.length; i++) {
+        final orderItems = responseData[i]['orders'] as List;
         List<CartItem> products = [];
-        final product =
-            await findId(responseData[i]['orderItem']['product_id']);
-        products.add(CartItem(
-          id: responseData[i]['orderItem']['product_id'],
-          productId: responseData[i]['orderItem']['product_id'],
-          color: Color(responseData[i]['orderItem']['color']),
-          quantity: responseData[i]['orderItem']['quantity'],
-          size: responseData[i]['orderItem']['size'],
-          imageUrl: product.imageUrls.first,
-          price: product.price,
-          title: product.title,
-        ));
+        for (var i = 0; i < orderItems.length; i++) {
+          final product = CartItem(
+            productId: orderItems[i]['product_id']['_id'].toString(),
+            imageUrl: orderItems[i]['product_id']['images'][0].toString(),
+            price:
+                double.parse(orderItems[i]['product_id']['price'].toString()),
+            title: orderItems[i]['product_id']['name'].toString(),
+            quantity: orderItems[i]['quantity'],
+            size: orderItems[i]['size'].toString(),
+            color: Color(orderItems[i]['color']),
+          );
+          products.add(product);
+        }
         final order = Order(
-          amount: responseData[i]['total'],
-          address: 'address',
-          products: products,
-          dateTime: DateTime.parse(responseData[i]['date']),
-        );
-        responseOrders.add(order);
-        print(responseOrders);
-        return responseOrders;
+            id: responseData[i]['_id'],
+            address: responseData[i]['address'],
+            amount: double.parse(responseData[i]['total'].toString()),
+            products: products,
+            dateTime: DateTime.parse(
+              responseData[i]['date'],
+            ));
+        responseOrders.insert(0, order);
       }
+      return responseOrders;
     } else {
       throw response.body;
     }
-    return [];
   }
 
-  Future<void> addOrder(
-      List<CartItem> cartProducts, double total, String address) async {
+  Future<void> addOrder(List<CartItem> cartProducts, double total,
+      String address, double coponDiscount) async {
     final url = Uri.parse('$mainUrl/orders');
-    print(url);
-    print(_token);
-    print(_userId);
-    print(json.encode({
-      'orderItems': cartProducts
-          .map((e) => {
-                'product_id': e.productId,
-                'quantity': e.quantity,
-                'color': e.color.value,
-                'size': e.size,
-              })
-          .toList(),
-      'total': total,
-      'address': address,
-    }));
     final response = await http.post(url,
         headers: {
           'usertype': 'vendor',
@@ -212,19 +206,17 @@ class Orders with ChangeNotifier {
               .toList(),
           'total': total,
           'address': address,
+          'discount': coponDiscount,
         }));
-
-    print(response.statusCode);
     if (response.statusCode == 200 || response.statusCode == 201) {
-      print(response.body);
+      return;
     } else {
       throw response.body;
     }
   }
 
   Future<List<CartItem>> fetchSellerOrders() async {
-    print('hi');
-    final url = Uri.parse('$mainUrl/orderBySeller/$_userId');
+ final url = Uri.parse('$mainUrl/orderBySeller/$_userId');
     final response = await http.get(url, headers: {
       'usertype': 'vendor',
       'Content-Type': 'application/json; charset=UTF-8',
@@ -253,9 +245,10 @@ class Orders with ChangeNotifier {
           imageUrl: product.imageUrls.first,
           color: Color(responseData[i]['order']['color']),
           size: responseData[i]['order']['size'],
+          date: DateTime.parse(responseData[i]['order']['date']),
           status: status,
         );
-        orderItems.add(order);
+        orderItems.insert(0,order);
       }
     } else {
       throw response.body;

@@ -6,7 +6,8 @@ import '../providers/orders.dart';
 
 class AddressesViewer extends StatelessWidget {
   final double total;
-  AddressesViewer({this.total});
+  final double coponDiscount;
+  AddressesViewer({this.total,this.coponDiscount});
   @override
   Widget build(BuildContext context) {
     final cartProvider = Provider.of<Cart>(context);
@@ -67,6 +68,7 @@ class AddressesViewer extends StatelessWidget {
                                                       .toList(),
                                                   total,
                                                   addresses[index],
+                                                  coponDiscount,
                                                 );
                                                 Navigator.pop(context);
                                                 cartProvider.clearCart();

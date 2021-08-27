@@ -251,7 +251,7 @@ class SellerItemTile extends StatelessWidget {
                 Text(
                   DateFormat.yMd()
                       .add_jm()
-                      .format(DateTime.now()), // Fetch dates from backend
+                      .format(e.date), // Fetch dates from backend
                   style: TextStyle(color: Colors.black54),
                 ),
               ],

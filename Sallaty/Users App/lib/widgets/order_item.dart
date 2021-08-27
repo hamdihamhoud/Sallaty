@@ -25,7 +25,7 @@ class _OrderItemState extends State<OrderItem> {
         children: [
           ListTile(
             title: Text(
-              'Total : \$${widget.order.amount}',
+              'Total : \$${widget.order.amount.toStringAsFixed(0)}',
             ),
             subtitle: Text(
               DateFormat('dd/MM/yyyy hh:mm').format(widget.order.dateTime),

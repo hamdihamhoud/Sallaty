@@ -85,7 +85,6 @@ class AuthProvider with ChangeNotifier {
     );
     if (response.statusCode == 200 || response.statusCode == 201) {
       var responseData = json.decode(response.body);
-      print(response.body);
       id = responseData['_id'];
       name = responseData['name'];
       number = responseData['number'];
@@ -231,8 +230,6 @@ class AuthProvider with ChangeNotifier {
       body: json.encode({"token": token}),
     );
     if (response.statusCode == 200 || response.statusCode == 201){
-              print('done');
-
        return true;}
     await logout();
     return false;

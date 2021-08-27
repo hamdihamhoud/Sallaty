@@ -76,7 +76,6 @@ class Product with ChangeNotifier {
     } else {
         final url = Uri.parse(
           'https://hamdi1234.herokuapp.com/deletFromWishlist?product=$id');
-          print(url);
       try {
         final response = await http.delete(
           url,
@@ -87,11 +86,9 @@ class Product with ChangeNotifier {
           },
         );
         if (response.statusCode == 200 || response.statusCode == 201) {
-          print('deleted');
           _setFavValue(oldStatus);
         }
       } catch (error) {
-        print('not deleted');
         print(error);
         _setFavValue(oldStatus);
       }

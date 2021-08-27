@@ -29,7 +29,6 @@ class AddressesScreen extends StatelessWidget {
               if (snapshot.connectionState == ConnectionState.waiting)
                 return Center(child: CircularProgressIndicator());
               addresses = snapshot.data;
-              print(addresses);
               return addresses != null ? ListView.builder(
                 itemCount: addresses.length,
                 itemBuilder: (ctx, index) => Container(

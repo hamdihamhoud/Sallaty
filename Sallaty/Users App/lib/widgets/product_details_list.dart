@@ -5,6 +5,9 @@ import 'package:ecart/widgets/product_details.dart';
 import 'package:ecart/widgets/read_more.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_rating_bar/flutter_rating_bar.dart';
+import 'package:provider/provider.dart';
+
+import 'product_item.dart';
 
 class ProductDetailsList extends StatelessWidget {
   const ProductDetailsList({
@@ -498,6 +501,50 @@ class ProductDetailsList extends StatelessWidget {
                           ],
                         ),
                 )),
+            Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                Padding(
+                  padding: const EdgeInsets.symmetric( vertical :8.0),
+                  child: Text(
+                    'Related Products',
+                    style: TextStyle(
+                      color: Color(0xFF333333),
+                      fontSize: 20,
+                      fontWeight: FontWeight.bold,
+                    ),
+                  ),
+                ),
+                FutureBuilder(
+                    future: product.type.length != 0 &&
+                            product.type.length != 'other'
+                        ? productProvider.fetchByType(product.type)
+                        : productProvider.fetchByCategory(product.category),
+                    builder: (ctx, snapshot) {
+                      if (snapshot.connectionState == ConnectionState.waiting)
+                        return Container(
+                            height: 290,
+                            child: Center(child: CircularProgressIndicator()));
+                      List<Product> relatedProducts = snapshot.data;
+                      return relatedProducts != null &&
+                              relatedProducts.length != 0
+                          ? Container(
+                              height: 290,
+                              child: ListView.builder(
+                                  scrollDirection: Axis.horizontal,
+                                  itemCount: relatedProducts.length,
+                                  itemBuilder: (ctx, index) =>
+                                      ChangeNotifierProvider.value(
+                                        value: relatedProducts[index],
+                                        child: ProductItem(),
+                                      )),
+                            )
+                          : Container(
+                              height: 290,
+                              child: Center(child: Text('No data found')));
+                    }),
+              ],
+            ),
             SizedBox(
               height: 85,
               width: mediaQuery.size.width,
