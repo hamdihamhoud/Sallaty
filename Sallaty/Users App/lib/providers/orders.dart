@@ -29,6 +29,18 @@ class Orders with ChangeNotifier {
   String _token;
   String _userId;
 
+  Future<int> checkCopon(String code) async {
+    final url = Uri.parse('$mainUrl/$code');
+    final response = await http.get(url, headers: {
+      'usertype': 'vendor',
+      'Content-Type': 'application/json; charset=UTF-8',
+      'authorization': _token,
+    });
+    final responseJson = json.decode(response.body);
+    // final responseData = responseJson[];
+    if (response.statusCode == 200) {}
+  }
+
   void setToken(String token) {
     _token = token;
   }
@@ -37,7 +49,7 @@ class Orders with ChangeNotifier {
     _userId = id;
   }
 
-   Future<Product> findId(String id) async {
+  Future<Product> findId(String id) async {
     // fetch by id
     final url = Uri.parse('$mainUrl/product/$id');
     final response = await http.get(url, headers: {
@@ -134,33 +146,31 @@ class Orders with ChangeNotifier {
       },
     );
     if (response.statusCode == 200 || response.statusCode == 201) {
-    final responseData = json.decode(response.body) as List;
-    for (var i = 0; i < responseData.length; i++) {
-      List<CartItem> products = [];
-       final product = await findId(responseData[i]['orderItem']['product_id']);
-       products.add(
-         CartItem(
-           id: responseData[i]['orderItem']['product_id'],
-           productId: responseData[i]['orderItem']['product_id'],
-           color: Color(responseData[i]['orderItem']['color']),
-           quantity: responseData[i]['orderItem']['quantity'],
-           size: responseData[i]['orderItem']['size'],
-           imageUrl: product.imageUrls.first,
-           price: product.price,
-           title: product.title,
-
-         )
-       );
-      final order = Order(
-        amount: responseData[i]['total'],
-        address: 'address',
-        products: products,
-        dateTime: DateTime.parse(responseData[i]['date']),
-      );
-      responseOrders.add(order);
-       print(responseOrders);
-    return responseOrders;
-    }
+      final responseData = json.decode(response.body) as List;
+      for (var i = 0; i < responseData.length; i++) {
+        List<CartItem> products = [];
+        final product =
+            await findId(responseData[i]['orderItem']['product_id']);
+        products.add(CartItem(
+          id: responseData[i]['orderItem']['product_id'],
+          productId: responseData[i]['orderItem']['product_id'],
+          color: Color(responseData[i]['orderItem']['color']),
+          quantity: responseData[i]['orderItem']['quantity'],
+          size: responseData[i]['orderItem']['size'],
+          imageUrl: product.imageUrls.first,
+          price: product.price,
+          title: product.title,
+        ));
+        final order = Order(
+          amount: responseData[i]['total'],
+          address: 'address',
+          products: products,
+          dateTime: DateTime.parse(responseData[i]['date']),
+        );
+        responseOrders.add(order);
+        print(responseOrders);
+        return responseOrders;
+      }
     } else {
       throw response.body;
     }
@@ -203,7 +213,7 @@ class Orders with ChangeNotifier {
           'total': total,
           'address': address,
         }));
- 
+
     print(response.statusCode);
     if (response.statusCode == 200 || response.statusCode == 201) {
       print(response.body);
@@ -211,7 +221,6 @@ class Orders with ChangeNotifier {
       throw response.body;
     }
   }
-
 
   Future<List<CartItem>> fetchSellerOrders() async {
     print('hi');
