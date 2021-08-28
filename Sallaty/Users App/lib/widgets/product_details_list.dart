@@ -505,7 +505,7 @@ class ProductDetailsList extends StatelessWidget {
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
                 Padding(
-                  padding: const EdgeInsets.symmetric( vertical :8.0),
+                  padding: const EdgeInsets.symmetric(vertical: 8.0),
                   child: Text(
                     'Related Products',
                     style: TextStyle(
@@ -526,6 +526,9 @@ class ProductDetailsList extends StatelessWidget {
                             height: 290,
                             child: Center(child: CircularProgressIndicator()));
                       List<Product> relatedProducts = snapshot.data;
+                      final i = relatedProducts
+                          .indexWhere((element) => element.id == product.id);
+                      relatedProducts.removeAt(i);
                       return relatedProducts != null &&
                               relatedProducts.length != 0
                           ? Container(

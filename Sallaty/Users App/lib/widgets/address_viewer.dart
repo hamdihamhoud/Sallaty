@@ -1,5 +1,6 @@
 import 'package:ecart/providers/addresses.dart';
 import 'package:ecart/providers/cart.dart';
+import 'package:ecart/providers/products.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import '../providers/orders.dart';
@@ -7,7 +8,7 @@ import '../providers/orders.dart';
 class AddressesViewer extends StatelessWidget {
   final double total;
   final double coponDiscount;
-  AddressesViewer({this.total,this.coponDiscount});
+  AddressesViewer({this.total, this.coponDiscount});
   @override
   Widget build(BuildContext context) {
     final cartProvider = Provider.of<Cart>(context);
@@ -61,7 +62,8 @@ class AddressesViewer extends StatelessWidget {
                                           child: TextButton(
                                             onPressed: () async {
                                               try {
-                                              await  Provider.of<Orders>(context,
+                                                await Provider.of<Orders>(
+                                                        context,
                                                         listen: false)
                                                     .addOrder(
                                                   cartProvider.items.values
@@ -72,6 +74,9 @@ class AddressesViewer extends StatelessWidget {
                                                 );
                                                 Navigator.pop(context);
                                                 cartProvider.clearCart();
+                                                Provider.of<ProductsProvider>(
+                                                        context,listen: false)
+                                                    .clearProducts();
                                                 showDialog(
                                                   context: context,
                                                   builder: (context) {
