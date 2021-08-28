@@ -92,7 +92,10 @@ class _AddtoCartState extends State<AddtoCart> {
                             notAvailable = false;
                             for (int j = 0;
                                 j <
-                                    widget.product.colorsAndQuantityAndSizes
+                                    productProvider.products
+                                        .firstWhere((element) =>
+                                            element.id == widget.product.id)
+                                        .colorsAndQuantityAndSizes
                                         .entries
                                         .firstWhere((element) =>
                                             element.key == _selectedColor)
@@ -101,8 +104,11 @@ class _AddtoCartState extends State<AddtoCart> {
                                 j++) {
                               sizes.insert(
                                   j,
-                                  widget
-                                      .product.colorsAndQuantityAndSizes.entries
+                                  productProvider.products
+                                      .firstWhere((element) =>
+                                          element.id == widget.product.id)
+                                      .colorsAndQuantityAndSizes
+                                      .entries
                                       .firstWhere((element) =>
                                           element.key == _selectedColor)
                                       .value
@@ -111,7 +117,11 @@ class _AddtoCartState extends State<AddtoCart> {
                             }
                           } else {
                             _selectedSize = '0';
-                            if (widget.product.colorsAndQuantityAndSizes.entries
+                            if (productProvider.products
+                                    .firstWhere((element) =>
+                                        element.id == widget.product.id)
+                                    .colorsAndQuantityAndSizes
+                                    .entries
                                     .firstWhere((element) =>
                                         element.key == _selectedColor)
                                     .value
@@ -151,7 +161,11 @@ class _AddtoCartState extends State<AddtoCart> {
                             setAmount(1);
                             _selectedSize = newvalue;
                             sizeSelected = true;
-                            if (widget.product.colorsAndQuantityAndSizes.entries
+                            if (productProvider.products
+                                    .firstWhere((element) =>
+                                        element.id == widget.product.id)
+                                    .colorsAndQuantityAndSizes
+                                    .entries
                                     .firstWhere((element) =>
                                         element.key == _selectedColor)
                                     .value
@@ -179,7 +193,11 @@ class _AddtoCartState extends State<AddtoCart> {
                 ),
               if ((colorSelected && hasSize && sizeSelected) ||
                   (colorSelected && !hasSize))
-                widget.product.colorsAndQuantityAndSizes.entries
+                productProvider.products
+                            .firstWhere(
+                                (element) => element.id == widget.product.id)
+                            .colorsAndQuantityAndSizes
+                            .entries
                             .firstWhere(
                                 (element) => element.key == _selectedColor)
                             .value

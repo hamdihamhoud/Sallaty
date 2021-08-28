@@ -1,5 +1,7 @@
 import 'package:ecart/models/product.dart';
+import 'package:ecart/providers/products.dart';
 import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
 
 class ProductDetails extends StatelessWidget {
   final int colorsNumber;
@@ -127,7 +129,12 @@ class ProductDetails extends StatelessWidget {
                                               ),
                                             ),
                                             Text(
-                                              product.colorsAndQuantityAndSizes
+                                              Provider.of<ProductsProvider>(
+                                                      context)
+                                                  .products
+                                                  .firstWhere((element) =>
+                                                      element.id == product.id)
+                                                  .colorsAndQuantityAndSizes
                                                   .entries
                                                   .elementAt(index)
                                                   .value
@@ -186,7 +193,12 @@ class ProductDetails extends StatelessWidget {
                                     ),
                                   ),
                                   Text(
-                                    product.colorsAndQuantityAndSizes.entries
+                                    Provider.of<ProductsProvider>(context)
+                                        .products
+                                        .firstWhere((element) =>
+                                            element.id == product.id)
+                                        .colorsAndQuantityAndSizes
+                                        .entries
                                         .elementAt(index)
                                         .value
                                         .entries
@@ -196,7 +208,12 @@ class ProductDetails extends StatelessWidget {
                                     style: TextStyle(
                                       fontSize: 16,
                                       fontWeight: FontWeight.bold,
-                                      color: product.colorsAndQuantityAndSizes
+                                      color: Provider.of<ProductsProvider>(
+                                                      context)
+                                                  .products
+                                                  .firstWhere((element) =>
+                                                      element.id == product.id)
+                                                  .colorsAndQuantityAndSizes
                                                   .entries
                                                   .elementAt(index)
                                                   .value
