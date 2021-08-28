@@ -116,12 +116,16 @@ class _CartObjectState extends State<CartObject> {
                           child: Column(
                             crossAxisAlignment: CrossAxisAlignment.start,
                             children: [
-                              Text(
-                                widget.cartItem.title,
-                                style: TextStyle(
-                                  color: Color(0xFF333333),
-                                  fontSize: 20,
-                                  fontWeight: FontWeight.bold,
+                              Container(
+                                constraints: BoxConstraints(maxWidth: MediaQuery.of(context).size.width * 0.4),
+                                child: Text(
+                                  widget.cartItem.title,
+                                  style: TextStyle(
+                                    color: Color(0xFF333333),
+                                    fontSize: 20,
+                                    fontWeight: FontWeight.bold,
+                                  ),
+                                  overflow: TextOverflow.ellipsis,
                                 ),
                               ),
                               Padding(
