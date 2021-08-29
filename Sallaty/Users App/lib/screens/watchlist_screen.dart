@@ -43,7 +43,7 @@ class WatchlistScreen extends StatelessWidget {
                           child: Text(
                             "Collect Love!",
                             style: TextStyle(
-                              color: Colors.red[300], //Color(0xFF333333),
+                              color: Colors.red[300],
                               fontSize: 21,
                               fontWeight: FontWeight.bold,
                             ),

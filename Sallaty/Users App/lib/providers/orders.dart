@@ -1,11 +1,9 @@
 import 'package:ecart/models/period.dart';
 import 'package:ecart/models/product.dart';
 import 'package:flutter/material.dart';
-
 import 'cart.dart';
 import 'dart:convert';
 import 'package:http/http.dart' as http;
-import 'products.dart';
 
 class Order {
   final String id;
@@ -27,7 +25,6 @@ class Order {
 
 class Orders with ChangeNotifier {
   final mainUrl = 'https://hamdi1234.herokuapp.com';
-  // List<Order> _orders = [];
   String _token;
   String _userId;
 
@@ -159,6 +156,7 @@ class Orders with ChangeNotifier {
         List<CartItem> products = [];
         for (var i = 0; i < orderItems.length; i++) {
           final product = CartItem(
+            id: orderItems[i]['product_id']['_id'] + i.toString(),
             productId: orderItems[i]['product_id']['_id'].toString(),
             imageUrl: orderItems[i]['product_id']['images'][0].toString(),
             price:
@@ -173,6 +171,7 @@ class Orders with ChangeNotifier {
         final order = Order(
             id: responseData[i]['_id'],
             address: responseData[i]['address'],
+            coponDiscount: responseData[i]['discount'],
             amount: double.parse(responseData[i]['total'].toString()),
             products: products,
             dateTime: DateTime.parse(

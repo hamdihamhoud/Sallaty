@@ -38,8 +38,6 @@ class MyApp extends StatelessWidget {
     return MultiProvider(
       providers: [
         ChangeNotifierProvider<AuthProvider>(create: (_) => AuthProvider()),
-        // ChangeNotifierProvider<ProductsProvider>(
-        //     create: (_) => ProductsProvider()),
         ChangeNotifierProxyProvider<AuthProvider, ProductsProvider>(
           create: (_) => ProductsProvider(),
           update: (ctx, auth, products) => products
@@ -64,8 +62,6 @@ class MyApp extends StatelessWidget {
         title: 'Sallaty',
         debugShowCheckedModeBanner: false,
         theme: ThemeData(
-          // canvasColor: Color(0xFF828282),
-          // buttonColor: Color(0xFF333333),
           primaryColor: Color(0xFF6fb9b8),
           accentColor: Color(0xFFd4f5ee),
           primaryColorBrightness: Brightness.dark,
@@ -104,8 +100,6 @@ class MyApp extends StatelessWidget {
                         : AuthScreen(),
           ),
         ),
-        // AppBottomNavigationBarController(),
-        // VerificationScreen(),
         routes: {
           HomeScreen.routeName: (ctx) => HomeScreen(),
           WatchlistScreen.routeName: (ctx) => WatchlistScreen(),

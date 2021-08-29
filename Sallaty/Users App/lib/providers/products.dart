@@ -26,6 +26,78 @@ class ProductsProvider with ChangeNotifier {
       _products.add(product);
   }
 
+  Product setProductFromResponse(dynamic responseData, bool isFavorite) {
+    final responseColorsAndQuantityAndSizes =
+        responseData['colorsAndQuantityAndSizes'] as List;
+    Map<Color, Map<String, int>> colorsAndQuantityAndSizes = {};
+    responseColorsAndQuantityAndSizes.forEach((element) {
+      colorsAndQuantityAndSizes.putIfAbsent(Color(element['color']), () {
+        final responseSizesAndQuantity = element['sizesAndQuantity'] as List;
+        Map<String, int> sizesAndQuantity = {};
+        responseSizesAndQuantity.forEach((secondElement) {
+          sizesAndQuantity.putIfAbsent(
+              secondElement['size'], () => secondElement['quantity']);
+        });
+        return sizesAndQuantity;
+      });
+    });
+    final responseSpecs = responseData['specs'] as Map;
+    Map<String, String> specs = {};
+    responseSpecs.forEach((key, value) {
+      specs.putIfAbsent(key, () => value);
+    });
+    final responseImages = responseData['images'] as List;
+    List<String> images = [];
+    responseImages.forEach((element) {
+      images.add(element);
+    });
+    final product = Product(
+      isFavorite: isFavorite,
+      id: responseData['_id'],
+      title: responseData['name'],
+      price: double.parse(responseData['price'].toString()),
+      colorsAndQuantityAndSizes: colorsAndQuantityAndSizes,
+      warranty: Period(
+        type: responseData['warrantyType'] == 'days'
+            ? TimeType.days
+            : responseData['warrantyType'] == 'months'
+                ? TimeType.months
+                : responseData['warrantyType'] == 'weeks'
+                    ? TimeType.weeks
+                    : TimeType.years,
+        period: responseData['warranty_period'],
+      ),
+      returning: Period(
+        type: responseData['returningType'] == 'days'
+            ? TimeType.days
+            : responseData['returningType'] == 'months'
+                ? TimeType.months
+                : responseData['returningType'] == 'weeks'
+                    ? TimeType.weeks
+                    : TimeType.years,
+        period: responseData['returning_period'],
+      ),
+      replacement: Period(
+        type: responseData['replacementType'] == 'days'
+            ? TimeType.days
+            : responseData['replacementType'] == 'months'
+                ? TimeType.months
+                : responseData['replacementType'] == 'weeks'
+                    ? TimeType.weeks
+                    : TimeType.years,
+        period: responseData['replacing_period'],
+      ),
+      category: responseData['category'],
+      type: responseData['type'],
+      description: responseData['discription'],
+      discountPercentage: double.parse(responseData['discount'].toString()),
+      specs: specs,
+      imageUrls: images,
+      ownerId: responseData['owner'],
+    );
+    return product;
+  }
+
   Future<Product> findId(String id) async {
     // fetch by id
     final url = Uri.parse('$mainUrl/product/$id');
@@ -37,75 +109,7 @@ class ProductsProvider with ChangeNotifier {
     final responseJson = json.decode(response.body);
     final responseData = responseJson['product'];
     if (response.statusCode == 200) {
-      final responseColorsAndQuantityAndSizes =
-          responseData['colorsAndQuantityAndSizes'] as List;
-      Map<Color, Map<String, int>> colorsAndQuantityAndSizes = {};
-      responseColorsAndQuantityAndSizes.forEach((element) {
-        colorsAndQuantityAndSizes.putIfAbsent(Color(element['color']), () {
-          final responseSizesAndQuantity = element['sizesAndQuantity'] as List;
-          Map<String, int> sizesAndQuantity = {};
-          responseSizesAndQuantity.forEach((secondElement) {
-            sizesAndQuantity.putIfAbsent(
-                secondElement['size'], () => secondElement['quantity']);
-          });
-          return sizesAndQuantity;
-        });
-      });
-      final responseSpecs = responseData['specs'] as Map;
-      Map<String, String> specs = {};
-      responseSpecs.forEach((key, value) {
-        specs.putIfAbsent(key, () => value);
-      });
-      final responseImages = responseData['images'] as List;
-      List<String> images = [];
-      responseImages.forEach((element) {
-        images.add(element);
-      });
-      final product = Product(
-          isFavorite: responseJson['isAdded'],
-        id: responseData['_id'],
-        title: responseData['name'],
-        price: double.parse(responseData['price'].toString()),
-        colorsAndQuantityAndSizes: colorsAndQuantityAndSizes,
-        warranty: Period(
-          type: responseData['warrantyType'] == 'days'
-              ? TimeType.days
-              : responseData['warrantyType'] == 'months'
-                  ? TimeType.months
-                  : responseData['warrantyType'] == 'weeks'
-                      ? TimeType.weeks
-                      : TimeType.years,
-          period: responseData['warranty_period'],
-        ),
-        returning: Period(
-          type: responseData['returningType'] == 'days'
-              ? TimeType.days
-              : responseData['returningType'] == 'months'
-                  ? TimeType.months
-                  : responseData['returningType'] == 'weeks'
-                      ? TimeType.weeks
-                      : TimeType.years,
-          period: responseData['returning_period'],
-        ),
-        replacement: Period(
-          type: responseData['replacementType'] == 'days'
-              ? TimeType.days
-              : responseData['replacementType'] == 'months'
-                  ? TimeType.months
-                  : responseData['replacementType'] == 'weeks'
-                      ? TimeType.weeks
-                      : TimeType.years,
-          period: responseData['replacing_period'],
-        ),
-        category: responseData['category'],
-        type: responseData['type'],
-        description: responseData['discription'],
-        discountPercentage: double.parse(responseData['discount'].toString()),
-        specs: specs,
-        imageUrls: images,
-        ownerId: responseData['owner'],
-      );
-      return product;
+      return setProductFromResponse(responseData, responseJson['isAdded']);
     } else {
       throw HttpException(response.body);
     }
@@ -122,85 +126,14 @@ class ProductsProvider with ChangeNotifier {
     List<Product> typeProducts = [];
     if (response.statusCode == 200) {
       responseData.forEach((element) {
-        final isFav = element['isAdded'] as bool;
-        element = element['product'];
-        final responseColorsAndQuantityAndSizes =
-            element['colorsAndQuantityAndSizes'] as List;
-        Map<Color, Map<String, int>> colorsAndQuantityAndSizes = {};
-        responseColorsAndQuantityAndSizes.forEach((secondElement) {
-          colorsAndQuantityAndSizes.putIfAbsent(Color(secondElement['color']),
-              () {
-            final responseSizesAndQuantity =
-                secondElement['sizesAndQuantity'] as List;
-            Map<String, int> sizesAndQuantity = {};
-            responseSizesAndQuantity.forEach((thirdElement) {
-              sizesAndQuantity.putIfAbsent(
-                  thirdElement['size'], () => thirdElement['quantity']);
-            });
-            return sizesAndQuantity;
-          });
-        });
-        final responseSpecs = element['specs'] as Map;
-        Map<String, String> specs = {};
-        responseSpecs.forEach((key, value) {
-          specs.putIfAbsent(key, () => value);
-        });
-        final responseImages = element['images'] as List;
-        List<String> images = [];
-        responseImages.forEach((element) {
-          images.add(element);
-        });
-        final product = Product(
-          isFavorite: isFav,
-          id: element['_id'],
-          title: element['name'],
-          price: double.parse(element['price'].toString()),
-          colorsAndQuantityAndSizes: colorsAndQuantityAndSizes,
-          warranty: Period(
-            type: element['warrantyType'] == 'days'
-                ? TimeType.days
-                : element['warrantyType'] == 'months'
-                    ? TimeType.months
-                    : element['warrantyType'] == 'weeks'
-                        ? TimeType.weeks
-                        : TimeType.years,
-            period: element['warranty_period'],
-          ),
-          returning: Period(
-            type: element['returningType'] == 'days'
-                ? TimeType.days
-                : element['returningType'] == 'months'
-                    ? TimeType.months
-                    : element['returningType'] == 'weeks'
-                        ? TimeType.weeks
-                        : TimeType.years,
-            period: element['returning_period'],
-          ),
-          replacement: Period(
-            type: element['replacementType'] == 'days'
-                ? TimeType.days
-                : element['replacementType'] == 'months'
-                    ? TimeType.months
-                    : element['replacementType'] == 'weeks'
-                        ? TimeType.weeks
-                        : TimeType.years,
-            period: element['replacing_period'],
-          ),
-          category: element['category'],
-          type: element['type'],
-          description: element['discription'],
-          discountPercentage: double.parse(element['discount'].toString()),
-          specs: specs,
-          imageUrls: images,
-          ownerId: element['owner'],
-        );
+        final product =
+            setProductFromResponse(element['product'], element['isAdded']);
         addProductToList(product);
         typeProducts.add(product);
       });
     } else {
       throw HttpException(response.body);
     }
-    // notifyListeners();
     return typeProducts;
   }
 
@@ -215,78 +148,8 @@ class ProductsProvider with ChangeNotifier {
     List<Product> typeProducts = [];
     if (response.statusCode == 200) {
       responseData.forEach((element) {
-        final isFav = element['isAdded'] as bool;
-        element = element['product'];
-        final responseColorsAndQuantityAndSizes =
-            element['colorsAndQuantityAndSizes'] as List;
-        Map<Color, Map<String, int>> colorsAndQuantityAndSizes = {};
-        responseColorsAndQuantityAndSizes.forEach((secondElement) {
-          colorsAndQuantityAndSizes.putIfAbsent(Color(secondElement['color']),
-              () {
-            final responseSizesAndQuantity =
-                secondElement['sizesAndQuantity'] as List;
-            Map<String, int> sizesAndQuantity = {};
-            responseSizesAndQuantity.forEach((thirdElement) {
-              sizesAndQuantity.putIfAbsent(
-                  thirdElement['size'], () => thirdElement['quantity']);
-            });
-            return sizesAndQuantity;
-          });
-        });
-        final responseSpecs = element['specs'] as Map;
-        Map<String, String> specs = {};
-        responseSpecs.forEach((key, value) {
-          specs.putIfAbsent(key, () => value);
-        });
-        final responseImages = element['images'] as List;
-        List<String> images = [];
-        responseImages.forEach((element) {
-          images.add(element);
-        });
-        final product = Product(
-          isFavorite: isFav,
-          id: element['_id'],
-          title: element['name'],
-          price: double.parse(element['price'].toString()),
-          colorsAndQuantityAndSizes: colorsAndQuantityAndSizes,
-          warranty: Period(
-            type: element['warrantyType'] == 'days'
-                ? TimeType.days
-                : element['warrantyType'] == 'months'
-                    ? TimeType.months
-                    : element['warrantyType'] == 'weeks'
-                        ? TimeType.weeks
-                        : TimeType.years,
-            period: element['warranty_period'],
-          ),
-          returning: Period(
-            type: element['returningType'] == 'days'
-                ? TimeType.days
-                : element['returningType'] == 'months'
-                    ? TimeType.months
-                    : element['returningType'] == 'weeks'
-                        ? TimeType.weeks
-                        : TimeType.years,
-            period: element['returning_period'],
-          ),
-          replacement: Period(
-            type: element['replacementType'] == 'days'
-                ? TimeType.days
-                : element['replacementType'] == 'months'
-                    ? TimeType.months
-                    : element['replacementType'] == 'weeks'
-                        ? TimeType.weeks
-                        : TimeType.years,
-            period: element['replacing_period'],
-          ),
-          category: element['category'],
-          type: element['type'],
-          description: element['discription'],
-          discountPercentage: double.parse(element['discount'].toString()),
-          specs: specs,
-          imageUrls: images,
-          ownerId: element['owner'],
-        );
+        final product =
+            setProductFromResponse(element['product'], element['isAdded']);
         addProductToList(product);
         typeProducts.add(product);
       });
@@ -308,76 +171,7 @@ class ProductsProvider with ChangeNotifier {
     if (response.statusCode == 200 || response.statusCode == 201) {
       final responseData = json.decode(response.body) as List;
       responseData.forEach((element) {
-        final responseColorsAndQuantityAndSizes =
-            element['colorsAndQuantityAndSizes'] as List;
-        Map<Color, Map<String, int>> colorsAndQuantityAndSizes = {};
-        responseColorsAndQuantityAndSizes.forEach((secondElement) {
-          colorsAndQuantityAndSizes.putIfAbsent(Color(secondElement['color']),
-              () {
-            final responseSizesAndQuantity =
-                secondElement['sizesAndQuantity'] as List;
-            Map<String, int> sizesAndQuantity = {};
-            responseSizesAndQuantity.forEach((thirdElement) {
-              sizesAndQuantity.putIfAbsent(
-                  thirdElement['size'], () => thirdElement['quantity']);
-            });
-            return sizesAndQuantity;
-          });
-        });
-        final responseSpecs = element['specs'] as Map;
-        Map<String, String> specs = {};
-        responseSpecs.forEach((key, value) {
-          specs.putIfAbsent(key, () => value);
-        });
-        final responseImages = element['images'] as List;
-        List<String> images = [];
-        responseImages.forEach((element) {
-          images.add(element);
-        });
-        final product = Product(
-          isFavorite: true,
-          id: element['_id'],
-          title: element['name'],
-          price: double.parse(element['price'].toString()),
-          colorsAndQuantityAndSizes: colorsAndQuantityAndSizes,
-          warranty: Period(
-            type: element['warrantyType'] == 'days'
-                ? TimeType.days
-                : element['warrantyType'] == 'months'
-                    ? TimeType.months
-                    : element['warrantyType'] == 'weeks'
-                        ? TimeType.weeks
-                        : TimeType.years,
-            period: element['warranty_period'],
-          ),
-          returning: Period(
-            type: element['returningType'] == 'days'
-                ? TimeType.days
-                : element['returningType'] == 'months'
-                    ? TimeType.months
-                    : element['returningType'] == 'weeks'
-                        ? TimeType.weeks
-                        : TimeType.years,
-            period: element['returning_period'],
-          ),
-          replacement: Period(
-            type: element['replacementType'] == 'days'
-                ? TimeType.days
-                : element['replacementType'] == 'months'
-                    ? TimeType.months
-                    : element['replacementType'] == 'weeks'
-                        ? TimeType.weeks
-                        : TimeType.years,
-            period: element['replacing_period'],
-          ),
-          category: element['category'],
-          type: element['type'],
-          description: element['discription'],
-          discountPercentage: double.parse(element['discount'].toString()),
-          specs: specs,
-          imageUrls: images,
-          ownerId: element['owner'],
-        );
+        final product = setProductFromResponse(element['product'], true);
         addProductToList(product);
         favorites.add(product);
       });
@@ -398,78 +192,8 @@ class ProductsProvider with ChangeNotifier {
     List<Product> offers = [];
     if (response.statusCode == 200) {
       responseData.forEach((element) {
-        final isFav = element['isAdded'] as bool;
-        element = element['product'];
-        final responseColorsAndQuantityAndSizes =
-            element['colorsAndQuantityAndSizes'] as List;
-        Map<Color, Map<String, int>> colorsAndQuantityAndSizes = {};
-        responseColorsAndQuantityAndSizes.forEach((secondElement) {
-          colorsAndQuantityAndSizes.putIfAbsent(Color(secondElement['color']),
-              () {
-            final responseSizesAndQuantity =
-                secondElement['sizesAndQuantity'] as List;
-            Map<String, int> sizesAndQuantity = {};
-            responseSizesAndQuantity.forEach((thirdElement) {
-              sizesAndQuantity.putIfAbsent(
-                  thirdElement['size'], () => thirdElement['quantity']);
-            });
-            return sizesAndQuantity;
-          });
-        });
-        final responseSpecs = element['specs'] as Map;
-        Map<String, String> specs = {};
-        responseSpecs.forEach((key, value) {
-          specs.putIfAbsent(key, () => value);
-        });
-        final responseImages = element['images'] as List;
-        List<String> images = [];
-        responseImages.forEach((element) {
-          images.add(element);
-        });
-        final product = Product(
-          isFavorite: isFav,
-          id: element['_id'],
-          title: element['name'],
-          price: double.parse(element['price'].toString()),
-          colorsAndQuantityAndSizes: colorsAndQuantityAndSizes,
-          warranty: Period(
-            type: element['warrantyType'] == 'days'
-                ? TimeType.days
-                : element['warrantyType'] == 'months'
-                    ? TimeType.months
-                    : element['warrantyType'] == 'weeks'
-                        ? TimeType.weeks
-                        : TimeType.years,
-            period: element['warranty_period'],
-          ),
-          returning: Period(
-            type: element['returningType'] == 'days'
-                ? TimeType.days
-                : element['returningType'] == 'months'
-                    ? TimeType.months
-                    : element['returningType'] == 'weeks'
-                        ? TimeType.weeks
-                        : TimeType.years,
-            period: element['returning_period'],
-          ),
-          replacement: Period(
-            type: element['replacementType'] == 'days'
-                ? TimeType.days
-                : element['replacementType'] == 'months'
-                    ? TimeType.months
-                    : element['replacementType'] == 'weeks'
-                        ? TimeType.weeks
-                        : TimeType.years,
-            period: element['replacing_period'],
-          ),
-          category: element['category'],
-          type: element['type'],
-          description: element['discription'],
-          discountPercentage: double.parse(element['discount'].toString()),
-          specs: specs,
-          imageUrls: images,
-          ownerId: element['owner'],
-        );
+        final product =
+            setProductFromResponse(element['product'], element['isAdded']);
         addProductToList(product);
         offers.add(product);
       });
@@ -502,78 +226,8 @@ class ProductsProvider with ChangeNotifier {
     List<Product> typeProducts = [];
     if (response.statusCode == 200) {
       responseData.forEach((element) {
-        final isFav = element['isAdded'] as bool;
-        element = element['product'];
-        final responseColorsAndQuantityAndSizes =
-            element['colorsAndQuantityAndSizes'] as List;
-        Map<Color, Map<String, int>> colorsAndQuantityAndSizes = {};
-        responseColorsAndQuantityAndSizes.forEach((secondElement) {
-          colorsAndQuantityAndSizes.putIfAbsent(Color(secondElement['color']),
-              () {
-            final responseSizesAndQuantity =
-                secondElement['sizesAndQuantity'] as List;
-            Map<String, int> sizesAndQuantity = {};
-            responseSizesAndQuantity.forEach((thirdElement) {
-              sizesAndQuantity.putIfAbsent(
-                  thirdElement['size'], () => thirdElement['quantity']);
-            });
-            return sizesAndQuantity;
-          });
-        });
-        final responseSpecs = element['specs'] as Map;
-        Map<String, String> specs = {};
-        responseSpecs.forEach((key, value) {
-          specs.putIfAbsent(key, () => value);
-        });
-        final responseImages = element['images'] as List;
-        List<String> images = [];
-        responseImages.forEach((element) {
-          images.add(element);
-        });
-        final product = Product(
-          isFavorite: isFav,
-          id: element['_id'],
-          title: element['name'],
-          price: double.parse(element['price'].toString()),
-          colorsAndQuantityAndSizes: colorsAndQuantityAndSizes,
-          warranty: Period(
-            type: element['warrantyType'] == 'days'
-                ? TimeType.days
-                : element['warrantyType'] == 'months'
-                    ? TimeType.months
-                    : element['warrantyType'] == 'weeks'
-                        ? TimeType.weeks
-                        : TimeType.years,
-            period: element['warranty_period'],
-          ),
-          returning: Period(
-            type: element['returningType'] == 'days'
-                ? TimeType.days
-                : element['returningType'] == 'months'
-                    ? TimeType.months
-                    : element['returningType'] == 'weeks'
-                        ? TimeType.weeks
-                        : TimeType.years,
-            period: element['returning_period'],
-          ),
-          replacement: Period(
-            type: element['replacementType'] == 'days'
-                ? TimeType.days
-                : element['replacementType'] == 'months'
-                    ? TimeType.months
-                    : element['replacementType'] == 'weeks'
-                        ? TimeType.weeks
-                        : TimeType.years,
-            period: element['replacing_period'],
-          ),
-          category: element['category'],
-          type: element['type'],
-          description: element['discription'],
-          discountPercentage: double.parse(element['discount'].toString()),
-          specs: specs,
-          imageUrls: images,
-          ownerId: element['owner'],
-        );
+        final product =
+            setProductFromResponse(element['product'], element['isAdded']);
         addProductToList(product);
         typeProducts.add(product);
       });
@@ -600,78 +254,8 @@ class ProductsProvider with ChangeNotifier {
     List<Product> searchProducts = [];
     if (response.statusCode == 200 || response.statusCode == 201) {
       responseData.forEach((element) {
-        final isFav = element['isAdded'] as bool;
-        element = element['product'];
-        final responseColorsAndQuantityAndSizes =
-            element['colorsAndQuantityAndSizes'] as List;
-        Map<Color, Map<String, int>> colorsAndQuantityAndSizes = {};
-        responseColorsAndQuantityAndSizes.forEach((secondElement) {
-          colorsAndQuantityAndSizes.putIfAbsent(Color(secondElement['color']),
-              () {
-            final responseSizesAndQuantity =
-                secondElement['sizesAndQuantity'] as List;
-            Map<String, int> sizesAndQuantity = {};
-            responseSizesAndQuantity.forEach((thirdElement) {
-              sizesAndQuantity.putIfAbsent(
-                  thirdElement['size'], () => thirdElement['quantity']);
-            });
-            return sizesAndQuantity;
-          });
-        });
-        final responseSpecs = element['specs'] as Map;
-        Map<String, String> specs = {};
-        responseSpecs.forEach((key, value) {
-          specs.putIfAbsent(key, () => value);
-        });
-        final responseImages = element['images'] as List;
-        List<String> images = [];
-        responseImages.forEach((element) {
-          images.add(element);
-        });
-        final product = Product(
-          isFavorite: isFav,
-          id: element['_id'],
-          title: element['name'],
-          price: double.parse(element['price'].toString()),
-          colorsAndQuantityAndSizes: colorsAndQuantityAndSizes,
-          warranty: Period(
-            type: element['warrantyType'] == 'days'
-                ? TimeType.days
-                : element['warrantyType'] == 'months'
-                    ? TimeType.months
-                    : element['warrantyType'] == 'weeks'
-                        ? TimeType.weeks
-                        : TimeType.years,
-            period: element['warranty_period'],
-          ),
-          returning: Period(
-            type: element['returningType'] == 'days'
-                ? TimeType.days
-                : element['returningType'] == 'months'
-                    ? TimeType.months
-                    : element['returningType'] == 'weeks'
-                        ? TimeType.weeks
-                        : TimeType.years,
-            period: element['returning_period'],
-          ),
-          replacement: Period(
-            type: element['replacementType'] == 'days'
-                ? TimeType.days
-                : element['replacementType'] == 'months'
-                    ? TimeType.months
-                    : element['replacementType'] == 'weeks'
-                        ? TimeType.weeks
-                        : TimeType.years,
-            period: element['replacing_period'],
-          ),
-          category: element['category'],
-          type: element['type'],
-          description: element['discription'],
-          discountPercentage: double.parse(element['discount'].toString()),
-          specs: specs,
-          imageUrls: images,
-          ownerId: element['owner'],
-        );
+        final product =
+            setProductFromResponse(element['product'], element['isAdded']);
         addProductToList(product);
         searchProducts.add(product);
       });
@@ -692,6 +276,9 @@ class ProductsProvider with ChangeNotifier {
         body: json.encode({
           "rate": rating,
         }));
+        if (response.statusCode != 200 && response.statusCode != 201) {
+          throw response.body;
+        }
     notifyListeners();
   }
 
@@ -945,75 +532,7 @@ class ProductsProvider with ChangeNotifier {
     List<Product> typeProducts = [];
     if (response.statusCode == 200) {
       responseData.forEach((element) {
-        final responseColorsAndQuantityAndSizes =
-            element['colorsAndQuantityAndSizes'] as List;
-        Map<Color, Map<String, int>> colorsAndQuantityAndSizes = {};
-        responseColorsAndQuantityAndSizes.forEach((secondElement) {
-          colorsAndQuantityAndSizes.putIfAbsent(Color(secondElement['color']),
-              () {
-            final responseSizesAndQuantity =
-                secondElement['sizesAndQuantity'] as List;
-            Map<String, int> sizesAndQuantity = {};
-            responseSizesAndQuantity.forEach((thirdElement) {
-              sizesAndQuantity.putIfAbsent(
-                  thirdElement['size'], () => thirdElement['quantity']);
-            });
-            return sizesAndQuantity;
-          });
-        });
-        final responseSpecs = element['specs'] as Map;
-        Map<String, String> specs = {};
-        responseSpecs.forEach((key, value) {
-          specs.putIfAbsent(key, () => value);
-        });
-        final responseImages = element['images'] as List;
-        List<String> images = [];
-        responseImages.forEach((element) {
-          images.add(element);
-        });
-        final product = Product(
-          id: element['_id'],
-          title: element['name'],
-          price: double.parse(element['price'].toString()),
-          colorsAndQuantityAndSizes: colorsAndQuantityAndSizes,
-          warranty: Period(
-            type: element['warrantyType'] == 'days'
-                ? TimeType.days
-                : element['warrantyType'] == 'months'
-                    ? TimeType.months
-                    : element['warrantyType'] == 'weeks'
-                        ? TimeType.weeks
-                        : TimeType.years,
-            period: element['warranty_period'],
-          ),
-          returning: Period(
-            type: element['returningType'] == 'days'
-                ? TimeType.days
-                : element['returningType'] == 'months'
-                    ? TimeType.months
-                    : element['returningType'] == 'weeks'
-                        ? TimeType.weeks
-                        : TimeType.years,
-            period: element['returning_period'],
-          ),
-          replacement: Period(
-            type: element['replacementType'] == 'days'
-                ? TimeType.days
-                : element['replacementType'] == 'months'
-                    ? TimeType.months
-                    : element['replacementType'] == 'weeks'
-                        ? TimeType.weeks
-                        : TimeType.years,
-            period: element['replacing_period'],
-          ),
-          category: element['category'],
-          type: element['type'],
-          description: element['discription'],
-          discountPercentage: double.parse(element['discount'].toString()),
-          specs: specs,
-          imageUrls: images,
-          ownerId: element['owner'],
-        );
+        final product = setProductFromResponse(element['product'], false);
         typeProducts.insert(0, product);
       });
     } else {

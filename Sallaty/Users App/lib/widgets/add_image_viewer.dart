@@ -22,8 +22,6 @@ class _AddImageViewerState extends State<AddImageViewer> {
         options: CarouselOptions(
             aspectRatio: 3 / 2,
             viewportFraction: 1,
-
-            // enlargeCenterPage: true,
             onPageChanged: (index, reason) {
               setState(() {
                 _current = index;

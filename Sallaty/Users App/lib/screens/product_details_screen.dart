@@ -40,7 +40,7 @@ class _ProductDetailsSceenState extends State<ProductDetailsSceen> {
           ModalRoute.of(context).settings.arguments as ProducDetailsScreenArgs;
       final String productId = args.id;
       isSeller = args.isSeller;
-      productProvider = Provider.of<ProductsProvider>(context,listen: false);
+      productProvider = Provider.of<ProductsProvider>(context, listen: false);
       cart = Provider.of<Cart>(context);
       mediaQuery = MediaQuery.of(context);
       theme = Theme.of(context);
@@ -141,7 +141,6 @@ class _ProductDetailsSceenState extends State<ProductDetailsSceen> {
                         ),
                         flexibleSpace: Stack(
                           children: [
-                        
                             Positioned(
                                 child: InkWell(
                                   child:
@@ -181,42 +180,41 @@ class _ProductDetailsSceenState extends State<ProductDetailsSceen> {
                               left: 0,
                               right: 0,
                             ),
-                            if(product.discountPercentage!=0)
-                            Positioned(
-                          bottom: 15,
-                          left: 25,
-                          child: Container(
-                            height: 30,
-                            width: mediaQuery.size.width * 0.2,
-                            decoration: BoxDecoration(
-                                borderRadius: BorderRadius.all(
-                                  Radius.circular(10),
-                                ),
-                                color: Colors.greenAccent),
-                            child: Center(
-                              child: Text(
-                                "${product.discountPercentage.toStringAsFixed(0)} %",
-                                style: TextStyle(
-                                  color: Colors.black54,
-                                  fontWeight: FontWeight.bold,
-                                  fontSize: 16,
+                            if (product.discountPercentage != 0)
+                              Positioned(
+                                bottom: 15,
+                                left: 25,
+                                child: Container(
+                                  height: 30,
+                                  width: mediaQuery.size.width * 0.2,
+                                  decoration: BoxDecoration(
+                                      borderRadius: BorderRadius.all(
+                                        Radius.circular(10),
+                                      ),
+                                      color: Colors.greenAccent),
+                                  child: Center(
+                                    child: Text(
+                                      "${product.discountPercentage.toStringAsFixed(0)} %",
+                                      style: TextStyle(
+                                        color: Colors.black54,
+                                        fontWeight: FontWeight.bold,
+                                        fontSize: 16,
+                                      ),
+                                    ),
+                                  ),
                                 ),
                               ),
-                            ),
-                          ),
-                        ),
-                            if(!isSeller)
-                            Positioned(
-                              bottom: 5,
-                              right: 25,
-                              child: FavoriteIcon(product: product),
-                            ),
+                            if (!isSeller)
+                              Positioned(
+                                bottom: 5,
+                                right: 25,
+                                child: FavoriteIcon(product: product),
+                              ),
                           ],
                         ),
                       ),
                       SliverList(
                         delegate: SliverChildBuilderDelegate(
-                          // ignore: missing_return
                           (BuildContext context, int index) {
                             if (index == 0) {
                               return ProductDetailsList(
@@ -227,10 +225,12 @@ class _ProductDetailsSceenState extends State<ProductDetailsSceen> {
                                   hasSize: hasSize,
                                   ownerName: ownerName,
                                   mediaQuery: mediaQuery);
+                            } else {
+                              return Container();
                             }
                           },
                         ),
-                      ),  
+                      ),
                     ],
                   ),
                   if (!isSeller)

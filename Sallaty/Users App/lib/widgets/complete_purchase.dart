@@ -3,7 +3,6 @@ import 'package:ecart/providers/orders.dart';
 import 'package:ecart/widgets/add_copon_form.dart';
 import 'package:ecart/widgets/add_new_address_button.dart';
 import 'package:ecart/widgets/address_viewer.dart';
-import 'package:ecart/widgets/alert_dialog.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
@@ -46,7 +45,6 @@ class _CompletePurchaseState extends State<CompletePurchase> {
 
   @override
   Widget build(BuildContext context) {
-    final ordersProvider = Provider.of<Orders>(context);
     final mediaquery = MediaQuery.of(context);
     final theme = Theme.of(context);
     return Container(

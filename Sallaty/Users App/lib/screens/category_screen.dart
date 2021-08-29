@@ -6,7 +6,6 @@ import '../providers/products.dart';
 import '../models/product.dart';
 import '../models/category.dart';
 import '../widgets/product_item.dart';
-//import '../widgets/home_suggestion_item.dart';
 import '../widgets/types_row.dart';
 import 'type_screen.dart';
 
@@ -25,9 +24,6 @@ class CategoryScreen extends StatelessWidget {
             style: TextStyle(fontWeight: FontWeight.bold),
           ),
           actions: [
-            // if (category.types.length == 0)
-            //   IconButton(
-            //       icon: Icon(Icons.filter_alt_rounded), onPressed: () {}),
             IconButton(
               icon: Icon(Icons.search),
               onPressed: () {},

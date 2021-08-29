@@ -3,7 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
 class AddCoponForm extends StatefulWidget {
-  Function setCoponDiscount;
+  final Function setCoponDiscount;
   AddCoponForm(this.setCoponDiscount);
   @override
   _AddCoponFormState createState() => _AddCoponFormState();

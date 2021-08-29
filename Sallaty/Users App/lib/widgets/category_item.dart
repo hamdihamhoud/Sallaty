@@ -30,9 +30,6 @@ class CategoryItem extends StatelessWidget {
                 child: ClipOval(
                   child: Padding(
                     padding: const EdgeInsets.all(8.0),
-                    // child: Image.asset(
-                    //   fit: BoxFit.cover,
-                    // ),
                   ),
                 ),
                 radius: 40,

@@ -41,7 +41,6 @@ class _OrderItemState extends State<OrderItem> {
               },
             ),
           ),
-          //     if (_expanded)
           AnimatedContainer(
             duration: Duration(milliseconds: 500),
             constraints: BoxConstraints(
@@ -50,7 +49,6 @@ class _OrderItemState extends State<OrderItem> {
               minHeight: _expanded ? 30 : 0,
             ),
             color: Colors.grey[200],
-            //    height: min(widget.order.products.length * 25.0 + 10, 100),
             child: ListView.builder(
               padding: const EdgeInsets.all(8),
               itemCount: widget.order.products.length,

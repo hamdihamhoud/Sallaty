@@ -15,17 +15,36 @@ import '../widgets/seller_filtering_row.dart';
 import 'drawer_screen.dart';
 import 'add_product_screen.dart';
 
-class AccountScreen extends StatelessWidget {
+class AccountScreen extends StatefulWidget {
   static const routeName = '/account';
   AccountScreen({Key key}) : super(key: key);
+
+  @override
+  _AccountScreenState createState() => _AccountScreenState();
+}
+
+class _AccountScreenState extends State<AccountScreen> {
+  Orders ordersProvider;
+  bool _init = true;
+
+  @override
+  void didChangeDependencies() {
+    if (_init) {
+      ordersProvider = Provider.of<Orders>(context);
+      _init = false;
+    }
+    super.didChangeDependencies();
+  }
+
+  List<CartItem> sellerOrders = [];
+  Future<void> refresh() async {
+    sellerOrders = await ordersProvider.fetchSellerOrders();
+    setState(() {});
+  }
+
   @override
   Widget build(BuildContext context) {
     bool isPremium = Provider.of<AuthProvider>(context, listen: false).isSeller;
-    List<CartItem> sellerOrders = [];
-    Future<List<CartItem>> _refresh() async {
-      sellerOrders = await Provider.of<Orders>(context).fetchSellerOrders();
-      return sellerOrders;
-    }
 
     Widget premiumBody() {
       List<Product> sellerProducts = [];
@@ -71,9 +90,9 @@ class AccountScreen extends StatelessWidget {
                         ),
                       );
               }),
-          RecentSoldItems(),
+          RecentSoldItems(refresh),
           FutureBuilder(
-              future: _refresh(),
+              future: ordersProvider.fetchSellerOrders(),
               builder: (ctx, snapshot) {
                 if (snapshot.connectionState == ConnectionState.waiting)
                   return Center(child: CircularProgressIndicator());
@@ -134,15 +153,13 @@ class AccountScreen extends StatelessWidget {
                 ),
               ),
             ),
-      // bottomNavigationBar: BottomBar(4, context),
     );
   }
 }
 
 class RecentSoldItems extends StatelessWidget {
-  const RecentSoldItems({
-    Key key,
-  }) : super(key: key);
+  final Function refresh;
+  const RecentSoldItems(this.refresh);
 
   @override
   Widget build(BuildContext context) {
@@ -166,7 +183,7 @@ class RecentSoldItems extends StatelessWidget {
                 Icons.refresh,
               ),
               color: Theme.of(context).primaryColor,
-              onPressed: () {},
+              onPressed: refresh,
             ),
           ),
         ],

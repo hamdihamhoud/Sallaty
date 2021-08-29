@@ -16,8 +16,6 @@ class AddressesProvider with ChangeNotifier {
     _userId = id;
   }
 
-  // List<String> _addresses = [];
-
   Future<List<String>> get addresses async {
     final url = Uri.parse('$mainUrl/getAddresses');
     final response = await http.get(

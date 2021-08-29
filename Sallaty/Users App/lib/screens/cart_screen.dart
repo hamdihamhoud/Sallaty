@@ -47,7 +47,7 @@ class _CartScreenState extends State<CartScreen> {
                     "Empty Cart",
                     style: TextStyle(
                       color:
-                          Theme.of(context).primaryColor, //Color(0xFF333333),
+                          Theme.of(context).primaryColor,
                       fontSize: 21,
                       fontWeight: FontWeight.bold,
                     ),

@@ -9,11 +9,8 @@ class AuthProvider with ChangeNotifier {
   String name;
   String email;
   String password;
-  // String imageUrl;
   String number;
   bool isSeller;
-  // List<String> wishListIds = [];
-  // List<String> ordersIds = [];
   String _token;
   final mainUrl = 'https://hamdi1234.herokuapp.com';
 
@@ -51,7 +48,6 @@ class AuthProvider with ChangeNotifier {
       }),
     );
     if (response.statusCode == 200 || response.statusCode == 201) {
-      var responseData = json.decode(response.body);
       name = username;
       number = usernumber;
       email = useremail;
@@ -62,9 +58,6 @@ class AuthProvider with ChangeNotifier {
       print(responseData);
       throw HttpException(responseData);
     }
-    // final responseData = json.decode(response.body);
-    // if (responseData['error'] != null)
-    //   throw HttpException(responseData['error']['message']);
   }
 
   Future<void> codeConfirming(String code) async {
@@ -95,8 +88,6 @@ class AuthProvider with ChangeNotifier {
       notifyListeners();
     } else {
       print('Request failed with status: ${response.statusCode}.');
-      // var responseData = json.decode(response.body);
-      // print(responseData);
       throw HttpException(response.body);
     }
     password = '';
@@ -131,8 +122,7 @@ class AuthProvider with ChangeNotifier {
     String number,
     String password,
   ) async {
-    final url =
-        Uri.parse('$mainUrl/users/loginbynumber');
+    final url = Uri.parse('$mainUrl/users/loginbynumber');
     final response = await http.post(url,
         headers: {
           'usertype': 'vendor',
@@ -150,7 +140,6 @@ class AuthProvider with ChangeNotifier {
       number = responseData['number'];
       _token = response.headers['authorization'];
       isSeller = responseData['role'] == 'normal' ? false : true;
-      
       saveToken();
       notifyListeners();
     } else
@@ -219,8 +208,7 @@ class AuthProvider with ChangeNotifier {
   }
 
   Future<bool> validToken() async {
-    final url =
-        Uri.parse('$mainUrl/users/checkAccessiblity');
+    final url = Uri.parse('$mainUrl/users/checkAccessiblity');
     final response = await http.post(
       url,
       headers: {
@@ -229,8 +217,9 @@ class AuthProvider with ChangeNotifier {
       },
       body: json.encode({"token": token}),
     );
-    if (response.statusCode == 200 || response.statusCode == 201){
-       return true;}
+    if (response.statusCode == 200 || response.statusCode == 201) {
+      return true;
+    }
     await logout();
     return false;
   }

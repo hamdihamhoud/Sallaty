@@ -69,7 +69,7 @@ class _VerificationScreenState extends State<VerificationScreen> {
                 height: 10,
               ),
               _isLoading
-                  ? CircularProgressIndicator()
+                  ? Center(child: CircularProgressIndicator())
                   : ElevatedButton(
                       child: Text(
                         'Submit',

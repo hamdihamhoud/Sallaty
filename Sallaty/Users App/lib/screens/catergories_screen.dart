@@ -9,7 +9,6 @@ class CategoriesScreen extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final mediaQuery = MediaQuery.of(context);
     return Scaffold(
       appBar: AppBar(
         title: Text('Categories'),
@@ -26,20 +25,13 @@ class CategoriesScreen extends StatelessWidget {
             margin: const EdgeInsets.symmetric(vertical: 10),
             child: Row(
               children: [
-                Container(
+                Padding(
                   padding: const EdgeInsets.only(
                     top: 8,
                     left: 8,
                     bottom: 8,
                     right: 15,
                   ),
-                  child: Container(),
-                  // Image.asset(
-                  //   categories[i].imageAsset,
-                  //   alignment: Alignment.centerLeft,
-                  //   width: mediaQuery.size.width * 0.2,
-                  //   fit: BoxFit.fitWidth,
-                  // ),
                 ),
                 Text(
                   categories[i].title,

@@ -1,5 +1,4 @@
 import 'package:ecart/models/period.dart';
-import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:http/http.dart' as http;
 
@@ -52,11 +51,13 @@ class Product with ChangeNotifier {
     final oldStatus = isFavorite;
     isFavorite = !isFavorite;
     notifyListeners();
-    if (isFavorite) {
-      final url = Uri.parse(
-          'https://hamdi1234.herokuapp.com/addToWishlist?product=$id');
-      try {
-        final response = await http.post(
+    Uri url;
+    http.Response response;
+    try {
+      if (isFavorite) {
+        url = Uri.parse(
+            'https://hamdi1234.herokuapp.com/addToWishlist?product=$id');
+        response = await http.post(
           url,
           headers: {
             'usertype': 'vendor',
@@ -64,34 +65,26 @@ class Product with ChangeNotifier {
             'authorization': token,
           },
         );
-        if (response.statusCode == 200 || response.statusCode == 201) {
+      } else {
+        url = Uri.parse(
+            'https://hamdi1234.herokuapp.com/deletFromWishlist?product=$id');
+        response = await http.delete(
+          url,
+          headers: {
+            'usertype': 'vendor',
+            'Content-Type': 'application/json; charset=UTF-8',
+            'authorization': token,
+          },
+        );
+      }
+      if (response.statusCode == 200 || response.statusCode == 201) {
         return;
-        } else{
-        _setFavValue(oldStatus);
-        }
-      } catch (error) {
-        print(error);
+      } else {
         _setFavValue(oldStatus);
       }
-    } else {
-        final url = Uri.parse(
-          'https://hamdi1234.herokuapp.com/deletFromWishlist?product=$id');
-      try {
-        final response = await http.delete(
-          url,
-          headers: {
-            'usertype': 'vendor',
-            'Content-Type': 'application/json; charset=UTF-8',
-            'authorization': token,
-          },
-        );
-        if (response.statusCode == 200 || response.statusCode == 201) {
-          _setFavValue(oldStatus);
-        }
-      } catch (error) {
-        print(error);
-        _setFavValue(oldStatus);
-      }
+    } catch (error) {
+      print(error);
+      _setFavValue(oldStatus);
     }
   }
 }

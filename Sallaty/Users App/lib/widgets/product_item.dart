@@ -56,7 +56,6 @@ class ProductItem extends StatelessWidget {
                   ),
                   foregroundDecoration: BoxDecoration(
                     borderRadius: BorderRadius.all(Radius.circular(15)),
-                    // color: Colors.white,
                     gradient: LinearGradient(
                       begin: FractionalOffset.topCenter,
                       end: FractionalOffset.bottomCenter,
@@ -67,7 +66,6 @@ class ProductItem extends StatelessWidget {
                       stops: [0.0, 1.0],
                     ),
                   ),
-                  // constraints: BoxConstraints(maxHeight: 120),
                   child: CachedNetworkImage(
                     alignment: Alignment.center,
                     imageUrl: product.imageUrls.first,

@@ -517,7 +517,7 @@ class ProductDetailsList extends StatelessWidget {
                 ),
                 FutureBuilder(
                     future: product.type.length != 0 &&
-                            product.type.length != 'other'
+                            product.type != 'other'
                         ? productProvider.fetchByType(product.type)
                         : productProvider.fetchByCategory(product.category),
                     builder: (ctx, snapshot) {

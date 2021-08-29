@@ -16,7 +16,6 @@ class DrawerScreen extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    // final admin = Provider.of<AuthProvider>(context).admin;
     return Container(
       width: MediaQuery.of(context).size.width * 0.77,
       child: Drawer(
@@ -65,15 +64,6 @@ class DrawerScreen extends StatelessWidget {
                     },
                   ),
                   const Divider(),
-                  // if (admin)
-                  // ListTile(
-                  //   leading: const Icon(Icons.edit),
-                  //   title: const Text('Your products'),
-                  //   onTap: () {
-                  //     Navigator.of(context)
-                  //         .pushNamed(.routeName);
-                  //   },
-                  // ),
                   ListTile(
                     leading: const Icon(Icons.feedback_outlined),
                     title: const Text('Feedback'),

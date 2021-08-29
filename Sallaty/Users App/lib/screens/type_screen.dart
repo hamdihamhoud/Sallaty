@@ -20,7 +20,6 @@ class TypeScreen extends StatelessWidget {
             style: TextStyle(fontWeight: FontWeight.bold),
           ),
           actions: [
-            // IconButton(icon: Icon(Icons.filter_alt_rounded), onPressed: () {}),
             IconButton(
               icon: Icon(Icons.search),
               onPressed: () {},

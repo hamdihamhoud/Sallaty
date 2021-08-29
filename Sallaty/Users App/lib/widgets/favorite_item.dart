@@ -68,7 +68,6 @@ class FavoriteItem extends StatelessWidget {
                       stops: [0.0, 1.0],
                     ),
                   ),
-                  // constraints: BoxConstraints(maxHeight: 120),
                   child: CachedNetworkImage(
                     alignment: Alignment.center,
                     imageUrl: product.imageUrls.first,

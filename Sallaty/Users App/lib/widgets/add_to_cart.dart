@@ -7,7 +7,6 @@ import 'package:ecart/widgets/quantity_icon.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
-// ignore: must_be_immutable
 class AddtoCart extends StatefulWidget {
   final Product product;
   const AddtoCart({this.product});
@@ -322,7 +321,6 @@ class _AddtoCartState extends State<AddtoCart> {
                                 duration: Duration(
                                   milliseconds: 1500,
                                 ),
-                                // behavior: SnackBarBehavior.fixed,
                                 shape: RoundedRectangleBorder(
                                   borderRadius: BorderRadius.only(
                                     topRight: Radius.circular(20),
