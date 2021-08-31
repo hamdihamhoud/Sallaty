@@ -12,7 +12,7 @@ class AuthProvider with ChangeNotifier {
   String number;
   bool isSeller;
   String _token;
-  final mainUrl = 'https://hamdi1234.herokuapp.com';
+  final mainUrl = 'https://sallaty-store.herokuapp.com';
 
   Future<bool> isAuth() async {
     if (token == null) {

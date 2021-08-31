@@ -1,4 +1,4 @@
-
+import 'package:ecart/providers/auth.dart';
 import 'package:ecart/screens/account_screen.dart';
 import 'package:ecart/screens/cart_screen.dart';
 import 'package:ecart/screens/drawer_screen.dart';
@@ -7,6 +7,9 @@ import 'package:ecart/screens/offers_screen.dart';
 import 'package:ecart/screens/watchlist_screen.dart';
 import 'package:flutter/material.dart';
 import 'package:google_nav_bar/google_nav_bar.dart';
+import 'package:provider/provider.dart';
+
+import 'analytics_premium_screen.dart';
 
 class AppBottomNavigationBarController extends StatefulWidget {
   static const routeName = '/main';
@@ -19,7 +22,6 @@ class AppBottomNavigationBarController extends StatefulWidget {
 
 class _AppBottomNavigationBarControllerState
     extends State<AppBottomNavigationBarController> {
-
   final List<Widget> pages = [
     HomeScreen(
       key: PageStorageKey('Page1'),
@@ -107,10 +109,10 @@ class _AppBottomNavigationBarControllerState
                   icon: Icons.local_offer_outlined,
                   text: 'Offers',
                 ),
-                  GButton(
-                    icon: Icons.account_circle_rounded,
-                    text: 'Account',
-                  ),
+                GButton(
+                  icon: Icons.account_circle_rounded,
+                  text: 'Account',
+                ),
               ]),
         ),
       );
@@ -118,6 +120,50 @@ class _AppBottomNavigationBarControllerState
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      appBar: _selectedIndex == 4
+          ? AppBar(
+              elevation: 0,
+              title: Text(
+                'Account',
+                style: TextStyle(fontWeight: FontWeight.w700),
+              ),
+              actions: [
+                if (Provider.of<AuthProvider>(context).isSeller)
+                  PopupMenuButton(
+                    onSelected: (_) {
+                      Navigator.of(context)
+                          .pushNamed(AnalyticsScreen.routeName);
+                    },
+                    itemBuilder: (ctx) {
+                      return [
+                        PopupMenuItem(
+                          child: Text(
+                            'Analytics & Earnings',
+                          ),
+                          value: 'Analytics & Earnings',
+                        ),
+                      ];
+                    },
+                  )
+              ],
+            )
+          : AppBar(
+              title: _selectedIndex == 0
+                  ? Text('Sallaty')
+                  : _selectedIndex == 1
+                      ? Text('Favorite')
+                      : _selectedIndex == 2
+                          ? Text('Cart')
+                          : Text('Offers'),
+              actions: [
+                if (_selectedIndex == 0)
+                  IconButton(
+                      icon: Icon(Icons.search),
+                      onPressed: () {
+                        showSearch(context: context, delegate: SearchItem());
+                      })
+              ],
+            ),
       drawer: DrawerScreen(),
       bottomNavigationBar: _bottomNavigationBar(_selectedIndex),
       backgroundColor: Theme.of(context).primaryColor,

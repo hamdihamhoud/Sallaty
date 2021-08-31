@@ -14,9 +14,6 @@ class OffersScreen extends StatelessWidget {
     List <Product> products = [];
     final mediaQuery = MediaQuery.of(context);
     return Scaffold(
-      appBar: AppBar(
-        title: Text('Offers'),
-      ),
       drawer: DrawerScreen(),
       body: FutureBuilder(
           future: Provider.of<ProductsProvider>(context,listen: false).getOffers(),

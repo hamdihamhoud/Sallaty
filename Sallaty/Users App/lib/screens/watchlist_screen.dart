@@ -14,10 +14,6 @@ class WatchlistScreen extends StatelessWidget {
     final mediaQuery = MediaQuery.of(context);
     List<Product> favorites = [];
     return Scaffold(
-        appBar: AppBar(
-          title: Text('Watchlist'),
-        ),
-        drawer: DrawerScreen(),
         body: FutureBuilder(
             future: Provider.of<ProductsProvider>(context).getFavorites(),
             builder: (ctx, snapshot) {

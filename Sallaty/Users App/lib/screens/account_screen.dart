@@ -113,32 +113,6 @@ class _AccountScreenState extends State<AccountScreen> {
 
     return Scaffold(
       backgroundColor: Colors.white,
-      appBar: AppBar(
-        elevation: 0,
-        title: Text(
-          'Account',
-          style: TextStyle(fontWeight: FontWeight.w700),
-        ),
-        actions: [
-          if (isPremium)
-            PopupMenuButton(
-              onSelected: (_) {
-                Navigator.of(context).pushNamed(AnalyticsScreen.routeName);
-              },
-              itemBuilder: (ctx) {
-                return [
-                  PopupMenuItem(
-                    child: Text(
-                      'Analytics & Earnings',
-                    ),
-                    value: 'Analytics & Earnings',
-                  ),
-                ];
-              },
-            )
-        ],
-      ),
-      drawer: DrawerScreen(),
       body: isPremium
           ? premiumBody()
           : Padding(

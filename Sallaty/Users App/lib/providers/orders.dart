@@ -24,7 +24,7 @@ class Order {
 }
 
 class Orders with ChangeNotifier {
-  final mainUrl = 'https://hamdi1234.herokuapp.com';
+  final mainUrl = 'https://sallaty-store.herokuapp.com';
   String _token;
   String _userId;
 

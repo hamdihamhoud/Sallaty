@@ -22,19 +22,6 @@ class _HomeScreenState extends State<HomeScreen> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(
-        title: Text(
-          'Sallaty',
-        ),
-        actions: [
-          IconButton(
-              icon: Icon(Icons.search),
-              onPressed: () {
-                showSearch(context: context, delegate: SearchItem());
-              })
-        ],
-      ),
-      drawer: DrawerScreen(),
       body: Column(
         children: [
           Container(

@@ -6,7 +6,7 @@ import 'package:http/http.dart' as http;
 class AddressesProvider with ChangeNotifier {
   String _token;
   String _userId;
-  final mainUrl = 'https://hamdi1234.herokuapp.com';
+  final mainUrl = 'https://sallaty-store.herokuapp.com';
 
   void setToken(String token) {
     _token = token;

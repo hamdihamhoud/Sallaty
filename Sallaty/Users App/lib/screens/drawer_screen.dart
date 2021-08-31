@@ -16,9 +16,9 @@ class DrawerScreen extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Container(
+    return Drawer(
+      child: Container(
       width: MediaQuery.of(context).size.width * 0.77,
-      child: Drawer(
         child: Column(
           children: [
             AppBar(

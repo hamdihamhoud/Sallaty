@@ -22,12 +22,6 @@ class _CartScreenState extends State<CartScreen> {
     final Map<String, CartItem> items = cart.items;
     final List<CartItem> components = items.values.toList();
     return Scaffold(
-      appBar: AppBar(
-        title: Text(
-          'My Cart',
-        ),
-      ),
-      drawer: DrawerScreen(),
       body: components.length == 0
           ? Column(
               mainAxisAlignment: MainAxisAlignment.center,
